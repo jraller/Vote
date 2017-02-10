@@ -1,6 +1,6 @@
 /*
 
-disqualifier
+[x] disqualifier
 make rounds interactive if needed like for handling ties
 add vote value first column checkbox
 [x] autodetect as default option for comma or tab
@@ -25,6 +25,7 @@ let votes,
 	voteField = document.getElementById('votes'),
 	delimiter,
 	positions,
+	disqualifyList = document.getElementById('disqualifyList'),
 	results = document.getElementById('results'),
 	runButton = document.getElementById('run'),
 	current = [],
@@ -41,10 +42,46 @@ function pickDelimiter() {
 
 	if (tabs > 0 && commas === 0) {
 		document.getElementById('delimiter').value = 't';
+		delimiter = 't';
 	}
 	if (commas > 0 && tabs === 0) {
 		document.getElementById('delimiter').value = ',';
+	delimiter = ',';
 	}
+}
+
+function listDisqualify() {
+	var res = [],
+		index;
+
+	disqualifyList.innerHTML = '';
+	fillCurrent();
+	countCandidates();
+	res.push('<p>Disqualify:</p><ul>');
+
+	for (index = 0; index < candidates.length; index++) {
+		res.push('<li><label><input type="checkbox" value="' + candidates[index] + '">' + candidates[index] + '</label></li>');
+	}
+
+	res.push('</ul>');
+
+	disqualifyList.innerHTML = res.join('');
+}
+
+function removeDisqualified() {
+	var list = disqualifyList.getElementsByTagName('input'),
+		index;
+
+	for (index = 0; index < list.length; index++) {
+		if (list[index].checked) {
+			eliminate(list[index].value);
+		}
+	}
+}
+
+function newVotes() {
+	pickDelimiter();
+	listDisqualify();
 }
 
 function nonEmpty(value) {
@@ -120,6 +157,8 @@ function runRound() {
 		lowtotal = 'unset',
 		lowindex;
 
+	removeDisqualified();
+
 	countCandidates();
 
 	// tally votes
@@ -190,7 +229,7 @@ if (runButton.addEventListener) {
 }
 
 if (voteField.addEventListener) {
-	voteField.addEventListener('change', pickDelimiter, false);
+	voteField.addEventListener('change', newVotes, false);
 } else if (voteField.attachEvent) {
-	voteField.attachEvent('onchange', pickDelimiter);
+	voteField.attachEvent('onchange', newVotes);
 }
