@@ -3,7 +3,7 @@
 disqualifier
 make rounds interactive if needed like for handling ties
 add vote value first column checkbox
-autodetect as default option for comma or tab
+[x] autodetect as default option for comma or tab
 
 sanity checks
 	do dupe votes
@@ -22,6 +22,7 @@ graph progression? area chart
 
 
 let votes,
+	voteField = document.getElementById('votes'),
 	delimiter,
 	positions,
 	results = document.getElementById('results'),
@@ -29,6 +30,22 @@ let votes,
 	current = [],
 	candidates = [],
 	round = 0;
+
+function pickDelimiter() {
+	var tabs = 0,
+		commas = 0;
+
+	votes = voteField.value;
+	tabs = (votes.match(/\t/g) || []).length;
+	commas = (votes.match(/,/g) || []).length;
+
+	if (tabs > 0 && commas === 0) {
+		document.getElementById('delimiter').value = 't';
+	}
+	if (commas > 0 && tabs === 0) {
+		document.getElementById('delimiter').value = ',';
+	}
+}
 
 function nonEmpty(value) {
 	return value !== '';
@@ -77,9 +94,9 @@ function countXPlace(candidate, place) {
 		index;
 
 	for (index = 0; index < current.length; index++) {
-			if (current[index][place] === candidate) {
-				value++;
-			}
+		if (current[index][place] === candidate) {
+			value++;
+		}
 	}
 
 	return value;
@@ -146,24 +163,23 @@ function runRound() {
 		eliminate(candidates[lowindex]);
 	}
 
-
 	results.innerHTML += res.join('');
 	round++;
 	countCandidates();
-
 }
 
 function runReport() {
-	votes = document.getElementById('votes').value;
+	votes = voteField.value;
 	delimiter = document.getElementById('delimiter').value;
 	positions = parseInt(document.getElementById('positions').value, 10);
 	results.innerHTML='';
 	round = 1;
 	fillCurrent();
 	countCandidates();
-	while (candidates.length >= positions && round < 10) {
+	while (candidates.length > positions && round < 10) {
 		runRound();
 	}
+	runRound();
 }
 
 // attach events
@@ -171,4 +187,10 @@ if (runButton.addEventListener) {
 	runButton.addEventListener('click', runReport, false);
 } else if (runButton.attachEvent) {
 	runButton.attachEvent('onclick', runReport);
+}
+
+if (voteField.addEventListener) {
+	voteField.addEventListener('change', pickDelimiter, false);
+} else if (voteField.attachEvent) {
+	voteField.attachEvent('onchange', pickDelimiter);
 }

@@ -7,13 +7,21 @@
 		<br/>
 		<label for="delimiter">Delimiter:</label>
 		<select id="delimiter">
-			<option value="t" selected>tab</option>
+			<option value="a" selected disabled>Auto</option>
+			<option value="t">tab</option>
 			<option value=",">comma</option>
 		</select>
 		<br/>
 		<label for="positions">Number of Positions:</label>
 		<input id="positions" type="number" inputmode="numeric" min="1" value="1"></input>
 		<br/>
+
+		<label for="voteValue">First column is vote values</label>
+		<input id="voteValue" type="checkbox"></input>
+
+		<div id="disqualifyList">
+		</div>
+
 		<button id="run" type="button">Run</button>
 	</form>
 
