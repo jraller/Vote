@@ -1,0 +1,23 @@
+{% extends 'layout.nunjucks' %}
+
+{% block content %}
+	<h1>{{ title }}</h1>
+	<form action="">
+		<textarea id="votes" rows="10" cols="80" wrap="soft"></textarea>
+		<br/>
+		<label for="delimiter">Delimiter:</label>
+		<select id="delimiter">
+			<option value="t" selected>tab</option>
+			<option value=",">comma</option>
+		</select>
+		<br/>
+		<label for="positions">Number of Positions:</label>
+		<input id="positions" type="number" inputmode="numeric" min="1" value="1"></input>
+		<br/>
+		<button id="run" type="button">Run</button>
+	</form>
+
+	<div id="results"></div>
+
+	<script src="js/tally.js"></script>
+{% endblock %}
