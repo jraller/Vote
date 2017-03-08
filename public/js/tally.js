@@ -1,8 +1,8 @@
 /*
 
 [x] disqualifier
-make rounds interactive if needed like for handling ties
-add vote value first column checkbox
+[ ] make rounds interactive if needed like for handling ties
+[x] add vote value first column checkbox
 [x] autodetect as default option for comma or tab
 
 sanity checks
@@ -160,6 +160,10 @@ function eliminate(candidate) {
 	}
 }
 
+function add(a, b) {
+	return a + b;
+}
+
 function runRound() {
 	var res = [],
 		index,
@@ -167,10 +171,12 @@ function runRound() {
 		count,
 		tally = [],
 		total = [],
+		grandTotal,
 		lowtotal = 'unset',
 		lowindex = [],
 		lowcount = 0,
-		shift = 0;
+		shift = 0,
+		mode = 'auto';
 
 	removeDisqualified();
 
@@ -199,7 +205,7 @@ function runRound() {
 	for (index = 1; index <= positions; index++) {
 		res.push('<th>' + index + '</th>');
 	}
-	res.push('<th>total</th></thead><tbody>');
+	res.push('<th>total</th><th>%</th></thead><tbody>');
 
 	// loop through and get values
 	for (index = 0; index < candidates.length; index++) {
@@ -216,6 +222,9 @@ function runRound() {
 		}
 	}
 
+	grandTotal = total.reduce(add, 0);
+
+	// build the table
 	for (index = 0; index < candidates.length; index++) {
 		res.push('<tr><td>' + candidates[index] + '</td>');
 		for (ind = 0 + shift; ind < positions + shift; ind++) {
@@ -233,29 +242,46 @@ function runRound() {
 		if (total[index] === lowtotal) {
 			res.push('</b>');
 		}
-		res.push('</td></tr>');
-
-
-
+		res.push('</td><td>' + (total[index] * 100 / grandTotal).toFixed(2) + '</td></tr>');
 	}
 	res.push('</tbody></table>');
 
-	if (candidates.length > positions) {
-		res.push('<p>Elimniating ');
+	// check what mode we should be in
 
-		for (index = 0; index < lowcount; index++) {
-			res.push(candidates[lowindex[index]]);
-			if (index !== lowcount - 1) {
-				res.push(', ');
+	if (candidates.length > positions) {
+		if (lowcount === 1) {
+			res.push('<p>Eliminating ' + candidates[lowindex[0]]);
+			eliminate(candidates[lowindex[0]]);
+		} else {
+			res.push('<p>Tie detected, Pick whom to eliminate:</p>');
+			res.push('<button onclick="');
+			for (index = 0; index < lowcount; index++) {
+				res.push('eliminate(\'' + candidates[lowindex[index]] + '\');');
 			}
-			eliminate(candidates[lowindex[index]]);
+			res.push('runRound();" type="button">all</button> ');
+			for (index = 0; index < lowcount; index++) {
+				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
+			}
+			mode = 'manual';
 		}
+	} else {
+		mode = 'done';
 	}
+
+	if (round > 15) {
+		mode = 'done';
+	}
+
 
 	results.innerHTML += res.join('');
 	round++;
 	countCandidates();
-}
+
+	if (mode === 'auto') {
+		runRound();
+	}
+
+} // end runRound
 
 function runReport() {
 	votes = voteField.value;
@@ -265,9 +291,6 @@ function runReport() {
 	round = 1;
 	fillCurrent();
 	countCandidates();
-	while (candidates.length > positions && round < 10) {
-		runRound();
-	}
 	runRound();
 }
 

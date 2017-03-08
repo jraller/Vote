@@ -15,3 +15,7 @@ table, td {
 td, th {
 	padding: 0 10px;
 }
+
+td:not(:first-child) {
+	text-align: right
+}
