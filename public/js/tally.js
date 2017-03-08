@@ -23,14 +23,33 @@ graph progression? area chart
 
 let votes,
 	voteField = document.getElementById('votes'),
-	delimiter,
+	delimiter, // document.getElementById('delimiter')
 	positions,
+	voteValues = document.getElementById('voteValue'),
 	disqualifyList = document.getElementById('disqualifyList'),
 	results = document.getElementById('results'),
 	runButton = document.getElementById('run'),
 	current = [],
 	candidates = [],
 	round = 0;
+
+function fillCurrent() {
+	var index,
+		ind;
+
+	if (delimiter === 't') {
+		delimiter = '\t';
+	}
+
+	current = votes.split('\n').filter(nonEmpty);
+
+	for (index = 0; index < current.length; index++) {
+		current[index] = current[index].split(delimiter).filter(nonEmpty);
+		for (ind = 0; ind < current[index].length; ind++) {
+			current[index][ind] = current[index][ind].trim();
+		}
+	}
+}
 
 function pickDelimiter() {
 	var tabs = 0,
@@ -46,7 +65,7 @@ function pickDelimiter() {
 	}
 	if (commas > 0 && tabs === 0) {
 		document.getElementById('delimiter').value = ',';
-	delimiter = ',';
+		delimiter = ',';
 	}
 }
 
@@ -88,32 +107,21 @@ function nonEmpty(value) {
 	return value !== '';
 }
 
-function fillCurrent() {
-	var index,
-		ind;
-
-	if (delimiter === 't') {
-		delimiter = '\t';
-	}
-
-	current = votes.split('\n').filter(nonEmpty);
-
-	for (index = 0; index < current.length; index++) {
-		current[index] = current[index].split(delimiter).filter(nonEmpty);
-		for (ind = 0; ind < current[index].length; ind++) {
-			current[index][ind] = current[index][ind].trim();
-		}
-	}
-}
-
 function countCandidates() {
 	var index,
-		ind;
+		ind,
+		firstColumn = 0;
 
 	candidates = [];
 
+	if (voteValues.checked) {
+		firstColumn = 1;
+	} else {
+		firstColumn = 0;
+	}
+
 	for (index = 0; index < current.length; index++) {
-		for (ind = 0; ind < current[index].length; ind++) {
+		for (ind = firstColumn; ind < current[index].length; ind++) {
 			if (candidates.indexOf(current[index][ind]) === -1) {
 				candidates.push(current[index][ind]);
 			}
@@ -126,13 +134,17 @@ function isNot(value) {
 }
 
 
-function countXPlace(candidate, place) {
+function countXPlace(candidate, place, firstValue) {
 	var value = 0,
 		index;
 
 	for (index = 0; index < current.length; index++) {
 		if (current[index][place] === candidate) {
-			value++;
+			if (firstValue) {
+				value = value + parseFloat(current[index][0], 10);
+			} else {
+				value++;
+			}
 		}
 	}
 
@@ -152,14 +164,23 @@ function runRound() {
 	var res = [],
 		index,
 		ind,
-		tally,
-		total,
+		count,
+		tally = [],
+		total = [],
 		lowtotal = 'unset',
-		lowindex;
+		lowindex = [],
+		lowcount = 0,
+		shift = 0;
 
 	removeDisqualified();
 
 	countCandidates();
+
+	if (voteValues.checked) {
+		shift = 1;
+	} else {
+		shift = 0;
+	}
 
 	// tally votes
 
@@ -179,27 +200,56 @@ function runRound() {
 		res.push('<th>' + index + '</th>');
 	}
 	res.push('<th>total</th></thead><tbody>');
+
+	// loop through and get values
 	for (index = 0; index < candidates.length; index++) {
-		tally = 0;
-		total = 0;
+		tally[index] = [];
+		total[index] = 0;
+		for (ind = 0 + shift; ind < positions + shift; ind++) {
+			count = countXPlace(candidates[index], ind, voteValues.checked);
+			tally[index].push(count);
+			total[index] += count;
+		}
+
+		if (lowtotal === 'unset' || total[index] < lowtotal) { // this is poorly written
+			lowtotal = total[index];
+		}
+	}
+
+	for (index = 0; index < candidates.length; index++) {
 		res.push('<tr><td>' + candidates[index] + '</td>');
-		for (ind = 0; ind < positions; ind++) {
-			tally = countXPlace(candidates[index], ind);
-			res.push('<td>' + tally + '</td>');
-			total += tally;
+		for (ind = 0 + shift; ind < positions + shift; ind++) {
+			res.push('<td>' + tally[index][ind - shift] + '</td>');
 		}
-		res.push('<td>' + total + '</td></tr>');
-		if (lowtotal === 'unset' || total < lowtotal) { // this is poorly written
-			lowindex = index;
-			lowtotal = total;
+
+		res.push('<td>');
+
+		if (total[index] === lowtotal) {
+			lowindex.push(index);
+			lowcount++;
+			res.push('<b>');
 		}
+		res.push(total[index]);
+		if (total[index] === lowtotal) {
+			res.push('</b>');
+		}
+		res.push('</td></tr>');
+
+
+
 	}
 	res.push('</tbody></table>');
 
-
 	if (candidates.length > positions) {
-		res.push('<p>Elimniating ' + candidates[lowindex]);
-		eliminate(candidates[lowindex]);
+		res.push('<p>Elimniating ');
+
+		for (index = 0; index < lowcount; index++) {
+			res.push(candidates[lowindex[index]]);
+			if (index !== lowcount - 1) {
+				res.push(', ');
+			}
+			eliminate(candidates[lowindex[index]]);
+		}
 	}
 
 	results.innerHTML += res.join('');
@@ -232,4 +282,10 @@ if (voteField.addEventListener) {
 	voteField.addEventListener('change', newVotes, false);
 } else if (voteField.attachEvent) {
 	voteField.attachEvent('onchange', newVotes);
+}
+
+if (voteValues.addEventListener) {
+	voteValues.addEventListener('change', newVotes, false);
+} else if (voteValues.attachEvent) {
+	voteValues.attachEvent('onchange', newVotes);
 }
