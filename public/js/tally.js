@@ -1,7 +1,7 @@
 /*
 
 [x] disqualifier
-[ ] make rounds interactive if needed like for handling ties
+[x] make rounds interactive if needed like for handling ties
 [x] add vote value first column checkbox
 [x] autodetect as default option for comma or tab
 
@@ -13,9 +13,9 @@ sanity checks
 
 show all paths?
 
-percentages?
+[x] percentages?
 
-graph progression? area chart
+graph progression? area chart. Do this by storing each round? d3?
 
  */
 
