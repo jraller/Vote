@@ -1,4 +1,6 @@
-/*
+/* jshint esversion:6 */
+
+/* Notes
 
 [x] disqualifier
 [x] make rounds interactive if needed like for handling ties
@@ -6,10 +8,10 @@
 [x] autodetect as default option for comma or tab
 
 sanity checks
-	do dupe votes
-	warn on skipped vote
-	report number of votes
-	report number of candidates (as disqualify)
+[]	do dupe votes
+[]	warn on skipped vote
+[x]	report number of votes
+[x]	report number of candidates (as disqualify)
 
 show all paths?
 
@@ -19,11 +21,11 @@ graph progression? area chart. Do this by storing each round? d3?
 
  */
 
-
-
 let votes,
 	voteField = document.getElementById('votes'),
-	delimiter, // document.getElementById('delimiter')
+	sanity = document.getElementById('sanity'),
+	delimiterDropdown = document.getElementById('delimiter'),
+	delimiter,
 	positions,
 	voteValues = document.getElementById('voteValue'),
 	disqualifyList = document.getElementById('disqualifyList'),
@@ -33,15 +35,37 @@ let votes,
 	candidates = [],
 	round = 0;
 
+function nonEmpty(value) {
+	return value !== '';
+}
+
 function fillCurrent() {
 	var index,
-		ind;
+		ind,
+		res = [],
+		lines,
+		ballots;
 
 	if (delimiter === 't') {
 		delimiter = '\t';
 	}
 
-	current = votes.split('\n').filter(nonEmpty);
+	sanity.innerHTML = '';
+
+
+	res.push('<p>Sanity Check</p>');
+
+
+	current = votes.split('\n');
+	lines = current.length;
+	current = current.filter(nonEmpty);
+	ballots = current.length;
+
+	if (lines - ballots > 1) {
+		res.push('<p><strong>The number of lines and ballots were different: ' + lines + ':' + ballots + '</strong></p>');
+	} else {
+		res.push('<p>' + ballots + ' ballots</p>');
+	}
 
 	for (index = 0; index < current.length; index++) {
 		current[index] = current[index].split(delimiter).filter(nonEmpty);
@@ -49,6 +73,8 @@ function fillCurrent() {
 			current[index][ind] = current[index][ind].trim();
 		}
 	}
+
+	sanity.innerHTML = res.join('');
 }
 
 function pickDelimiter() {
@@ -60,13 +86,17 @@ function pickDelimiter() {
 	commas = (votes.match(/,/g) || []).length;
 
 	if (tabs > 0 && commas === 0) {
-		document.getElementById('delimiter').value = 't';
+		delimiterDropdown.value = 't';
 		delimiter = 't';
 	}
 	if (commas > 0 && tabs === 0) {
-		document.getElementById('delimiter').value = ',';
+		delimiterDropdown.value = ',';
 		delimiter = ',';
 	}
+}
+
+function pickVoteValues() {
+	voteValues.checked = !isNaN(Number.parseInt(voteField.value.substring(0, 1), 10));
 }
 
 function listDisqualify() {
@@ -74,12 +104,11 @@ function listDisqualify() {
 		index;
 
 	disqualifyList.innerHTML = '';
-	fillCurrent();
-	countCandidates();
 	res.push('<p>Disqualify:</p><ul>');
 
 	for (index = 0; index < candidates.length; index++) {
-		res.push('<li><label><input type="checkbox" value="' + candidates[index] + '">' + candidates[index] + '</label></li>');
+		res.push('<li><label><input type="checkbox" value="' + candidates[index] + '">');
+		res.push(candidates[index] + '</label></li>');
 	}
 
 	res.push('</ul>');
@@ -100,11 +129,10 @@ function removeDisqualified() {
 
 function newVotes() {
 	pickDelimiter();
+	pickVoteValues();
+	fillCurrent();
+	countCandidates();
 	listDisqualify();
-}
-
-function nonEmpty(value) {
-	return value !== '';
 }
 
 function countCandidates() {
@@ -285,7 +313,7 @@ function runRound() {
 
 function runReport() {
 	votes = voteField.value;
-	delimiter = document.getElementById('delimiter').value;
+	delimiter = delimiterDropdown.value;
 	positions = parseInt(document.getElementById('positions').value, 10);
 	results.innerHTML='';
 	round = 1;
