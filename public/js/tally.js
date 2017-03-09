@@ -1,4 +1,5 @@
 /* jshint esversion:6 */
+/* global d3 */
 
 /* Notes
 
@@ -33,7 +34,9 @@ let votes,
 	runButton = document.getElementById('run'),
 	current = [],
 	candidates = [],
-	round = 0;
+	candidatesFull = [],
+	round = 0,
+	history = [];
 
 function nonEmpty(value) {
 	return value !== '';
@@ -192,6 +195,60 @@ function add(a, b) {
 	return a + b;
 }
 
+function chart() {
+	var svg = d3.select('svg'),
+		margin = {top: 20, right: 20, bottom: 30, left: 50},
+		width = svg.attr('width') - margin.left - margin.right,
+		height = svg.attr('height') - margin.top - margin.bottom,
+		x = d3.scaleLinear().range([0, width]),
+		y = d3.scaleLinear().range([height, 0]),
+		z = d3.scaleOrdinal(d3.schemeCategory10),
+		stack = d3.stack(),
+		area = d3.area()
+			.x(function(d) { return x(d.data.round); })
+			.y0(function(d) { return y(d[0]); })
+			.y1(function(d) { return y(d[1]); }),
+		g = svg.append('g'),
+		layer,
+		keys = candidatesFull;
+
+	x.domain(d3.extent(history, function(d) { return d.round; }));
+	z.domain(keys);
+	stack.keys(keys);
+
+	y.domain(d3.extent([d3.max(d3.values(history[history.length - 1])) , 0]));
+
+	layer = g.selectAll('.layer')
+		.data(stack(history))
+		.enter().append('g')
+			.attr('class', 'layer');
+
+	layer.append('path')
+		.attr('class', 'area')
+		.style('fill', function(d) { return z(d.key); })
+		.attr('d', area);
+
+	layer
+	// .filter(function(d) { return d[d.length - 1][1] - d[d.length - 1][0] > 0.01; })
+		.append('text')
+			.attr('x', 6)
+			.attr('y', function(d) { return y((d[0][0] + d[0][1]) / 2); })
+			.attr('dy', '.35em')
+			.style('font', '10px sans-serif')
+			.style('text-anchor', 'start')
+			.text(function(d) { return d.key; });
+
+	g.append('g')
+		.attr('class', 'axis axis--x')
+		.attr('transform', 'translate(0,' + height + ')')
+		.call(d3.axisBottom(x).ticks(history.length));
+
+	g.append('g')
+		.attr('class', 'axis axis--y')
+		.call(d3.axisLeft(y).ticks(10, ''));
+
+}
+
 function runRound() {
 	var res = [],
 		index,
@@ -204,7 +261,8 @@ function runRound() {
 		lowindex = [],
 		lowcount = 0,
 		shift = 0,
-		mode = 'auto';
+		mode = 'auto',
+		entry = {};
 
 	removeDisqualified();
 
@@ -300,6 +358,18 @@ function runRound() {
 		mode = 'done';
 	}
 
+	entry.round = round;
+
+	for (index = 0; index < candidatesFull.length; index++) {
+		entry[candidatesFull[index]] = 0;
+	}
+
+	for (index = 0; index < candidates.length; index++) {
+		entry[candidates[index]] = total[index];
+	}
+
+	// capture history
+	history.push(entry);
 
 	results.innerHTML += res.join('');
 	round++;
@@ -307,6 +377,10 @@ function runRound() {
 
 	if (mode === 'auto') {
 		runRound();
+	}
+
+	if (mode === 'done') {
+		chart();
 	}
 
 } // end runRound
@@ -318,7 +392,9 @@ function runReport() {
 	results.innerHTML='';
 	round = 1;
 	fillCurrent();
+	candidatesFull = candidates;
 	countCandidates();
+	history = [];
 	runRound();
 }
 

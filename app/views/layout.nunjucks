@@ -12,4 +12,5 @@
 <body>
   {% block content %}{% endblock %}
 </body>
+<script src="components/d3/d3.js"></script>
 </html>

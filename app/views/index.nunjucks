@@ -28,5 +28,7 @@
 
 	<div id="results"></div>
 
+	<svg id="chart" width="960" height="500"></svg>
+
 	<script src="js/tally.js"></script>
 {% endblock %}
