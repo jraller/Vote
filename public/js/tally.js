@@ -1,5 +1,5 @@
 /* jshint esversion:6 */
-/* global d3 */
+/* global d3, sankey */
 
 /* Notes
 
@@ -36,7 +36,10 @@ let votes,
 	candidates = [],
 	candidatesFull = [],
 	round = 0,
-	history = [];
+	offset = 0,
+	offsetLast = 0,
+	eliminations = [],
+	history = {};
 
 function nonEmpty(value) {
 	return value !== '';
@@ -182,13 +185,29 @@ function countXPlace(candidate, place, firstValue) {
 	return value;
 }
 
-
 function eliminate(candidate) {
-	var index;
+	var index,
+		transfers = {},
+		position,
+		length,
+		value;
 
 	for (index = 0; index < current.length; index++) {
+		position = current[index].indexOf(candidate);
+		length = current[index].length;
+
+		if (position === 1 && length > position) {
+			if (voteValues.checked) {
+				value = parseFloat(current[index][0], 10);
+			} else {
+				value = 1;
+			}
+
+			transfers[current[index][position + 1] || 'none'] = transfers[current[index][position + 1]] + value || value;
+		}
 		current[index] = current[index].filter(isNot, candidate);
 	}
+	eliminations.push({c: candidate, transfers: transfers});
 }
 
 function add(a, b) {
@@ -196,56 +215,87 @@ function add(a, b) {
 }
 
 function chart() {
-	var svg = d3.select('svg'),
-		margin = {top: 20, right: 20, bottom: 30, left: 50},
+	var formatNumber = d3.format(',.1f'),
+		format = function(d) {
+			return formatNumber(d) + ' votes';
+		},
+		color = d3.scaleOrdinal(d3.schemeCategory20),
+		svg = d3.select('svg'),
+		margin = {top: 20, right: 20, bottom: 20, left: 20},
 		width = svg.attr('width') - margin.left - margin.right,
 		height = svg.attr('height') - margin.top - margin.bottom,
-		x = d3.scaleLinear().range([0, width]),
-		y = d3.scaleLinear().range([height, 0]),
-		z = d3.scaleOrdinal(d3.schemeCategory10),
-		stack = d3.stack(),
-		area = d3.area()
-			.x(function(d) { return x(d.data.round); })
-			.y0(function(d) { return y(d[0]); })
-			.y1(function(d) { return y(d[1]); }),
-		g = svg.append('g'),
-		layer,
-		keys = candidatesFull;
+		sankey = d3.sankey()
+			.nodeWidth(15)
+			.nodePadding(10)
+			.size([width, height]),
+		path = sankey.link(),
+		g = svg.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	x.domain(d3.extent(history, function(d) { return d.round; }));
-	z.domain(keys);
-	stack.keys(keys);
+	sankey
+		.nodes(history.nodes)
+		.links(history.links)
+		.layout(32);
 
-	y.domain(d3.extent([d3.max(d3.values(history[history.length - 1])) , 0]));
+	var link = g.append('g').selectAll('.link')
+		.data(history.links)
+		.enter().append('path')
+		.attr('class', 'link')
+		.attr('d', path)
+		.style('stroke-width', function(d) {
+			return Math.max(1, d.dy);
+		})
+		.sort(function(a, b) {
+			return b.dy - a.dy;
+		});
 
-	layer = g.selectAll('.layer')
-		.data(stack(history))
+	link.append('title')
+		.text(function(d) {
+			return d.source.name + ' → ' + d.target.name + '\n' + format(d.value);
+		});
+
+	var node = g.append('g')
+		.selectAll('.node')
+		.data(history.nodes)
 		.enter().append('g')
-			.attr('class', 'layer');
+		.attr('class', 'node')
+		.attr('transform', function(d) {
+			return 'translate(' + d.x + ',' + d.y + ')';
+		});
 
-	layer.append('path')
-		.attr('class', 'area')
-		.style('fill', function(d) { return z(d.key); })
-		.attr('d', area);
+	node.append('rect')
+		.attr('height', function(d) {
+			return d.dy;
+		})
+		.attr('width', sankey.nodeWidth())
+		.style('fill', function(d) {
+			return d.color = color(d.name.replace(/ .*/, ''));
+		})
+		.style('stroke', function(d) {
+			return d3.rgb(d.color).darker(2);
+		})
+		.append('title')
+		.text(function(d, i) {
+			return d.name + '\n' + format(d.value) + '\n' + i;
+		});
 
-	layer
-	// .filter(function(d) { return d[d.length - 1][1] - d[d.length - 1][0] > 0.01; })
-		.append('text')
-			.attr('x', 6)
-			.attr('y', function(d) { return y((d[0][0] + d[0][1]) / 2); })
-			.attr('dy', '.35em')
-			.style('font', '10px sans-serif')
-			.style('text-anchor', 'start')
-			.text(function(d) { return d.key; });
-
-	g.append('g')
-		.attr('class', 'axis axis--x')
-		.attr('transform', 'translate(0,' + height + ')')
-		.call(d3.axisBottom(x).ticks(history.length));
-
-	g.append('g')
-		.attr('class', 'axis axis--y')
-		.call(d3.axisLeft(y).ticks(10, ''));
+	//filter these to not show iv value is zero
+	node.append('text')
+		.attr('x', -6)
+		.attr('y', function(d) {
+			return d.dy / 2;
+		})
+		.attr('dy', '.35em')
+		.attr('text-anchor', 'end')
+		.attr('transform', null)
+		.text(function(d) {
+			return d.name;
+		})
+		.filter(function(d) {
+			return d.x < width / 2;
+		})
+		.attr('x', 6 + sankey.nodeWidth())
+		.attr('text-anchor', 'start');
 
 }
 
@@ -261,10 +311,7 @@ function runRound() {
 		lowindex = [],
 		lowcount = 0,
 		shift = 0,
-		mode = 'auto',
-		entry = {};
-
-	removeDisqualified();
+		mode = 'auto';
 
 	countCandidates();
 
@@ -358,19 +405,52 @@ function runRound() {
 		mode = 'done';
 	}
 
-	entry.round = round;
-
-	for (index = 0; index < candidatesFull.length; index++) {
-		entry[candidatesFull[index]] = 0;
-	}
-
-	for (index = 0; index < candidates.length; index++) {
-		entry[candidates[index]] = total[index];
-	}
-
 	// capture history
-	history.push(entry);
+	candidatesFull.push(candidates);
 
+	// add base nodes and self links
+	for (index = 0; index < candidates.length; index++) {
+		history.nodes.push({'name': candidates[index] + ' round ' + round});
+		history.links.push({
+			'source': candidatesFull[round - 1].indexOf(candidates[index]) + offsetLast,
+			'target': candidatesFull[round].indexOf(candidates[index]) + offset,
+			'value': total[index]
+		});
+
+		// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
+
+	}
+
+	console.log(eliminations);
+
+	for (index = 0; index < eliminations.length; index++) {
+		console.log('resolving', eliminations[index].c);
+
+		Object.keys(eliminations[index].transfers).forEach(function (transfer) {
+			if (transfer !== 'none') {
+
+				history.links.push({
+					'source': candidatesFull[round].indexOf(eliminations[index].c) + offset,
+					'target': candidatesFull[round].indexOf(transfer) + offset,
+					'value': eliminations[index].transfers[transfer]
+				});
+
+				console.log('source', eliminations[index].c, candidatesFull[round].indexOf(eliminations[index].c) + offset);
+				console.log('target', transfer, candidatesFull[round].indexOf(transfer) + offset);
+				console.log('value', eliminations[index].transfers[transfer]);
+				console.log('');
+
+			}
+		});
+	}
+
+
+	eliminations = [];
+	console.log('end of round', round);
+
+
+	offsetLast = offset;
+	offset += candidates.length;
 	results.innerHTML += res.join('');
 	round++;
 	countCandidates();
@@ -380,21 +460,38 @@ function runRound() {
 	}
 
 	if (mode === 'done') {
+		console.log(history);
+		console.table(candidatesFull);
+
+		for (index = 0; index < history.nodes.length; index++) {
+			console.log('node', index, history.nodes[index]);
+		}
+
 		chart();
 	}
-
 } // end runRound
 
 function runReport() {
+	var index;
+
 	votes = voteField.value;
 	delimiter = delimiterDropdown.value;
 	positions = parseInt(document.getElementById('positions').value, 10);
 	results.innerHTML='';
 	round = 1;
 	fillCurrent();
-	candidatesFull = candidates;
+	removeDisqualified();
 	countCandidates();
-	history = [];
+	history.nodes = [];
+	offset = candidates.length;
+	offsetLast = 0;
+
+	for (index = 0; index < candidates.length; index++) {
+		history.nodes.push({'name': candidates[index] + ' initial round'});
+	}
+	candidatesFull.push(candidates);
+	history.links = [];
+	eliminations = [];
 	runRound();
 }
 

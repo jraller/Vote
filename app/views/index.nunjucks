@@ -31,4 +31,6 @@
 	<svg id="chart" width="960" height="500"></svg>
 
 	<script src="js/tally.js"></script>
+	<script src="components/d3/d3.js"></script>
+	<script src="js/sankey.js"></script>
 {% endblock %}
