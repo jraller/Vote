@@ -322,7 +322,8 @@ function runRound() {
 		lowcount = 0,
 		shift = 0,
 		mode = 'auto',
-		notEliminated;
+		notEliminated,
+		waitForInput = false;
 
 	countCandidates();
 
@@ -407,6 +408,7 @@ function runRound() {
 				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
 			}
 			mode = 'manual';
+			waitForInput = true;
 		}
 	} else {
 		mode = 'done';
@@ -416,61 +418,65 @@ function runRound() {
 		mode = 'done';
 	}
 
-	// add base nodes and self links
-	for (index = 0; index < candidates.length; index++) {
+	if (!waitForInput) {
+		// add base nodes and self links
+		for (index = 0; index < candidates.length; index++) {
 
-		history.nodes.push({
-			'name': candidates[index] + ' round ' + round,
-			'candidate': candidates[index],
-			'round': round
-		});
+			history.nodes.push({
+				'name': candidates[index] + ' round ' + round,
+				'candidate': candidates[index],
+				'round': round
+			});
 
-		notEliminated = true;
+			notEliminated = true;
 
-		for (ind = 0; ind < eliminations.length; ind++) {
-			if (candidates[index] === eliminations[ind].c) {
-				notEliminated = false;
+			for (ind = 0; ind < eliminations.length; ind++) {
+				if (candidates[index] === eliminations[ind].c) {
+					notEliminated = false;
+				}
 			}
+
+			if (notEliminated && candidates.length > positions) {
+				history.links.push({
+					'source': {'c': candidates[index], 'r': round},
+					'target': {'c': candidates[index], 'r': round + 1},
+					'value': total[index]
+				});
+			}
+
+			// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
+
 		}
 
-		if (notEliminated && candidates.length > positions) {
-			history.links.push({
-				'source': {'c': candidates[index], 'r': round},
-				'target': {'c': candidates[index], 'r': round + 1},
-				'value': total[index]
+		console.log(round);
+		console.dir(eliminations);
+
+		for (index = 0; index < eliminations.length; index++) {
+			// console.log('resolving', eliminations[index].c);
+
+			Object.keys(eliminations[index].transfers).forEach(function (transfer) {
+				if (transfer !== 'none') {
+
+					history.links.push({
+						'source': {'c': eliminations[index].c, 'r': round},
+						'target': {'c': transfer, 'r': round + 1},
+						'value': eliminations[index].transfers[transfer]
+					});
+
+				}
 			});
 		}
 
-		// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
+		eliminations = [];
+
+		round++;
 
 	}
 
-	console.log(round);
-	console.dir(eliminations);
-
-	for (index = 0; index < eliminations.length; index++) {
-		// console.log('resolving', eliminations[index].c);
-
-		Object.keys(eliminations[index].transfers).forEach(function (transfer) {
-			if (transfer !== 'none') {
-
-				history.links.push({
-					'source': {'c': eliminations[index].c, 'r': round},
-					'target': {'c': transfer, 'r': round + 1},
-					'value': eliminations[index].transfers[transfer]
-				});
-
-			}
-		});
-	}
-
-
-	eliminations = [];
 	// console.log('end of round', round);
 
 
 	results.innerHTML += res.join('');
-	round++;
 	countCandidates();
 
 	if (mode === 'auto') {
