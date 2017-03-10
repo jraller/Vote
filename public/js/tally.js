@@ -9,6 +9,9 @@
 [x] autodetect as default option for comma or tab
 [x] refactor eliminate to handle multiple
 [x] refactor needs to keep in mind the number of positions
+[x] add all ballots as source in chart
+[x] add sink for ballots with no remaining choices
+[ ] fix tie rendering
 
 sanity checks
 []	do dupe votes
@@ -444,6 +447,27 @@ function runRound() {
 	}
 	res.push('</tbody></table>');
 
+	// links from "ballots"
+	if (round === 1) {
+		history.nodes.push({
+			'name': 'Ballots', // display name may be different than candidate name
+			'candidate': 'ballots',
+			'round': 0
+		});
+		history.nodes.push({
+			'name': 'no remaining choices', // display name may be different than candidate name
+			'candidate': 'no remaining choices',
+			'round': 0
+		});
+		for (index = 0; index < candidates.length; index++) {
+			history.links.push({
+				'source': {'c': 'ballots', 'r': 0},
+				'target': {'c': candidates[index], 'r': round},
+				'value': total[index]
+			});
+		}
+	}
+
 	// check what mode we should be in
 
 	if (candidates.length > positions) {
@@ -507,13 +531,17 @@ function runRound() {
 		Object.keys(eliminations[index].transfers).forEach(function (transfer) {
 
 			if (transfer !== 'none') {
-
 				history.links.push({
 					'source': {'c': eliminations[index].c, 'r': round},
 					'target': {'c': transfer, 'r': round + 1},
 					'value': eliminations[index].transfers[transfer]
 				});
-
+			} else {
+				history.links.push({
+					'source': {'c': eliminations[index].c, 'r': round},
+					'target': {'c': 'no remaining choices', 'r': 0},
+					'value': eliminations[index].transfers[transfer]
+				});
 			}
 		});
 	}
