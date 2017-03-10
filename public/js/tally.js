@@ -180,34 +180,119 @@ function countXPlace(candidate, place, firstValue) {
 			}
 		}
 	}
-
 	return value;
 }
 
+
+
+
+
+
+
+
+
+
 function eliminate(candidate) {
 	var index,
-		transfers = {},
-		position,
+		ind,
+		i,
+		hold,
 		length,
-		value;
+		recipient,
+		value,
+		counted,
+		firstColumn;
 
-	for (index = 0; index < current.length; index++) {
-		position = current[index].indexOf(candidate);
-		length = current[index].length;
-
-		if (position === 1 && length > position) {
-			if (voteValues.checked) {
-				value = parseFloat(current[index][0], 10);
-			} else {
-				value = 1;
-			}
-
-			transfers[current[index][position + 1] || 'none'] = transfers[current[index][position + 1]] + value || value;
-		}
-		current[index] = current[index].filter(isNot, candidate);
+	if (voteValues.checked) {
+		firstColumn = 1;
+	} else {
+		firstColumn = 0;
 	}
-	eliminations.push({c: candidate, transfers: transfers});
+
+
+	// normalize candidate to array
+	if (typeof candidate === 'string') {
+		candidate = [candidate];
+	}
+	// set up eliminations storage
+	for (index = 0; index < candidate.length; index++) {
+		eliminations.push({c: candidate[index], transfers: {}});
+	}
+	// for each ballot to consider
+	for (index = 0; index < current.length; index++) {
+
+		// make a copy of ballot
+		hold = current[index];
+		// remove each eliminated candidate from original
+		for (ind = 0; ind < candidate.length; ind++) {
+			current[index] = current[index].filter(isNot, candidate[ind]);
+		}
+
+		length = hold.length;
+
+		// how far into copy should we check
+		if (length < positions) {
+			counted = length + firstColumn;
+		} else {
+			counted = positions + firstColumn;
+		}
+
+		for (ind = firstColumn; ind < counted; ind++) {
+
+			// for each counted position check if there had been a removed
+			if (candidate.indexOf(hold[ind]) !== -1) {
+				// record what, if anything, it was replaced with
+
+				//what was it replaced by, or none
+
+				// loop eliminations
+				for (i = 0; i < eliminations.length; i++) {
+
+					// check for match to replaced
+					if (hold[ind] === eliminations[i].c) {
+						length = current[index].length;
+
+
+						if (ind >= length) {
+							recipient = 'none';
+						} else {
+							recipient = current[index][ind];
+						}
+
+						console.log(ind, length, recipient);
+
+
+						if (voteValues.checked) {
+							value = parseFloat(current[index][0], 10);
+						} else {
+							value = 1;
+						}
+
+						eliminations[i].transfers[recipient] = eliminations[i].transfers[recipient] + value || value;
+
+						console.log(hold[ind], '->', recipient, ':', eliminations[i].transfers[recipient]);
+					}
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function add(a, b) {
 	return a + b;
@@ -299,7 +384,7 @@ function chart() {
 }
 
 function findNode(candidate, round) {
-	var result = 0,
+	var result = -1,
 		index;
 
 	for (index = 0; index < history.nodes.length; index++) {
@@ -401,11 +486,14 @@ function runRound() {
 			eliminate(candidates[lowindex[0]]);
 		} else {
 			res.push('<p>Tie detected, Pick whom to eliminate:</p>');
-			res.push('<button onclick="');
+			res.push('<button onclick="eliminate(\'');
 			for (index = 0; index < lowcount; index++) {
-				res.push('eliminate(\'' + candidates[lowindex[index]] + '\');');
+				res.push(candidates[lowindex[index]]);
+				if (index !== lowcount) {
+					res.push('\',\'');
+				}
 			}
-			res.push('runRound();" type="button">all</button> ');
+			res.push('\');runRound();" type="button">all</button> ');
 			for (index = 0; index < lowcount; index++) {
 				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
 			}
@@ -457,6 +545,9 @@ function runRound() {
 			// console.log('resolving', eliminations[index].c);
 
 			Object.keys(eliminations[index].transfers).forEach(function (transfer) {
+
+				console.log(transfer);
+
 				if (transfer !== 'none') {
 
 					history.links.push({
@@ -494,6 +585,7 @@ function runRound() {
 		}
 		console.log('--------------');
 
+		// resolve links?
 		for (index = 0; index < history.links.length; index++) {
 			console.log('link', index, history.links[index].source, history.links[index].target, history.links[index].value);
 			history.links[index].source = findNode(history.links[index].source.c, history.links[index].source.r);
@@ -503,7 +595,11 @@ function runRound() {
 			console.log('---');
 		}
 
-		// resolve links?
+		console.log('all links:', history.links.length);
+		history.links.filter(function(entry) {
+			return entry.source !== -1 && entry.target !== -1;
+		});
+		console.log('good links:', history.links.length);
 
 		chart();
 	}
