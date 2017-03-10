@@ -519,6 +519,7 @@ function runReport() {
 	history.nodes = [];
 	history.links = [];
 	eliminations = [];
+	d3.select('svg').selectAll('*').remove();
 	runRound();
 }
 
