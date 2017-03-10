@@ -345,8 +345,8 @@ function chart() {
 		.text(function(d) {
 			return d.name;
 		})
-		.filter(function(d) {
-			return d.x < width / 2;
+		.filter(function(d, i) { // only for the first entry align text the other way
+			return i === 0; //d.x < width / 2;
 		})
 		.attr('x', 6 + sankey.nodeWidth())
 		.attr('text-anchor', 'start');
