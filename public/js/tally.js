@@ -93,11 +93,13 @@ function pickDelimiter() {
 	if (tabs > 0 && commas === 0) {
 		delimiterDropdown.value = 't';
 		delimiter = 't';
-	}
-	if (commas > 0 && tabs === 0) {
+	} else if (commas > 0 && tabs === 0) {
 		delimiterDropdown.value = ',';
 		delimiter = ',';
+	} else {
+		delimiter = 't';
 	}
+
 }
 
 function pickVoteValues() {
@@ -183,15 +185,6 @@ function countXPlace(candidate, place, firstValue) {
 	return value;
 }
 
-
-
-
-
-
-
-
-
-
 function eliminate(candidate) {
 	var index,
 		ind,
@@ -208,7 +201,6 @@ function eliminate(candidate) {
 	} else {
 		firstColumn = 0;
 	}
-
 
 	// normalize candidate to array
 	if (typeof candidate === 'string') {
@@ -251,48 +243,23 @@ function eliminate(candidate) {
 					// check for match to replaced
 					if (hold[ind] === eliminations[i].c) {
 						length = current[index].length;
-
-
 						if (ind >= length) {
 							recipient = 'none';
 						} else {
 							recipient = current[index][ind];
 						}
-
-						console.log(ind, length, recipient);
-
-
 						if (voteValues.checked) {
 							value = parseFloat(current[index][0], 10);
 						} else {
 							value = 1;
 						}
-
 						eliminations[i].transfers[recipient] = eliminations[i].transfers[recipient] + value || value;
-
-						console.log(hold[ind], '->', recipient, ':', eliminations[i].transfers[recipient]);
 					}
 				}
 			}
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function add(a, b) {
 	return a + b;
@@ -359,8 +326,8 @@ function chart() {
 			return d3.rgb(d.color).darker(2);
 		})
 		.append('title')
-		.text(function(d, i) {
-			return d.name + '\n' + format(d.value) + '\n' + i;
+		.text(function(d) {
+			return d.name + '\n' + format(d.value);
 		});
 
 	//filter these to not show iv value is zero
@@ -409,8 +376,7 @@ function runRound() {
 		lowcount = 0,
 		shift = 0,
 		mode = 'auto',
-		notEliminated,
-		waitForInput = false;
+		notEliminated;
 
 	countCandidates();
 
@@ -498,7 +464,6 @@ function runRound() {
 				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
 			}
 			mode = 'manual';
-			waitForInput = true;
 		}
 	} else {
 		mode = 'done';
@@ -508,63 +473,55 @@ function runRound() {
 		mode = 'done';
 	}
 
-	if (!waitForInput) {
-		// add base nodes and self links
-		for (index = 0; index < candidates.length; index++) {
+	// add base nodes and self links
+	for (index = 0; index < candidates.length; index++) {
 
-			history.nodes.push({
-				'name': candidates[index] + ' round ' + round,
-				'candidate': candidates[index],
-				'round': round
-			});
+		history.nodes.push({
+			'name': candidates[index], // display name may be different than candidate name
+			'candidate': candidates[index],
+			'round': round
+		});
 
-			notEliminated = true;
+		notEliminated = true;
 
-			for (ind = 0; ind < eliminations.length; ind++) {
-				if (candidates[index] === eliminations[ind].c) {
-					notEliminated = false;
-				}
+		for (ind = 0; ind < eliminations.length; ind++) {
+			if (candidates[index] === eliminations[ind].c) {
+				notEliminated = false;
 			}
-
-			if (notEliminated && candidates.length > positions) {
-				history.links.push({
-					'source': {'c': candidates[index], 'r': round},
-					'target': {'c': candidates[index], 'r': round + 1},
-					'value': total[index]
-				});
-			}
-
-			// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
-
 		}
 
-		console.log(round);
-		console.dir(eliminations);
-
-		for (index = 0; index < eliminations.length; index++) {
-			// console.log('resolving', eliminations[index].c);
-
-			Object.keys(eliminations[index].transfers).forEach(function (transfer) {
-
-				console.log(transfer);
-
-				if (transfer !== 'none') {
-
-					history.links.push({
-						'source': {'c': eliminations[index].c, 'r': round},
-						'target': {'c': transfer, 'r': round + 1},
-						'value': eliminations[index].transfers[transfer]
-					});
-
-				}
+		if (notEliminated && candidates.length > positions) {
+			history.links.push({
+				'source': {'c': candidates[index], 'r': round},
+				'target': {'c': candidates[index], 'r': round + 1},
+				'value': total[index]
 			});
 		}
 
-		eliminations = [];
-
-		round++;
+		// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
 
 	}
+
+	for (index = 0; index < eliminations.length; index++) {
+
+		Object.keys(eliminations[index].transfers).forEach(function (transfer) {
+
+			if (transfer !== 'none') {
+
+				history.links.push({
+					'source': {'c': eliminations[index].c, 'r': round},
+					'target': {'c': transfer, 'r': round + 1},
+					'value': eliminations[index].transfers[transfer]
+				});
+
+			}
+		});
+	}
+
+	eliminations = [];
+
+	round++;
+
 
 	// console.log('end of round', round);
 
@@ -577,29 +534,26 @@ function runRound() {
 	}
 
 	if (mode === 'done') {
-		console.log('--------------');
-		console.dir(history);
-
-		for (index = 0; index < history.nodes.length; index++) {
-			console.log('node', index, history.nodes[index]);
-		}
-		console.log('--------------');
 
 		// resolve links?
 		for (index = 0; index < history.links.length; index++) {
-			console.log('link', index, history.links[index].source, history.links[index].target, history.links[index].value);
 			history.links[index].source = findNode(history.links[index].source.c, history.links[index].source.r);
 			history.links[index].target = findNode(history.links[index].target.c, history.links[index].target.r);
-			console.log('link', index, history.links[index].source, history.links[index].target, history.links[index].value);
-			console.log('link', index, history.nodes[history.links[index].source].name, history.nodes[history.links[index].target].name, history.links[index].value);
-			console.log('---');
 		}
 
 		console.log('all links:', history.links.length);
-		history.links.filter(function(entry) {
-			return entry.source !== -1 && entry.target !== -1;
+		history.links = history.links.filter(function (entry) {
+			var check = true;
+
+			check = check && entry.source !== -1;
+			check = check && entry.target !== -1;
+			check = check && typeof entry.source !== undefined;
+			check = check && typeof entry.target !== undefined;
+			return check;
 		});
 		console.log('good links:', history.links.length);
+
+		console.dir(history);
 
 		chart();
 	}
@@ -608,6 +562,9 @@ function runRound() {
 function runReport() {
 	votes = voteField.value;
 	delimiter = delimiterDropdown.value;
+	if (delimiter === 'a') {
+		delimiter = 't';
+	}
 	positions = parseInt(document.getElementById('positions').value, 10);
 	results.innerHTML='';
 	round = 1;
