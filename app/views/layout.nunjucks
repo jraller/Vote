@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+<meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/css/style.css">
@@ -12,5 +12,4 @@
 <body>
   {% block content %}{% endblock %}
 </body>
-<script src="components/d3/d3.js"></script>
 </html>

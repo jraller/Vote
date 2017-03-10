@@ -7,6 +7,11 @@
 [x] make rounds interactive if needed like for handling ties
 [x] add vote value first column checkbox
 [x] autodetect as default option for comma or tab
+[x] refactor eliminate to handle multiple
+[x] refactor needs to keep in mind the number of positions
+[x] add all ballots as source in chart
+[x] add sink for ballots with no remaining choices
+[ ] fix tie rendering
 
 sanity checks
 []	do dupe votes
@@ -34,9 +39,9 @@ let votes,
 	runButton = document.getElementById('run'),
 	current = [],
 	candidates = [],
-	candidatesFull = [],
 	round = 0,
-	history = [];
+	eliminations = [],
+	history = {};
 
 function nonEmpty(value) {
 	return value !== '';
@@ -91,11 +96,13 @@ function pickDelimiter() {
 	if (tabs > 0 && commas === 0) {
 		delimiterDropdown.value = 't';
 		delimiter = 't';
-	}
-	if (commas > 0 && tabs === 0) {
+	} else if (commas > 0 && tabs === 0) {
 		delimiterDropdown.value = ',';
 		delimiter = ',';
+	} else {
+		delimiter = 't';
 	}
+
 }
 
 function pickVoteValues() {
@@ -178,16 +185,82 @@ function countXPlace(candidate, place, firstValue) {
 			}
 		}
 	}
-
 	return value;
 }
 
-
 function eliminate(candidate) {
-	var index;
+	var index,
+		ind,
+		i,
+		hold,
+		length,
+		recipient,
+		value,
+		counted,
+		firstColumn;
 
+	if (voteValues.checked) {
+		firstColumn = 1;
+	} else {
+		firstColumn = 0;
+	}
+
+	// normalize candidate to array
+	if (typeof candidate === 'string') {
+		candidate = [candidate];
+	}
+	// set up eliminations storage
+	for (index = 0; index < candidate.length; index++) {
+		eliminations.push({c: candidate[index], transfers: {}});
+	}
+	// for each ballot to consider
 	for (index = 0; index < current.length; index++) {
-		current[index] = current[index].filter(isNot, candidate);
+
+		// make a copy of ballot
+		hold = current[index];
+		// remove each eliminated candidate from original
+		for (ind = 0; ind < candidate.length; ind++) {
+			current[index] = current[index].filter(isNot, candidate[ind]);
+		}
+
+		length = hold.length;
+
+		// how far into copy should we check
+		if (length < positions) {
+			counted = length + firstColumn;
+		} else {
+			counted = positions + firstColumn;
+		}
+
+		for (ind = firstColumn; ind < counted; ind++) {
+
+			// for each counted position check if there had been a removed
+			if (candidate.indexOf(hold[ind]) !== -1) {
+				// record what, if anything, it was replaced with
+
+				//what was it replaced by, or none
+
+				// loop eliminations
+				for (i = 0; i < eliminations.length; i++) {
+
+					// check for match to replaced
+					if (hold[ind] === eliminations[i].c) {
+						length = current[index].length;
+						if (ind >= length) {
+							recipient = 'none';
+						} else {
+							recipient = current[index][ind];
+						}
+						if (voteValues.checked) {
+							value = parseFloat(current[index][0], 10);
+						} else {
+							value = 1;
+						}
+						eliminations[i].transfers[recipient] = eliminations[i].transfers[recipient] + value || value;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -196,57 +269,101 @@ function add(a, b) {
 }
 
 function chart() {
-	var svg = d3.select('svg'),
-		margin = {top: 20, right: 20, bottom: 30, left: 50},
+	var formatNumber = d3.format(',.1f'),
+		format = function(d) {
+			return formatNumber(d) + ' votes';
+		},
+		color = d3.scaleOrdinal(d3.schemeCategory20),
+		svg = d3.select('svg'),
+		margin = {top: 20, right: 20, bottom: 20, left: 20},
 		width = svg.attr('width') - margin.left - margin.right,
 		height = svg.attr('height') - margin.top - margin.bottom,
-		x = d3.scaleLinear().range([0, width]),
-		y = d3.scaleLinear().range([height, 0]),
-		z = d3.scaleOrdinal(d3.schemeCategory10),
-		stack = d3.stack(),
-		area = d3.area()
-			.x(function(d) { return x(d.data.round); })
-			.y0(function(d) { return y(d[0]); })
-			.y1(function(d) { return y(d[1]); }),
-		g = svg.append('g'),
-		layer,
-		keys = candidatesFull;
+		sankey = d3.sankey()
+			.nodeWidth(15)
+			.nodePadding(10)
+			.size([width, height]),
+		path = sankey.link(),
+		g = svg.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-	x.domain(d3.extent(history, function(d) { return d.round; }));
-	z.domain(keys);
-	stack.keys(keys);
+	sankey
+		.nodes(history.nodes)
+		.links(history.links)
+		.layout(32);
 
-	y.domain(d3.extent([d3.max(d3.values(history[history.length - 1])) , 0]));
+	var link = g.append('g').selectAll('.link')
+		.data(history.links)
+		.enter().append('path')
+		.attr('class', 'link')
+		.attr('d', path)
+		.style('stroke-width', function(d) {
+			return Math.max(1, d.dy);
+		})
+		.sort(function(a, b) {
+			return b.dy - a.dy;
+		});
 
-	layer = g.selectAll('.layer')
-		.data(stack(history))
+	link.append('title')
+		.text(function(d) {
+			return d.source.name + ' → ' + d.target.name + '\n' + format(d.value);
+		});
+
+	var node = g.append('g')
+		.selectAll('.node')
+		.data(history.nodes)
 		.enter().append('g')
-			.attr('class', 'layer');
+		.attr('class', 'node')
+		.attr('transform', function(d) {
+			return 'translate(' + d.x + ',' + d.y + ')';
+		});
 
-	layer.append('path')
-		.attr('class', 'area')
-		.style('fill', function(d) { return z(d.key); })
-		.attr('d', area);
+	node.append('rect')
+		.attr('height', function(d) {
+			return d.dy;
+		})
+		.attr('width', sankey.nodeWidth())
+		.style('fill', function(d) {
+			return d.color = color(d.name.replace(/ .*/, ''));
+		})
+		.style('stroke', function(d) {
+			return d3.rgb(d.color).darker(2);
+		})
+		.append('title')
+		.text(function(d) {
+			return d.name + '\n' + format(d.value);
+		});
 
-	layer
-	// .filter(function(d) { return d[d.length - 1][1] - d[d.length - 1][0] > 0.01; })
-		.append('text')
-			.attr('x', 6)
-			.attr('y', function(d) { return y((d[0][0] + d[0][1]) / 2); })
-			.attr('dy', '.35em')
-			.style('font', '10px sans-serif')
-			.style('text-anchor', 'start')
-			.text(function(d) { return d.key; });
+	//filter these to not show iv value is zero
+	node.append('text')
+		.attr('x', -6)
+		.attr('y', function(d) {
+			return d.dy / 2;
+		})
+		.attr('dy', '.35em')
+		.attr('text-anchor', 'end')
+		.attr('transform', null)
+		.text(function(d) {
+			return d.name;
+		})
+		.filter(function(d, i) { // only for the first entry align text the other way
+			return i === 0; //d.x < width / 2;
+		})
+		.attr('x', 6 + sankey.nodeWidth())
+		.attr('text-anchor', 'start');
 
-	g.append('g')
-		.attr('class', 'axis axis--x')
-		.attr('transform', 'translate(0,' + height + ')')
-		.call(d3.axisBottom(x).ticks(history.length));
+}
 
-	g.append('g')
-		.attr('class', 'axis axis--y')
-		.call(d3.axisLeft(y).ticks(10, ''));
+function findNode(candidate, round) {
+	var result = -1,
+		index;
 
+	for (index = 0; index < history.nodes.length; index++) {
+		if (history.nodes[index].candidate == candidate && history.nodes[index].round === round) {
+			result = index;
+		}
+	}
+
+	return result;
 }
 
 function runRound() {
@@ -262,9 +379,7 @@ function runRound() {
 		lowcount = 0,
 		shift = 0,
 		mode = 'auto',
-		entry = {};
-
-	removeDisqualified();
+		notEliminated;
 
 	countCandidates();
 
@@ -332,6 +447,27 @@ function runRound() {
 	}
 	res.push('</tbody></table>');
 
+	// links from "ballots"
+	if (round === 1) {
+		history.nodes.push({
+			'name': 'Ballots', // display name may be different than candidate name
+			'candidate': 'ballots',
+			'round': 0
+		});
+		history.nodes.push({
+			'name': 'no remaining choices', // display name may be different than candidate name
+			'candidate': 'no remaining choices',
+			'round': 0
+		});
+		for (index = 0; index < candidates.length; index++) {
+			history.links.push({
+				'source': {'c': 'ballots', 'r': 0},
+				'target': {'c': candidates[index], 'r': round},
+				'value': total[index]
+			});
+		}
+	}
+
 	// check what mode we should be in
 
 	if (candidates.length > positions) {
@@ -340,11 +476,14 @@ function runRound() {
 			eliminate(candidates[lowindex[0]]);
 		} else {
 			res.push('<p>Tie detected, Pick whom to eliminate:</p>');
-			res.push('<button onclick="');
+			res.push('<button onclick="eliminate(\'');
 			for (index = 0; index < lowcount; index++) {
-				res.push('eliminate(\'' + candidates[lowindex[index]] + '\');');
+				res.push(candidates[lowindex[index]]);
+				if (index !== lowcount) {
+					res.push('\',\'');
+				}
 			}
-			res.push('runRound();" type="button">all</button> ');
+			res.push('\');runRound();" type="button">all</button> ');
 			for (index = 0; index < lowcount; index++) {
 				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
 			}
@@ -358,21 +497,64 @@ function runRound() {
 		mode = 'done';
 	}
 
-	entry.round = round;
-
-	for (index = 0; index < candidatesFull.length; index++) {
-		entry[candidatesFull[index]] = 0;
-	}
-
+	// add base nodes and self links
 	for (index = 0; index < candidates.length; index++) {
-		entry[candidates[index]] = total[index];
+
+		history.nodes.push({
+			'name': candidates[index], // display name may be different than candidate name
+			'candidate': candidates[index],
+			'round': round
+		});
+
+		notEliminated = true;
+
+		for (ind = 0; ind < eliminations.length; ind++) {
+			if (candidates[index] === eliminations[ind].c) {
+				notEliminated = false;
+			}
+		}
+
+		if (notEliminated && candidates.length > positions) {
+			history.links.push({
+				'source': {'c': candidates[index], 'r': round},
+				'target': {'c': candidates[index], 'r': round + 1},
+				'value': total[index]
+			});
+		}
+
+		// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
+
 	}
 
-	// capture history
-	history.push(entry);
+	for (index = 0; index < eliminations.length; index++) {
+
+		Object.keys(eliminations[index].transfers).forEach(function (transfer) {
+
+			if (transfer !== 'none') {
+				history.links.push({
+					'source': {'c': eliminations[index].c, 'r': round},
+					'target': {'c': transfer, 'r': round + 1},
+					'value': eliminations[index].transfers[transfer]
+				});
+			} else {
+				history.links.push({
+					'source': {'c': eliminations[index].c, 'r': round},
+					'target': {'c': 'no remaining choices', 'r': 0},
+					'value': eliminations[index].transfers[transfer]
+				});
+			}
+		});
+	}
+
+	eliminations = [];
+
+	round++;
+
+
+	// console.log('end of round', round);
+
 
 	results.innerHTML += res.join('');
-	round++;
 	countCandidates();
 
 	if (mode === 'auto') {
@@ -380,21 +562,47 @@ function runRound() {
 	}
 
 	if (mode === 'done') {
+
+		// resolve links?
+		for (index = 0; index < history.links.length; index++) {
+			history.links[index].source = findNode(history.links[index].source.c, history.links[index].source.r);
+			history.links[index].target = findNode(history.links[index].target.c, history.links[index].target.r);
+		}
+
+		console.log('all links:', history.links.length);
+		history.links = history.links.filter(function (entry) {
+			var check = true;
+
+			check = check && entry.source !== -1;
+			check = check && entry.target !== -1;
+			check = check && typeof entry.source !== undefined;
+			check = check && typeof entry.target !== undefined;
+			return check;
+		});
+		console.log('good links:', history.links.length);
+
+		console.dir(history);
+
 		chart();
 	}
-
 } // end runRound
 
 function runReport() {
 	votes = voteField.value;
 	delimiter = delimiterDropdown.value;
+	if (delimiter === 'a') {
+		delimiter = 't';
+	}
 	positions = parseInt(document.getElementById('positions').value, 10);
 	results.innerHTML='';
 	round = 1;
 	fillCurrent();
-	candidatesFull = candidates;
+	removeDisqualified();
 	countCandidates();
-	history = [];
+	history.nodes = [];
+	history.links = [];
+	eliminations = [];
+	d3.select('svg').selectAll('*').remove();
 	runRound();
 }
 
