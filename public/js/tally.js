@@ -7,6 +7,8 @@
 [x] make rounds interactive if needed like for handling ties
 [x] add vote value first column checkbox
 [x] autodetect as default option for comma or tab
+[ ] refactor eliminate to handle multiple
+[ ] refactor needs to keep in mind the number of positions
 
 sanity checks
 []	do dupe votes
