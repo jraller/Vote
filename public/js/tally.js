@@ -12,6 +12,7 @@
 [x] add all ballots as source in chart
 [x] add sink for ballots with no remaining choices
 [x] fix tie rendering and logic, perhaps split the run into first and second halves?
+[ ] fix transfer of final round when not using vote values
 
 sanity checks
 []	do dupe votes
