@@ -192,8 +192,8 @@ function eliminate(candidate) {
 	var index,
 		ind,
 		i,
-		hold,
-		length,
+		hold, // copy of ballot to compare against
+		length, //
 		recipient,
 		value,
 		counted,
@@ -223,10 +223,25 @@ function eliminate(candidate) {
 			current[index] = current[index].filter(isNot, candidate[ind]);
 		}
 
+		// where the elimination occurred is important
+		// this shows up when multiple positions are considered
+		// needs refactor
+
+		// 1 A B C
+		// 1 B C
+
+		// 1 B A C
+		// 1 B C
+
+		// use countXPlace() to check if was in positions
+		// if elimination was in positions
+		// check to see what positions + 1 is after elimination
+
+
 		length = hold.length;
 
 		// how far into copy should we check
-		if (length < positions) {
+		if (length + firstColumn < positions) {
 			counted = length + firstColumn;
 		} else {
 			counted = positions + firstColumn;
@@ -262,6 +277,9 @@ function eliminate(candidate) {
 			}
 		}
 	}
+
+	console.log(eliminations);
+
 }
 
 function add(a, b) {
