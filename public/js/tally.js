@@ -11,7 +11,7 @@
 [x] refactor needs to keep in mind the number of positions
 [x] add all ballots as source in chart
 [x] add sink for ballots with no remaining choices
-[ ] fix tie rendering
+[x] fix tie rendering and logic, perhaps split the run into first and second halves?
 
 sanity checks
 []	do dupe votes
@@ -41,7 +41,8 @@ let votes,
 	candidates = [],
 	round = 0,
 	eliminations = [],
-	history = {};
+	history = {},
+	total= [];
 
 function nonEmpty(value) {
 	return value !== '';
@@ -192,11 +193,9 @@ function eliminate(candidate) {
 	var index,
 		ind,
 		i,
-		hold, // copy of ballot to compare against
-		length, //
+		place = [],
 		recipient,
 		value,
-		counted,
 		firstColumn;
 
 	if (voteValues.checked) {
@@ -209,15 +208,25 @@ function eliminate(candidate) {
 	if (typeof candidate === 'string') {
 		candidate = [candidate];
 	}
-	// set up eliminations storage
+
+	// set up eliminations storage, for each candidate
 	for (index = 0; index < candidate.length; index++) {
 		eliminations.push({c: candidate[index], transfers: {}});
 	}
+
 	// for each ballot to consider
 	for (index = 0; index < current.length; index++) {
+		place = [];
+		for (ind = firstColumn; ind < Math.min(current[index].length, positions) + firstColumn; ind++) {
+			for (i = 0; i < candidate.length; i++) {
+				if (current[index][ind] === candidate[i]) {
+					place.push({'c': i, 'p': ind});
+				}
+			}
+		}
 
-		// make a copy of ballot
-		hold = current[index];
+		// we now know if candidate was scoring
+
 		// remove each eliminated candidate from original
 		for (ind = 0; ind < candidate.length; ind++) {
 			current[index] = current[index].filter(isNot, candidate[ind]);
@@ -227,58 +236,46 @@ function eliminate(candidate) {
 		// this shows up when multiple positions are considered
 		// needs refactor
 
+		// removing single A
+
 		// 1 A B C
 		// 1 B C
 
 		// 1 B A C
 		// 1 B C
 
+		// removing A B
+
+		// 1 A B C D E
+		// 1 C D E
+
+		// 1 C A B D E
+		// 1 C D E
+
+		// 1 C A D B E
+		// 1 C D E
+
 		// use countXPlace() to check if was in positions
 		// if elimination was in positions
-		// check to see what positions + 1 is after elimination
+		// check to see what positions is after elimination
 
 
-		length = hold.length;
-
-		// how far into copy should we check
-		if (length + firstColumn < positions) {
-			counted = length + firstColumn;
-		} else {
-			counted = positions + firstColumn;
-		}
-
-		for (ind = firstColumn; ind < counted; ind++) {
-
-			// for each counted position check if there had been a removed
-			if (candidate.indexOf(hold[ind]) !== -1) {
-				// record what, if anything, it was replaced with
-
-				//what was it replaced by, or none
-
-				// loop eliminations
-				for (i = 0; i < eliminations.length; i++) {
-
-					// check for match to replaced
-					if (hold[ind] === eliminations[i].c) {
-						length = current[index].length;
-						if (ind >= length) {
-							recipient = 'none';
-						} else {
-							recipient = current[index][ind];
-						}
-						if (voteValues.checked) {
-							value = parseFloat(current[index][0], 10);
-						} else {
-							value = 1;
-						}
-						eliminations[i].transfers[recipient] = eliminations[i].transfers[recipient] + value || value;
-					}
-				}
+		for (ind = 0; ind < place.length; ind++) {
+			if (positions >= current[index].length) {
+				recipient = 'none';
+			} else {
+				recipient = current[index][positions];
 			}
-		}
-	}
+			if (voteValues.checked) {
+				value = parseFloat(current[index][0], 10);
+			} else {
+				value = 1;
+			}
 
-	console.log(eliminations);
+			eliminations[place[ind].c].transfers[recipient] = eliminations[place[ind].c].transfers[recipient] + value || value;
+		}
+
+	}
 
 }
 
@@ -347,8 +344,8 @@ function chart() {
 			return d3.rgb(d.color).darker(2);
 		})
 		.append('title')
-		.text(function(d) {
-			return d.name + '\n' + format(d.value);
+		.text(function(d, i) {
+			return d.name + '\n' + format(d.value) + '\n' + i;
 		});
 
 	//filter these to not show iv value is zero
@@ -390,14 +387,15 @@ function runRound() {
 		ind,
 		count,
 		tally = [],
-		total = [],
 		grandTotal,
 		lowtotal = 'unset',
 		lowindex = [],
 		lowcount = 0,
 		shift = 0,
-		mode = 'auto',
-		notEliminated;
+		mode = 'auto';
+
+	total = [];
+
 
 	countCandidates();
 
@@ -494,16 +492,16 @@ function runRound() {
 			eliminate(candidates[lowindex[0]]);
 		} else {
 			res.push('<p>Tie detected, Pick whom to eliminate:</p>');
-			res.push('<button onclick="eliminate(\'');
+			res.push('<button onclick="eliminate([\'');
 			for (index = 0; index < lowcount; index++) {
 				res.push(candidates[lowindex[index]]);
-				if (index !== lowcount) {
+				if (index !== lowcount - 1) {
 					res.push('\',\'');
 				}
 			}
-			res.push('\');runRound();" type="button">all</button> ');
+			res.push('\']);secondHalf();" type="button">all</button> ');
 			for (index = 0; index < lowcount; index++) {
-				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');runRound();" type="button">' + candidates[lowindex[index]] + '</button> ');
+				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');secondHalf();" type="button">' + candidates[lowindex[index]] + '</button> ');
 			}
 			mode = 'manual';
 		}
@@ -514,6 +512,20 @@ function runRound() {
 	if (round > 15) {
 		mode = 'done';
 	}
+
+	results.innerHTML += res.join('');
+
+	if (mode !== 'manual') {
+		secondHalf(mode);
+	}
+
+}
+
+
+function secondHalf(mode) {
+	var index,
+		ind,
+		notEliminated;
 
 	// add base nodes and self links
 	for (index = 0; index < candidates.length; index++) {
@@ -539,8 +551,6 @@ function runRound() {
 				'value': total[index]
 			});
 		}
-
-		// console.log('linking', candidates[index], history.links[history.links.length - 1].source, history.links[history.links.length - 1].target);
 
 	}
 
@@ -568,16 +578,7 @@ function runRound() {
 
 	round++;
 
-
-	// console.log('end of round', round);
-
-
-	results.innerHTML += res.join('');
 	countCandidates();
-
-	if (mode === 'auto') {
-		runRound();
-	}
 
 	if (mode === 'done') {
 
@@ -602,6 +603,8 @@ function runRound() {
 		console.dir(history);
 
 		chart();
+	} else {
+		runRound();
 	}
 } // end runRound
 
