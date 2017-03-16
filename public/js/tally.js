@@ -15,10 +15,12 @@
 [ ] fix transfer of final round when not using vote values - there is an off by one error in elimination
 
 sanity checks
-[]	do dupe votes
-[]	warn on skipped vote
+[x]	do dupe votes
+[x]	warn on skipped vote
 [x]	report number of votes
+[ ] report ballot length distribution
 [x]	report number of candidates (as disqualify)
+[x] error if not all numeric in column 1 if vote values checked
 
 show all paths?
 
@@ -52,9 +54,15 @@ function nonEmpty(value) {
 function fillCurrent() {
 	var index,
 		ind,
+		i,
 		res = [],
 		lines,
-		ballots;
+		ballots,
+		numeric = true,
+		hold,
+		dupe = false,
+		skipped = false,
+		ballotLength = {};
 
 	if (delimiter === 't') {
 		delimiter = '\t';
@@ -78,10 +86,36 @@ function fillCurrent() {
 	}
 
 	for (index = 0; index < current.length; index++) {
-		current[index] = current[index].split(delimiter).filter(nonEmpty);
+		current[index] = current[index].split(delimiter);
+		// check here for skipped
+		hold = current[index];
+		current[index] = current[index].filter(nonEmpty);
+		if (hold.slice(0, current[index].length - 1).indexOf('') !== -1) {
+			skipped = true;
+		}
 		for (ind = 0; ind < current[index].length; ind++) {
 			current[index][ind] = current[index][ind].trim();
+			if (voteValues.checked && ind === 0 && isNaN(Number.parseFloat(current[index][ind], 10))) {
+				numeric = false;
+			}
+			for (i = 0; i < ind; i++) {
+				if (current[index][ind] === current[index][i]) {
+					dupe = true;
+				}
+			}
 		}
+	}
+
+	if (voteValues.checked && numeric === false) {
+		res.push('<p><b>non numeric first field on at least one ballot when vote values checked.</b></p>');
+	}
+
+	if (dupe) {
+		res.push('<p><b>At least one ballot found with duplicated choice.</b></p>');
+	}
+
+	if (skipped) {
+		res.push('<p>Some choices skipped in at least one ballot</p>');
 	}
 
 	sanity.innerHTML = res.join('');
