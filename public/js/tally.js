@@ -279,14 +279,10 @@ function eliminate(candidate) {
 				}
 			}
 
-			console.log(positions, current[index].length, recipient, value);
-
 			eliminations[place[ind].c].transfers[recipient] = eliminations[place[ind].c].transfers[recipient] + value || value;
 		}
 
 	}
-
-	console.log(eliminations);
 
 }
 
