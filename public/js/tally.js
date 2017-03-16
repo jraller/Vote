@@ -12,7 +12,7 @@
 [x] add all ballots as source in chart
 [x] add sink for ballots with no remaining choices
 [x] fix tie rendering and logic, perhaps split the run into first and second halves?
-[ ] fix transfer of final round when not using vote values
+[ ] fix transfer of final round when not using vote values - there is an off by one error in elimination
 
 sanity checks
 []	do dupe votes
@@ -262,21 +262,31 @@ function eliminate(candidate) {
 
 
 		for (ind = 0; ind < place.length; ind++) {
-			if (positions >= current[index].length) {
-				recipient = 'none';
-			} else {
-				recipient = current[index][positions];
-			}
+
 			if (voteValues.checked) {
 				value = parseFloat(current[index][0], 10);
+				if (positions >= current[index].length) {
+					recipient = 'none';
+				} else {
+					recipient = current[index][positions];
+				}
 			} else {
 				value = 1;
+				if (positions > current[index].length) {
+					recipient = 'none';
+				} else {
+					recipient = current[index][positions - 1];
+				}
 			}
+
+			console.log(positions, current[index].length, recipient, value);
 
 			eliminations[place[ind].c].transfers[recipient] = eliminations[place[ind].c].transfers[recipient] + value || value;
 		}
 
 	}
+
+	console.log(eliminations);
 
 }
 
