@@ -12,13 +12,13 @@
 [x] add all ballots as source in chart
 [x] add sink for ballots with no remaining choices
 [x] fix tie rendering and logic, perhaps split the run into first and second halves?
-[ ] fix transfer of final round when not using vote values - there is an off by one error in elimination
+[x] fix transfer of final round when not using vote values - there is an off by one error in elimination
 
 sanity checks
 [x]	do dupe votes
 [x]	warn on skipped vote
 [x]	report number of votes
-[ ] report ballot length distribution
+[x] report ballot length distribution
 [x]	report number of candidates (as disqualify)
 [x] error if not all numeric in column 1 if vote values checked
 
@@ -104,6 +104,7 @@ function fillCurrent() {
 				}
 			}
 		}
+		ballotLength[current[index].length] = ballotLength[current[index].length] + 1 || 1;
 	}
 
 	if (voteValues.checked && numeric === false) {
@@ -117,6 +118,13 @@ function fillCurrent() {
 	if (skipped) {
 		res.push('<p>Some choices skipped in at least one ballot</p>');
 	}
+
+	res.push('<p>Ballot length distribution</p><table><thead><tr><th>ballot length</th><th>count</th></tr></thead><tbody>');
+	Object.keys(ballotLength).forEach(function (item) {
+		res.push('<tr><td>' + item + '</td><td>' + ballotLength[item] + '</td></tr>');
+	});
+	res.push('</tbody></table><hr/>');
+
 
 	sanity.innerHTML = res.join('');
 }
