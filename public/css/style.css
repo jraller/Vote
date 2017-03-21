@@ -15,6 +15,9 @@ td, th {
 td:not(:first-child) {
   text-align: right; }
 
+tr.lowVotes td {
+  font-weight: bold; }
+
 .node rect {
   cursor: move;
   fill-opacity: .9;

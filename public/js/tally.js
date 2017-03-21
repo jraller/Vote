@@ -13,6 +13,8 @@
 [x] add sink for ballots with no remaining choices
 [x] fix tie rendering and logic, perhaps split the run into first and second halves?
 [x] fix transfer of final round when not using vote values - there is an off by one error in elimination
+[ ] allow manual control of vote values checkbox
+[x] fix graph when candidate gets zero votes in a round
 
 sanity checks
 [x]	do dupe votes
@@ -30,105 +32,63 @@ graph progression? area chart. Do this by storing each round? d3?
 
  */
 
-let votes,
-	voteField = document.getElementById('votes'),
-	sanity = document.getElementById('sanity'),
-	delimiterDropdown = document.getElementById('delimiter'),
-	delimiter,
-	positions,
-	voteValues = document.getElementById('voteValue'),
-	disqualifyList = document.getElementById('disqualifyList'),
-	results = document.getElementById('results'),
-	runButton = document.getElementById('run'),
-	current = [],
-	candidates = [],
-	round = 0,
-	eliminations = [],
-	history = {},
-	total= [];
+let voteField = document.getElementById('votes'), // ui input field for ballot collection
+	votes, // raw user input of ballot collection
+	sanity = document.getElementById('sanity'), // page region for sanity report
+	delimiterDropdown = document.getElementById('delimiter'), // ui element
+	delimiter, // ballot choices separator value
+	positions, // value for number of candidates to select from field
+	voteValues = document.getElementById('voteValue'), // ui checkbox controling if first column holds vote values
+	disqualifyList = document.getElementById('disqualifyList'), // page region to insert disqualify list
+	results = document.getElementById('results'), // the results region
+	runButton = document.getElementById('run'), // ui element for initiating calculation
+	current = [], // the current state of ballot collection throughtout the process
+	candidates = [], // current canidates list at any point
+	round = 0, // round counter
+	eliminations = [], // storage to keep track of eliminated candidates each round
+	history = {}, // used to capture information from rounds in order to build chart
+	total= []; // per round totals
 
+
+/**
+ * [nonEmpty description]
+ * @param  {string} value [description]
+ * @return {Boolean}       [description]
+ */
 function nonEmpty(value) {
 	return value !== '';
 }
 
-function fillCurrent() {
-	var index,
-		ind,
-		i,
-		res = [],
-		lines,
-		ballots,
-		numeric = true,
-		hold,
-		dupe = false,
-		skipped = false,
-		ballotLength = {};
-
-	if (delimiter === 't') {
-		delimiter = '\t';
-	}
-
-	sanity.innerHTML = '';
-
-
-	res.push('<p>Sanity Check</p>');
-
-
-	current = votes.split('\n');
-	lines = current.length;
-	current = current.filter(nonEmpty);
-	ballots = current.length;
-
-	if (lines - ballots > 1) {
-		res.push('<p><strong>The number of lines and ballots were different: ' + lines + ':' + ballots + '</strong></p>');
-	} else {
-		res.push('<p>' + ballots + ' ballots</p>');
-	}
-
-	for (index = 0; index < current.length; index++) {
-		current[index] = current[index].split(delimiter);
-		// check here for skipped
-		hold = current[index];
-		current[index] = current[index].filter(nonEmpty);
-		if (hold.slice(0, current[index].length - 1).indexOf('') !== -1) {
-			skipped = true;
-		}
-		for (ind = 0; ind < current[index].length; ind++) {
-			current[index][ind] = current[index][ind].trim();
-			if (voteValues.checked && ind === 0 && isNaN(Number.parseFloat(current[index][ind], 10))) {
-				numeric = false;
-			}
-			for (i = 0; i < ind; i++) {
-				if (current[index][ind] === current[index][i]) {
-					dupe = true;
-				}
-			}
-		}
-		ballotLength[current[index].length] = ballotLength[current[index].length] + 1 || 1;
-	}
-
-	if (voteValues.checked && numeric === false) {
-		res.push('<p><b>non numeric first field on at least one ballot when vote values checked.</b></p>');
-	}
-
-	if (dupe) {
-		res.push('<p><b>At least one ballot found with duplicated choice.</b></p>');
-	}
-
-	if (skipped) {
-		res.push('<p>Some choices skipped in at least one ballot</p>');
-	}
-
-	res.push('<p>Ballot length distribution</p><table><thead><tr><th>ballot length</th><th>count</th></tr></thead><tbody>');
-	Object.keys(ballotLength).forEach(function (item) {
-		res.push('<tr><td>' + item + '</td><td>' + ballotLength[item] + '</td></tr>');
-	});
-	res.push('</tbody></table><hr/>');
-
-
-	sanity.innerHTML = res.join('');
+/**
+ * [isNot description]
+ * @param  {string}  value [description]
+ * @return {Boolean}       [description]
+ */
+function isNot(value) {
+	return value !== this.toString();
 }
 
+/**
+ * [add description]
+ * @param {float} a [description]
+ * @param {float} b [description]
+ */
+function add(a, b) {
+	return a + b;
+}
+
+/**
+ * [pickVoteValues description]
+ * @return {[type]} [description]
+ */
+function pickVoteValues() {
+	voteValues.checked = !isNaN(Number.parseInt(voteField.value.substring(0, 1), 10));
+}
+
+/**
+ * [pickDelimiter description]
+ * @return {[type]} [description]
+ */
 function pickDelimiter() {
 	var tabs = 0,
 		commas = 0;
@@ -146,92 +106,13 @@ function pickDelimiter() {
 	} else {
 		delimiter = 't';
 	}
-
 }
 
-function pickVoteValues() {
-	voteValues.checked = !isNaN(Number.parseInt(voteField.value.substring(0, 1), 10));
-}
-
-function listDisqualify() {
-	var res = [],
-		index;
-
-	disqualifyList.innerHTML = '';
-	res.push('<p>Disqualify:</p><ul>');
-
-	for (index = 0; index < candidates.length; index++) {
-		res.push('<li><label><input type="checkbox" value="' + candidates[index] + '">');
-		res.push(candidates[index] + '</label></li>');
-	}
-
-	res.push('</ul>');
-
-	disqualifyList.innerHTML = res.join('');
-}
-
-function removeDisqualified() {
-	var list = disqualifyList.getElementsByTagName('input'),
-		index;
-
-	for (index = 0; index < list.length; index++) {
-		if (list[index].checked) {
-			eliminate(list[index].value);
-		}
-	}
-}
-
-function newVotes() {
-	pickDelimiter();
-	pickVoteValues();
-	fillCurrent();
-	countCandidates();
-	listDisqualify();
-}
-
-function countCandidates() {
-	var index,
-		ind,
-		firstColumn = 0;
-
-	candidates = [];
-
-	if (voteValues.checked) {
-		firstColumn = 1;
-	} else {
-		firstColumn = 0;
-	}
-
-	for (index = 0; index < current.length; index++) {
-		for (ind = firstColumn; ind < current[index].length; ind++) {
-			if (candidates.indexOf(current[index][ind]) === -1) {
-				candidates.push(current[index][ind]);
-			}
-		}
-	}
-}
-
-function isNot(value) {
-	return value !== this.toString();
-}
-
-
-function countXPlace(candidate, place, firstValue) {
-	var value = 0,
-		index;
-
-	for (index = 0; index < current.length; index++) {
-		if (current[index][place] === candidate) {
-			if (firstValue) {
-				value = value + parseFloat(current[index][0], 10);
-			} else {
-				value++;
-			}
-		}
-	}
-	return value;
-}
-
+/**
+ * [eliminate description]
+ * @param  {string} candidate [description]
+ * @return {object}           [description]
+ */
 function eliminate(candidate) {
 	var index,
 		ind,
@@ -328,8 +209,174 @@ function eliminate(candidate) {
 
 }
 
-function add(a, b) {
-	return a + b;
+/**
+ * [listDisqualify description]
+ * @return {[type]} [description]
+ */
+function listDisqualify() {
+	var res = [],
+		index;
+
+	disqualifyList.innerHTML = '';
+	res.push('<p>Disqualify:</p><ul>');
+
+	for (index = 0; index < candidates.length; index++) {
+		res.push('<li><label><input type="checkbox" value="' + candidates[index] + '">');
+		res.push(candidates[index] + '</label></li>');
+	}
+
+	res.push('</ul>');
+
+	disqualifyList.innerHTML = res.join('');
+}
+
+/**
+ * [removeDisqualified description]
+ * @return {[type]} [description]
+ */
+function removeDisqualified() {
+	var list = disqualifyList.getElementsByTagName('input'),
+		index;
+
+	for (index = 0; index < list.length; index++) {
+		if (list[index].checked) {
+			eliminate(list[index].value);
+		}
+	}
+}
+
+/**
+ * [fillCurrent description]
+ * @return {[type]} [description]
+ */
+function fillCurrent() {
+	var index,
+		ind,
+		i,
+		res = [],
+		lines,
+		ballots,
+		numeric = true,
+		hold,
+		dupe = false,
+		skipped = false,
+		ballotLength = {};
+
+	if (delimiter === 't') {
+		delimiter = '\t';
+	}
+
+	sanity.innerHTML = '';
+
+
+	res.push('<p>Sanity Check</p>');
+
+
+	current = votes.split('\n');
+	lines = current.length;
+	current = current.filter(nonEmpty);
+	ballots = current.length;
+
+	if (lines - ballots > 1) {
+		res.push('<p><strong>The number of lines and ballots were different: ' + lines + ':' + ballots + '</strong></p>');
+	} else {
+		res.push('<p>' + ballots + ' ballots</p>');
+	}
+
+	for (index = 0; index < current.length; index++) {
+		current[index] = current[index].split(delimiter);
+		// check here for skipped
+		hold = current[index];
+		current[index] = current[index].filter(nonEmpty);
+		if (hold.slice(0, current[index].length - 1).indexOf('') !== -1) {
+			skipped = true;
+		}
+		for (ind = 0; ind < current[index].length; ind++) {
+			current[index][ind] = current[index][ind].trim();
+			if (voteValues.checked && ind === 0 && isNaN(Number.parseFloat(current[index][ind], 10))) {
+				numeric = false;
+			}
+			for (i = 0; i < ind; i++) {
+				if (current[index][ind] === current[index][i]) {
+					dupe = true;
+				}
+			}
+		}
+		ballotLength[current[index].length] = ballotLength[current[index].length] + 1 || 1;
+	}
+
+	if (voteValues.checked && numeric === false) {
+		res.push('<p><b>non numeric first field on at least one ballot when vote values checked.</b></p>');
+	}
+
+	if (dupe) {
+		res.push('<p><b>At least one ballot found with duplicated choice.</b></p>');
+	}
+
+	if (skipped) {
+		res.push('<p>Some choices skipped in at least one ballot</p>');
+	}
+
+	res.push('<table><thead><tr><th>ballot length</th><th>count</th></tr></thead><tbody>');
+	Object.keys(ballotLength).forEach(function (item) {
+		res.push('<tr><td>' + item + '</td><td>' + ballotLength[item] + '</td></tr>');
+	});
+	res.push('</tbody></table><hr/>');
+
+
+	sanity.innerHTML = res.join('');
+}
+
+function countCandidates() {
+	var index,
+		ind,
+		firstColumn = 0;
+
+	candidates = [];
+
+	if (voteValues.checked) {
+		firstColumn = 1;
+	} else {
+		firstColumn = 0;
+	}
+
+	for (index = 0; index < current.length; index++) {
+		for (ind = firstColumn; ind < current[index].length; ind++) {
+			if (candidates.indexOf(current[index][ind]) === -1) {
+				candidates.push(current[index][ind]);
+			}
+		}
+	}
+	candidates.sort();
+}
+
+function countXPlace(candidate, place, firstValue) {
+	var value = 0,
+		index;
+
+	for (index = 0; index < current.length; index++) {
+		if (current[index][place] === candidate) {
+			if (firstValue) {
+				value = value + parseFloat(current[index][0], 10);
+			} else {
+				value++;
+			}
+		}
+	}
+	return value;
+}
+
+function findNode(candidate, round) {
+	var result = -1,
+		index;
+
+	for (index = 0; index < history.nodes.length; index++) {
+		if (history.nodes[index].candidate == candidate && history.nodes[index].round === round) {
+			result = index;
+		}
+	}
+
+	return result;
 }
 
 function chart() {
@@ -417,19 +464,6 @@ function chart() {
 
 }
 
-function findNode(candidate, round) {
-	var result = -1,
-		index;
-
-	for (index = 0; index < history.nodes.length; index++) {
-		if (history.nodes[index].candidate == candidate && history.nodes[index].round === round) {
-			result = index;
-		}
-	}
-
-	return result;
-}
-
 function runRound() {
 	var res = [],
 		index,
@@ -492,25 +526,26 @@ function runRound() {
 
 	// build the table
 	for (index = 0; index < candidates.length; index++) {
-		res.push('<tr><td>' + candidates[index] + '</td>');
+
+		if (total[index] === lowtotal) {
+			res.push('<tr class="lowVotes">');
+			lowindex.push(index);
+			lowcount++;
+		} else {
+			res.push('<tr>');
+		}
+
+		res.push('<td>' + candidates[index] + '</td>');
 		for (ind = 0 + shift; ind < positions + shift; ind++) {
 			res.push('<td>' + tally[index][ind - shift] + '</td>');
 		}
 
-		res.push('<td>');
-
-		if (total[index] === lowtotal) {
-			lowindex.push(index);
-			lowcount++;
-			res.push('<b>');
-		}
-		res.push(total[index]);
-		if (total[index] === lowtotal) {
-			res.push('</b>');
-		}
+		res.push('<td>' + total[index]);
 		res.push('</td><td>' + (total[index] * 100 / grandTotal).toFixed(2) + '</td></tr>');
 	}
-	res.push('</tbody></table>');
+	res.push('</tbody><tfoot><tr><td colspan="' + (positions + 1) + '">Total</td><td>');
+	res.push(total.reduce(add, 0));
+	res.push('</td><td></td><tr></tfoot></table>');
 
 	// links from "ballots"
 	if (round === 1) {
@@ -525,11 +560,13 @@ function runRound() {
 			'round': 0
 		});
 		for (index = 0; index < candidates.length; index++) {
-			history.links.push({
-				'source': {'c': 'ballots', 'r': 0},
-				'target': {'c': candidates[index], 'r': round},
-				'value': total[index]
-			});
+			if (total[index] > 0) {
+				history.links.push({
+					'source': {'c': 'ballots', 'r': 0},
+					'target': {'c': candidates[index], 'r': round},
+					'value': total[index]
+				});
+			}
 		}
 	}
 
@@ -579,11 +616,13 @@ function secondHalf(mode) {
 	// add base nodes and self links
 	for (index = 0; index < candidates.length; index++) {
 
-		history.nodes.push({
-			'name': candidates[index], // display name may be different than candidate name
-			'candidate': candidates[index],
-			'round': round
-		});
+		if (total[index] > 0) {
+			history.nodes.push({
+				'name': candidates[index], // display name may be different than candidate name
+				'candidate': candidates[index],
+				'round': round
+			});
+		}
 
 		notEliminated = true;
 
@@ -655,7 +694,15 @@ function secondHalf(mode) {
 	} else {
 		runRound();
 	}
-} // end runRound
+} // end second half of runRound
+
+function newVotes() {
+	pickDelimiter();
+	pickVoteValues();
+	fillCurrent();
+	countCandidates();
+	listDisqualify();
+}
 
 function runReport() {
 	votes = voteField.value;
