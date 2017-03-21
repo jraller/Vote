@@ -5,7 +5,6 @@
 	<form action="">
 		<textarea id="votes" rows="10" cols="80" wrap="soft"></textarea>
 		<br/>
-		<div id="sanity"></div>
 		<label for="delimiter">Delimiter:</label>
 		<select id="delimiter">
 			<option value="a" selected disabled>Auto</option>
@@ -17,11 +16,21 @@
 		<input id="positions" type="number" inputmode="numeric" min="1" value="1"></input>
 		<br/>
 
+		<label for="sortOrder">Sort order:</label>
+		<select id="sortOrder">
+			<option value="u" selected>unsorted</option>
+			<option value="f">first name</option>
+			<option value="l">last name</option>
+		</select>
+		<br/>
+
 		<label for="voteValue">First column is vote values</label>
 		<input id="voteValue" type="checkbox"></input>
 
 		<div id="disqualifyList">
 		</div>
+
+		<div id="sanity"></div>
 
 		<button id="run" type="button">Run</button>
 	</form>

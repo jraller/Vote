@@ -39,6 +39,7 @@ let voteField = document.getElementById('votes'), // ui input field for ballot c
 	delimiter, // ballot choices separator value
 	positions, // value for number of candidates to select from field
 	voteValues = document.getElementById('voteValue'), // ui checkbox controling if first column holds vote values
+	sortOrder = document.getElementById('sortOrder'),
 	disqualifyList = document.getElementById('disqualifyList'), // page region to insert disqualify list
 	results = document.getElementById('results'), // the results region
 	runButton = document.getElementById('run'), // ui element for initiating calculation
@@ -48,7 +49,6 @@ let voteField = document.getElementById('votes'), // ui input field for ballot c
 	eliminations = [], // storage to keep track of eliminated candidates each round
 	history = {}, // used to capture information from rounds in order to build chart
 	total= []; // per round totals
-
 
 /**
  * [nonEmpty description]
@@ -347,7 +347,25 @@ function countCandidates() {
 			}
 		}
 	}
-	candidates.sort();
+	if (sortOrder.value === 'f') {
+		candidates.sort();
+	}
+	if (sortOrder.value === 'l') {
+		candidates.sort(function(a, b) {
+			var lastA = a.toLowerCase().split(' ').reverse(), // John Van Buren becomes Buren Van John
+				lastB = b.toLowerCase().split(' ').reverse(),
+				result = 0;
+
+			if (lastA < lastB) {
+				result = -1;
+			}
+			if (lastA > lastB) {
+				result = 1;
+			}
+
+			return result;
+		});
+	}
 }
 
 function countXPlace(candidate, place, firstValue) {
@@ -740,4 +758,10 @@ if (voteValues.addEventListener) {
 	voteValues.addEventListener('change', newVotes, false);
 } else if (voteValues.attachEvent) {
 	voteValues.attachEvent('onchange', newVotes);
+}
+
+if (sortOrder.addEventListener) {
+	sortOrder.addEventListener('change', newVotes, false);
+} else if (voteValues.attachEvent) {
+	sortOrder.attachEvent('onchange', newVotes);
 }
