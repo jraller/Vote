@@ -3,34 +3,34 @@
 
 /* Notes
 
-[x] disqualifier
-[x] make rounds interactive if needed like for handling ties
-[x] add vote value first column checkbox
-[x] autodetect as default option for comma or tab
-[x] refactor eliminate to handle multiple
-[x] refactor needs to keep in mind the number of positions
-[x] add all ballots as source in chart
-[x] add sink for ballots with no remaining choices
-[x] fix tie rendering and logic, perhaps split the run into first and second halves?
-[x] fix transfer of final round when not using vote values - there is an off by one error in elimination
-[ ] allow manual control of vote values checkbox
-[x] fix graph when candidate gets zero votes in a round
+	[x] disqualifier
+	[x] make rounds interactive if needed like for handling ties
+	[x] add vote value first column checkbox
+	[x] autodetect as default option for comma or tab
+	[x] refactor eliminate to handle multiple
+	[x] refactor needs to keep in mind the number of positions
+	[x] add all ballots as source in chart
+	[x] add sink for ballots with no remaining choices
+	[x] fix tie rendering and logic, perhaps split the run into first and second halves?
+	[x] fix transfer of final round when not using vote values - there is an off by one error in elimination
+	[ ] allow manual control of vote values checkbox
+	[x] fix graph when candidate gets zero votes in a round
 
-sanity checks
-[x]	do dupe votes
-[x]	warn on skipped vote
-[x]	report number of votes
-[x] report ballot length distribution
-[x]	report number of candidates (as disqualify)
-[x] error if not all numeric in column 1 if vote values checked
+	sanity checks
+	[x]	do dupe votes
+	[x]	warn on skipped vote
+	[x]	report number of votes
+	[x] report ballot length distribution
+	[x]	report number of candidates (as disqualify)
+	[x] error if not all numeric in column 1 if vote values checked
 
-show all paths?
+	show all paths?
 
-[x] percentages?
+	[x] percentages?
 
-graph progression? area chart. Do this by storing each round? d3?
+	graph progression? area chart. Do this by storing each round? d3?
 
- */
+	*/
 
 let voteField = document.getElementById('votes'), // ui input field for ballot collection
 	votes, // raw user input of ballot collection
@@ -38,64 +38,61 @@ let voteField = document.getElementById('votes'), // ui input field for ballot c
 	delimiterDropdown = document.getElementById('delimiter'), // ui element
 	delimiter, // ballot choices separator value
 	positions, // value for number of candidates to select from field
-	voteValues = document.getElementById('voteValue'), // ui checkbox controling if first column holds vote values
+	voteValues = document.getElementById('voteValue'), // ui checkbox controlling if first column holds vote values
 	sortOrder = document.getElementById('sortOrder'),
 	disqualifyList = document.getElementById('disqualifyList'), // page region to insert disqualify list
 	results = document.getElementById('results'), // the results region
 	runButton = document.getElementById('run'), // ui element for initiating calculation
-	current = [], // the current state of ballot collection throughtout the process
-	candidates = [], // current canidates list at any point
+	current = [], // the current state of ballot collection throughout the process
+	candidates = [], // current candidates list at any point
 	round = 0, // round counter
 	eliminations = [], // storage to keep track of eliminated candidates each round
 	history = {}, // used to capture information from rounds in order to build chart
-	total= []; // per round totals
+	total = []; // per round totals
 
 /**
- * [nonEmpty description]
- * @param  {string} value [description]
- * @return {Boolean}       [description]
- */
+	* [nonEmpty description]
+	* @param  {string} value [description]
+	* @return {Boolean}       [description]
+	*/
 function nonEmpty(value) {
 	return value !== '';
 }
 
 /**
- * [isNot description]
- * @param  {string}  value [description]
- * @return {Boolean}       [description]
- */
+	* [isNot description]
+	* @param  {string}  value [description]
+	* @return {Boolean}       [description]
+	*/
 function isNot(value) {
 	return value !== this.toString();
 }
 
 /**
- * [add description]
- * @param {float} a [description]
- * @param {float} b [description]
- */
+	* [add description]
+	* @param {float} a [description]
+	* @param {float} b [description]
+	*/
 function add(a, b) {
 	return a + b;
 }
 
 /**
- * [pickVoteValues description]
- * @return {[type]} [description]
- */
+	* [pickVoteValues description]
+	* @return {[type]} [description]
+	*/
 function pickVoteValues() {
 	voteValues.checked = !isNaN(Number.parseInt(voteField.value.substring(0, 1), 10));
 }
 
 /**
- * [pickDelimiter description]
- * @return {[type]} [description]
- */
+	* [pickDelimiter description]
+	* @return {[type]} [description]
+	*/
 function pickDelimiter() {
-	var tabs = 0,
-		commas = 0;
-
 	votes = voteField.value;
-	tabs = (votes.match(/\t/g) || []).length;
-	commas = (votes.match(/,/g) || []).length;
+	let tabs = (votes.match(/\t/g) || []).length,
+		commas = (votes.match(/,/g) || []).length;
 
 	if (tabs > 0 && commas === 0) {
 		delimiterDropdown.value = 't';
@@ -109,12 +106,12 @@ function pickDelimiter() {
 }
 
 /**
- * [eliminate description]
- * @param  {string} candidate [description]
- * @return {object}           [description]
- */
+	* [eliminate description]
+	* @param  {string} candidate [description]
+	* @return {object}           [description]
+	*/
 function eliminate(candidate) {
-	var index,
+	let index,
 		ind,
 		i,
 		place = [],
@@ -187,7 +184,7 @@ function eliminate(candidate) {
 		for (ind = 0; ind < place.length; ind++) {
 
 			if (voteValues.checked) {
-				value = parseFloat(current[index][0], 10);
+				value = parseFloat(current[index][0]);
 				if (positions >= current[index].length) {
 					recipient = 'none';
 				} else {
@@ -210,11 +207,11 @@ function eliminate(candidate) {
 }
 
 /**
- * [listDisqualify description]
- * @return {[type]} [description]
- */
+	* [listDisqualify description]
+	* @return {[type]} [description]
+	*/
 function listDisqualify() {
-	var res = [],
+	let res = [],
 		index;
 
 	disqualifyList.innerHTML = '';
@@ -231,11 +228,11 @@ function listDisqualify() {
 }
 
 /**
- * [removeDisqualified description]
- * @return {[type]} [description]
- */
+	* [removeDisqualified description]
+	* @return {[type]} [description]
+	*/
 function removeDisqualified() {
-	var list = disqualifyList.getElementsByTagName('input'),
+	let list = disqualifyList.getElementsByTagName('input'),
 		index;
 
 	for (index = 0; index < list.length; index++) {
@@ -246,11 +243,11 @@ function removeDisqualified() {
 }
 
 /**
- * [fillCurrent description]
- * @return {[type]} [description]
- */
+	* [fillCurrent description]
+	* @return {[type]} [description]
+	*/
 function fillCurrent() {
-	var index,
+	let index,
 		ind,
 		i,
 		res = [],
@@ -293,7 +290,7 @@ function fillCurrent() {
 		}
 		for (ind = 0; ind < current[index].length; ind++) {
 			current[index][ind] = current[index][ind].trim();
-			if (voteValues.checked && ind === 0 && isNaN(Number.parseFloat(current[index][ind], 10))) {
+			if (voteValues.checked && ind === 0 && isNaN(Number.parseFloat(current[index][ind]))) {
 				numeric = false;
 			}
 			for (i = 0; i < ind; i++) {
@@ -328,7 +325,7 @@ function fillCurrent() {
 }
 
 function countCandidates() {
-	var index,
+	let index,
 		ind,
 		firstColumn = 0;
 
@@ -351,8 +348,8 @@ function countCandidates() {
 		candidates.sort();
 	}
 	if (sortOrder.value === 'l') {
-		candidates.sort(function(a, b) {
-			var lastA = a.toLowerCase().split(' ').reverse(), // John Van Buren becomes Buren Van John
+		candidates.sort(function (a, b) {
+			let lastA = a.toLowerCase().split(' ').reverse(), // John Van Buren becomes Buren Van John
 				lastB = b.toLowerCase().split(' ').reverse(),
 				result = 0;
 
@@ -369,13 +366,13 @@ function countCandidates() {
 }
 
 function countXPlace(candidate, place, firstValue) {
-	var value = 0,
+	let value = 0,
 		index;
 
 	for (index = 0; index < current.length; index++) {
 		if (current[index][place] === candidate) {
 			if (firstValue) {
-				value = value + parseFloat(current[index][0], 10);
+				value = value + parseFloat(current[index][0]);
 			} else {
 				value++;
 			}
@@ -385,7 +382,7 @@ function countXPlace(candidate, place, firstValue) {
 }
 
 function findNode(candidate, round) {
-	var result = -1,
+	let result = -1,
 		index;
 
 	for (index = 0; index < history.nodes.length; index++) {
@@ -398,8 +395,8 @@ function findNode(candidate, round) {
 }
 
 function chart() {
-	var formatNumber = d3.format(',.1f'),
-		format = function(d) {
+	let formatNumber = d3.format(',.1f'),
+		format = function (d) {
 			return formatNumber(d) + ' votes';
 		},
 		color = d3.scaleOrdinal(d3.schemeCategory20),
@@ -420,61 +417,61 @@ function chart() {
 		.links(history.links)
 		.layout(32);
 
-	var link = g.append('g').selectAll('.link')
+	let link = g.append('g').selectAll('.link')
 		.data(history.links)
 		.enter().append('path')
 		.attr('class', 'link')
 		.attr('d', path)
-		.style('stroke-width', function(d) {
+		.style('stroke-width', function (d) {
 			return Math.max(1, d.dy);
 		})
-		.sort(function(a, b) {
+		.sort(function (a, b) {
 			return b.dy - a.dy;
 		});
 
 	link.append('title')
-		.text(function(d) {
+		.text(function (d) {
 			return d.source.name + ' → ' + d.target.name + '\n' + format(d.value);
 		});
 
-	var node = g.append('g')
+	let node = g.append('g')
 		.selectAll('.node')
 		.data(history.nodes)
 		.enter().append('g')
 		.attr('class', 'node')
-		.attr('transform', function(d) {
+		.attr('transform', function (d) {
 			return 'translate(' + d.x + ',' + d.y + ')';
 		});
 
 	node.append('rect')
-		.attr('height', function(d) {
+		.attr('height', function (d) {
 			return d.dy;
 		})
 		.attr('width', sankey.nodeWidth())
-		.style('fill', function(d) {
+		.style('fill', function (d) {
 			return d.color = color(d.name.replace(/ .*/, ''));
 		})
-		.style('stroke', function(d) {
+		.style('stroke', function (d) {
 			return d3.rgb(d.color).darker(2);
 		})
 		.append('title')
-		.text(function(d, i) {
+		.text(function (d, i) {
 			return d.name + '\n' + format(d.value) + '\n' + i;
 		});
 
 	//filter these to not show iv value is zero
 	node.append('text')
 		.attr('x', -6)
-		.attr('y', function(d) {
+		.attr('y', function (d) {
 			return d.dy / 2;
 		})
 		.attr('dy', '.35em')
 		.attr('text-anchor', 'end')
 		.attr('transform', null)
-		.text(function(d) {
+		.text(function (d) {
 			return d.name;
 		})
-		.filter(function(d, i) { // only for the first entry align text the other way
+		.filter(function (d, i) { // only for the first entry align text the other way
 			return i === 0; //d.x < width / 2;
 		})
 		.attr('x', 6 + sankey.nodeWidth())
@@ -483,15 +480,15 @@ function chart() {
 }
 
 function runRound() {
-	var res = [],
+	let res = [],
 		index,
 		ind,
 		count,
 		tally = [],
 		grandTotal,
-		lowtotal = 'unset',
-		lowindex = [],
-		lowcount = 0,
+		lowTotal = 'unset',
+		lowIndex = [],
+		lowCount = 0,
 		shift = 0,
 		mode = 'auto';
 
@@ -519,24 +516,24 @@ function runRound() {
 	}
 	res.push('</p>');
 
-	res.push('<table><thead><th>Candidate</th>');
+	res.push('<table><thead><tr><th>Candidate</th>');
 	for (index = 1; index <= positions; index++) {
 		res.push('<th>' + index + '</th>');
 	}
-	res.push('<th>total</th><th>%</th></thead><tbody>');
+	res.push('<th>total</th><th>%</th></tr></thead><tbody>');
 
 	// loop through and get values
 	for (index = 0; index < candidates.length; index++) {
 		tally[index] = [];
 		total[index] = 0;
-		for (ind = 0 + shift; ind < positions + shift; ind++) {
+		for (ind = shift; ind < positions + shift; ind++) {
 			count = countXPlace(candidates[index], ind, voteValues.checked);
 			tally[index].push(count);
 			total[index] += count;
 		}
 
-		if (lowtotal === 'unset' || total[index] < lowtotal) { // this is poorly written
-			lowtotal = total[index];
+		if (lowTotal === 'unset' || total[index] < lowTotal) { // this is poorly written
+			lowTotal = total[index];
 		}
 	}
 
@@ -545,16 +542,16 @@ function runRound() {
 	// build the table
 	for (index = 0; index < candidates.length; index++) {
 
-		if (total[index] === lowtotal) {
+		if (total[index] === lowTotal) {
 			res.push('<tr class="lowVotes">');
-			lowindex.push(index);
-			lowcount++;
+			lowIndex.push(index);
+			lowCount++;
 		} else {
 			res.push('<tr>');
 		}
 
 		res.push('<td>' + candidates[index] + '</td>');
-		for (ind = 0 + shift; ind < positions + shift; ind++) {
+		for (ind = shift; ind < positions + shift; ind++) {
 			res.push('<td>' + tally[index][ind - shift] + '</td>');
 		}
 
@@ -591,21 +588,21 @@ function runRound() {
 	// check what mode we should be in
 
 	if (candidates.length > positions) {
-		if (lowcount === 1) {
-			res.push('<p>Eliminating ' + candidates[lowindex[0]]);
-			eliminate(candidates[lowindex[0]]);
+		if (lowCount === 1) {
+			res.push('<p>Eliminating ' + candidates[lowIndex[0]]);
+			eliminate(candidates[lowIndex[0]]);
 		} else {
 			res.push('<p>Tie detected, Pick whom to eliminate:</p>');
 			res.push('<button onclick="eliminate([\'');
-			for (index = 0; index < lowcount; index++) {
-				res.push(candidates[lowindex[index]]);
-				if (index !== lowcount - 1) {
+			for (index = 0; index < lowCount; index++) {
+				res.push(candidates[lowIndex[index]]);
+				if (index !== lowCount - 1) {
 					res.push('\',\'');
 				}
 			}
 			res.push('\']);secondHalf();" type="button">all</button> ');
-			for (index = 0; index < lowcount; index++) {
-				res.push('<button onclick="eliminate(\'' + candidates[lowindex[index]] + '\');secondHalf();" type="button">' + candidates[lowindex[index]] + '</button> ');
+			for (index = 0; index < lowCount; index++) {
+				res.push('<button onclick="eliminate(\'' + candidates[lowIndex[index]] + '\');secondHalf();" type="button">' + candidates[lowIndex[index]] + '</button> ');
 			}
 			mode = 'manual';
 		}
@@ -627,7 +624,7 @@ function runRound() {
 
 
 function secondHalf(mode) {
-	var index,
+	let index,
 		ind,
 		notEliminated;
 
@@ -696,7 +693,7 @@ function secondHalf(mode) {
 
 		console.log('all links:', history.links.length);
 		history.links = history.links.filter(function (entry) {
-			var check = true;
+			let check = true;
 
 			check = check && entry.source !== -1;
 			check = check && entry.target !== -1;
@@ -729,7 +726,7 @@ function runReport() {
 		delimiter = 't';
 	}
 	positions = parseInt(document.getElementById('positions').value, 10);
-	results.innerHTML='';
+	results.innerHTML = '';
 	round = 1;
 	fillCurrent();
 	removeDisqualified();
