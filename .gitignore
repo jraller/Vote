@@ -7,9 +7,6 @@ gen
 # npm
 node_modules
 
-# typings
-typings
-
 # for now
 dist
 !dist/bundle.js
