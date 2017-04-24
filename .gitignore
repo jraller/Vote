@@ -10,4 +10,3 @@ node_modules
 # for now
 dist
 !dist/bundle.js
-!dist/stats.html
