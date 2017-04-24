@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es5",
+    "sourceMap": true,
+    "inlineSources": true
+  },
+  "exclude": [
+    "node_modules",
+    "app/scripts"
+  ]
+}

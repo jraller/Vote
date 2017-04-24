@@ -1,5 +1,11 @@
-node_modules/
-public/components
-.nyc_output
-.sass-cache
+# IntelliJ project files
 .idea
+*.iml
+out
+gen
+
+# npm
+node_modules
+
+# typings
+typings
