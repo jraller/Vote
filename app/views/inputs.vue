@@ -4,13 +4,13 @@
             <div class="form-group">
                 <label for="votes">Votes:</label>
                 <br />
-                <textarea id="votes" class="form-control" rows="10"></textarea>
+                <textarea id="votes" v-on:change="changeVotes" class="form-control" rows="10"></textarea>
             </div>
         </div>
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="delimiter">Delimiter:</label>
-                <select id="delimiter" class="form-control">
+                <label for="delimiter">Delimiter: {{ newdata }}</label>
+                <select id="delimiter" class="form-control" v-on:change="changeDelimiter">
                     <option value="a" selected disabled>Auto</option>
                     <option value="t">tab</option>
                     <option value=",">comma</option>

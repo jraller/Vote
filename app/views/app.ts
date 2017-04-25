@@ -12,7 +12,18 @@ module.exports = {
             showDisqualify: true,
             showSanity: true,
             showResults: true,
-            showChart: true
+            showChart: true,
+            counter: 0
         }
+    },
+    methods: {
+        count: function() {
+            this.$emit('count')
+        }
+    },
+    created() {
+        this.$on('count', function() {
+            this.counter++;
+        });
     }
 };
