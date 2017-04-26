@@ -12,9 +12,7 @@ const store = new Vuex.Store({
 			state.delimiter = delimiter;
 		},
 		newBallots(state, raw) {
-			let temp = [];
-
-			temp = raw.toString().split('\n');
+			let temp = raw.toString().split('\n');
 			state.rawLength = temp.length;
 			temp = temp.filter(library.nonEmpty);
 			state.ballotCount = temp.length;
