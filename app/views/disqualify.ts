@@ -1,11 +1,17 @@
 module.exports = {
+    computed: {
+        candidates() {
+            return this.$store.state.candidateList;
+        }
+    },
     data: function() {
         return {
-            candidates: [
-                'fred',
-                'sally',
-                'george'
-            ]
+            disqualifyCandidates: []
+        }
+    },
+    methods: {
+        changeDisqualified: function() {
+            this.$store.commit('updateDisqualified', this.disqualifyCandidates);
         }
     }
 };

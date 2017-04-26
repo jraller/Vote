@@ -13,17 +13,7 @@ module.exports = {
             showSanity: true,
             showResults: true,
             showChart: true,
-            counter: 0
+            workingCopy: []
         }
-    },
-    methods: {
-        count: function() {
-            this.$emit('count')
-        }
-    },
-    created() {
-        this.$on('count', function() {
-            this.counter++;
-        });
     }
 };

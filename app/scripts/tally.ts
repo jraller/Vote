@@ -1,7 +1,4 @@
 /* jshint esversion:6 */
-/* global d3 */
-
-
 
 /* Notes
 
@@ -33,9 +30,6 @@
  graph progression? area chart. Do this by storing each round? d3?
 
  */
-
-import * as d3 from 'd3';
-import * as sankey from 'd3-sankey';
 
 let voteField = document.getElementById('votes'), // ui input field for ballot collection
     votes, // raw user input of ballot collection

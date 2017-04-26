@@ -1,24 +1,23 @@
 module.exports = {
     data: function (){
         return {
-            preProcessVotes: false,
-            newdata: 0
+            delimiter: 'a',
+            voteValues: false,
+            trigger: '',
+            rawInput: ''
         }
     },
     methods: {
         changeVotes: function() {
-            this.$emit('votesChanged');
+            this.$emit('inputChange', 'votes');
+            this.$store.commit('newBallots', this.rawInput);
+            this.$store.commit('newCandidates');
         },
         changeDelimiter: function() {
-            this.$emit('delimiterChanged')
+            this.$store.commit('changeDelimiter', this.delimiter);
+        },
+        changeVoteValues: function() {
+            this.$emit('inputChange', 'voteValues');
         }
-    },
-    created() {
-        this.$on('votesChanged', function() {
-            this.preProcessVotes = true;
-        });
-        this.$on('delimiterChanged', function() {
-            this.newdata++;
-        });
     }
 };

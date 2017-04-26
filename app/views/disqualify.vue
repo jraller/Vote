@@ -5,11 +5,12 @@
             <li v-for="candidate in candidates">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" :value="candidate">{{ candidate }}
+                        <input type="checkbox" :value="candidate" v-model="disqualifyCandidates" v-on:change="changeDisqualified">{{ candidate }}
                     </label>
                 </div>
             </li>
         </ul>
+        <p>disqualified: {{ disqualifyCandidates }}</p>
     </div>
 </template>
 
