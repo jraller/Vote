@@ -7,6 +7,11 @@ import * as library from './scripts/library';
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+	getters: { // computed properties for stores
+		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
+			return state.rawLength - state.ballotCount > 1;
+		}
+	},
 	mutations: {
 		changeDelimiter(state, delimiter) {
 			state.delimiter = delimiter;

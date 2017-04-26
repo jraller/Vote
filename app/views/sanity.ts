@@ -1,3 +1,12 @@
-/**
- * Created by jraller on 4/24/2017.
- */
+import { mapGetters } from 'vuex';
+
+module.exports = {
+    computed: {
+        // diff () {
+        //     return this.$store.getters.skippedBallots;
+        // },
+        ...mapGetters([
+            'skippedBallots'
+        ])
+    }
+};

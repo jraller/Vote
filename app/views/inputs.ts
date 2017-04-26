@@ -1,3 +1,5 @@
+import { mapMutations } from 'vuex';
+
 module.exports = {
     data: function (){
         return {
@@ -8,6 +10,12 @@ module.exports = {
         }
     },
     methods: {
+        // ...mapMutations([
+        //     'changeDelimiter' // payload for this isn't fully handled?
+        // ]),
+        // ...mapMutations({
+        //     fred: 'changeFred'
+        // }),
         changeVotes: function() {
             this.$emit('inputChange', 'votes');
             this.$store.commit('newBallots', this.rawInput);
