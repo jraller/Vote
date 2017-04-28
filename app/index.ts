@@ -2,11 +2,13 @@ import 'bootstrap-loader';
 import 'jquery';
 import Vue from 'vue';
 import Vuex from 'vuex';
+
+import {Delimiters, pickDelimiter} from './scripts/delimiters';
 import * as library from './scripts/library';
 
 Vue.use(Vuex);
 
-const fred = new library.Delimiters();
+const delimiters = new Delimiters();
 
 const store = new Vuex.Store({
 	getters: { // computed properties for stores
@@ -40,7 +42,7 @@ const store = new Vuex.Store({
 			}
 		},
 		pickDelimiter(state, raw) {
-			state.delimiter = library.pickDelimiter(raw);
+			state.delimiter = pickDelimiter(raw);
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
@@ -53,8 +55,8 @@ const store = new Vuex.Store({
 		ballotCount: 0,
 		candidateList: [],
 		current: [],
-		delimiter: '-1',
-		delimiters: fred.listDelimiters(),
+		delimiter: 'auto',
+		delimiterList: delimiters.listDelimiters(),
 		disqualifiedCandidates: [],
 		rawLength: 0,
 	},

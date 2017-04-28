@@ -1,12 +1,19 @@
-import { mapMutations } from 'vuex';
+import {mapMutations} from 'vuex';
+
+import {Delimiters} from '../scripts/delimiters';
+
+const delimiters = new Delimiters;
 
 module.exports = {
 	computed: {
-	  delimiter() {
-		  return this.$store.state.delimiter;
-	  }
+		delimiter() {
+			return this.$store.state.delimiter;
+		},
+		delimiterList() {
+			return this.$store.state.delimiterList;
+		},
 	},
-	data: function (){
+	data: function () {
 		return {
 			voteValues: false,
 			trigger: '',
@@ -20,7 +27,7 @@ module.exports = {
 		// ...mapMutations({
 		//     fred: 'changeFred'
 		// }),
-		changeVotes: function() {
+		changeVotes: function () {
 			this.$emit('inputChange', 'votes');
 			if (this.rawInput === '') {
 				this.$store.commit('setDelimiter', '-1');
@@ -39,6 +46,15 @@ module.exports = {
 			this.$emit('inputChange', 'voteValues');
 			this.$store.commit('newBallots', this.rawInput);
 			this.$store.commit('newCandidates');
-		}
+		},
+		getCode: function(d) {
+			return delimiters.getCode(d);
+		},
+		getDescription: (d) => {
+			return delimiters.getDescription(d);
+		},
+		getDisabled: (d) => {
+			return d === 'auto';
+		},
 	}
 };
