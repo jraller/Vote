@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "inlineSources": true,
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es5",
     "sourceMap": true,
-    "inlineSources": true
+//    "strict": true,
+    "target": "es5"
   },
   "exclude": [
     "node_modules",
-    "app/scripts"
+    "app/scripts/tally.ts"
+  ],
+  "include": [
+    "app/scripts/library.ts"
   ]
 }

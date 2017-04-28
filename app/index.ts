@@ -10,7 +10,7 @@ const store = new Vuex.Store({
 	getters: { // computed properties for stores
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
 			return state.rawLength - state.ballotCount > 1;
-		}
+		},
 	},
 	mutations: {
 		changeDelimiter(state, delimiter) {
@@ -37,26 +37,32 @@ const store = new Vuex.Store({
 				}
 			}
 		},
+		pickDelimiter(state, raw) {
+			state.delimiter = library.pickDelimiter(raw);
+		},
+		setDelimiter(state, value) {
+			state.delimiter = value;
+		},
 		updateDisqualified(state, value) {
 			state.disqualifiedCandidates = value;
-		}
+		},
 	},
 	state: {
 		ballotCount: 0,
 		candidateList: [],
 		current: [],
-		delimiter: '',
+		delimiter: 'a',
 		disqualifiedCandidates: [],
-		rawLength: 0
-	}
+		rawLength: 0,
+	},
 });
 
 const vm = new Vue({
 	components: {
-		app: require('./views/app.vue')
+		app: require('./views/app.vue'),
 	},
 	el: '#app',
-	store
+	store,
 });
 
 if (module.hot) {

@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
                 <label for="positions">Number of Positions:</label>
-                <input id="positions" class="form-control" type="number" inputmode="numeric" min="1" value="1"></input>
+                <input id="positions" class="form-control" type="number" inputmode="numeric" min="1" value="1">
             </div>
             <div class="form-group">
                 <label for="sortOrder">Sort order:</label>

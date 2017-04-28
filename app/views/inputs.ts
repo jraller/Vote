@@ -1,9 +1,13 @@
 import { mapMutations } from 'vuex';
 
 module.exports = {
+    computed: {
+      delimiter() {
+          return this.$store.state.delimiter;
+      }
+    },
     data: function (){
         return {
-            delimiter: 'a',
             voteValues: false,
             trigger: '',
             rawInput: ''
@@ -18,6 +22,11 @@ module.exports = {
         // }),
         changeVotes: function() {
             this.$emit('inputChange', 'votes');
+            if (this.rawInput === '') {
+                this.$store.commit('setDelimiter', 'a');
+            } else if (this.delimiter === 'a') {
+                this.$store.commit('pickDelimiter', this.rawInput);
+            }
             this.$store.commit('newBallots', this.rawInput);
             this.$store.commit('newCandidates');
         },

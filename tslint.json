@@ -2,9 +2,8 @@
   "extends": "tslint:recommended",
   "rules": {
     "indent": [true, "tabs"],
-    "no-var-requires": false,
     "quotemark": [true, "single", "avoid-escape"],
-    "trailing-comma": [false]
+    "trailing-comma": [true, {"multiline": "always", "singleline": "never"}]
   },
   "jsRules": {
   }
