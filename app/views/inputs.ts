@@ -30,8 +30,8 @@ module.exports = {
 		changeVotes: function () {
 			this.$emit('inputChange', 'votes');
 			if (this.rawInput === '') {
-				this.$store.commit('setDelimiter', '-1');
-			} else if (this.delimiter === '-1') {
+				this.$store.commit('setDelimiter', 'auto');
+			} else if (this.delimiter === 'auto') {
 				this.$store.commit('pickDelimiter', this.rawInput);
 			}
 			this.$store.commit('newBallots', this.rawInput);
@@ -46,9 +46,6 @@ module.exports = {
 			this.$emit('inputChange', 'voteValues');
 			this.$store.commit('newBallots', this.rawInput);
 			this.$store.commit('newCandidates');
-		},
-		getCode: function(d) {
-			return delimiters.getCode(d);
 		},
 		getDescription: (d) => {
 			return delimiters.getDescription(d);

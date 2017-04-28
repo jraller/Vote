@@ -3,7 +3,7 @@ import 'jquery';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import {Delimiters, pickDelimiter} from './scripts/delimiters';
+import {Delimiters} from './scripts/delimiters';
 import * as library from './scripts/library';
 
 Vue.use(Vuex);
@@ -13,18 +13,18 @@ const delimiters = new Delimiters();
 const store = new Vuex.Store({
 	getters: { // computed properties for stores
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
-			return state.rawLength - state.ballotCount > 1;
+			return state.rawLength > 1 && state.rawLength - state.ballotCount > 0;
 		},
 	},
 	mutations: {
 		newBallots(state, raw) {
-			let temp = raw.toString().split('\n');
+			let temp = raw.toString().trim().split('\n');
 			state.rawLength = temp.length;
 			temp = temp.filter(library.nonEmpty);
 			state.ballotCount = temp.length;
 
 			for (let index = 0; index < temp.length; index++) {
-				temp[index] = temp[index].split(String.fromCharCode(parseInt(state.delimiter, 10)));
+				temp[index] = temp[index].split(String.fromCharCode(delimiters.getCode(state.delimiter)));
 				for (let ind = 0; ind < temp[index].length; ind++) {
 					temp[index][ind] = temp[index][ind].trim();
 				}
@@ -42,7 +42,7 @@ const store = new Vuex.Store({
 			}
 		},
 		pickDelimiter(state, raw) {
-			state.delimiter = pickDelimiter(raw);
+			state.delimiter = delimiters.pickDelimiter(raw);
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;

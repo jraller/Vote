@@ -39,23 +39,24 @@ export class Delimiters {
 	public getDescription(d) {
 		return this.delims[d].description;
 	}
-}
 
-export function pickDelimiter(input: string): string {
-	let delimiter;
+	public pickDelimiter(input: string): string {
+		let delimiter;
 
-	const tabs = (input.match(/\t/g) || []).length;
-	const commas = (input.match(/,/g) || []).length;
-	const pipes = (input.match(/\|/g) || []).length;
+		const tabs = (input.match(/\t/g) || []).length;
+		const commas = (input.match(/,/g) || []).length;
+		const pipes = (input.match(/\|/g) || []).length;
 
-	if (pipes > 0) {
-		delimiter = '124';
-	} else if (tabs > 0 && commas === 0) {
-		delimiter = '9';
-	} else if (commas > 0 && tabs === 0) {
-		delimiter = '44';
-	} else {
-		delimiter = '9';
+		if (pipes > 0) {
+			delimiter = 'pipe';
+		} else if (tabs > 0 && commas === 0) {
+			delimiter = 'tab';
+		} else if (commas > 0 && tabs === 0) {
+			delimiter = 'comma';
+		} else {
+			delimiter = 'tab';
+		}
+		return delimiter;
 	}
-	return delimiter;
+
 }
