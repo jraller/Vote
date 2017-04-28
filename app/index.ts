@@ -13,17 +13,17 @@ const store = new Vuex.Store({
 		},
 	},
 	mutations: {
-		changeDelimiter(state, delimiter) {
-			state.delimiter = delimiter;
-		},
 		newBallots(state, raw) {
 			let temp = raw.toString().split('\n');
 			state.rawLength = temp.length;
 			temp = temp.filter(library.nonEmpty);
 			state.ballotCount = temp.length;
 
-			for (let i = 0; i < temp.length; i++) {
-				temp[i] = temp[i].split(state.delimiter);
+			for (let index = 0; index < temp.length; index++) {
+				temp[index] = temp[index].split(String.fromCharCode(parseInt(state.delimiter, 10)));
+				for (let ind = 0; ind < temp[index].length; ind++) {
+					temp[index][ind] = temp[index][ind].trim();
+				}
 			}
 			state.current = temp;
 		},
@@ -51,7 +51,7 @@ const store = new Vuex.Store({
 		ballotCount: 0,
 		candidateList: [],
 		current: [],
-		delimiter: 'a',
+		delimiter: '-1',
 		disqualifiedCandidates: [],
 		rawLength: 0,
 	},

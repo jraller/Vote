@@ -10,10 +10,11 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="delimiter">Delimiter:</label>
-                <select id="delimiter" class="form-control" v-on:change="changeDelimiter" v-model="delimiter">
-                    <option value="a" selected disabled>Auto</option>
-                    <option value="t">tab</option>
-                    <option value=",">comma</option>
+                <select id="delimiter" class="form-control" v-on:change="changeDelimiter" v-model="delimiter" ref="delimiter">
+                    <option value="-1" selected disabled>Auto</option>
+                    <option value="9">tab</option>
+                    <option value="44">comma</option>
+                    <option value="124">pipe</option>
                 </select>
             </div>
             <div class="form-group">
