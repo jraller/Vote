@@ -6,6 +6,8 @@ import * as library from './scripts/library';
 
 Vue.use(Vuex);
 
+const fred = new library.Delimiters();
+
 const store = new Vuex.Store({
 	getters: { // computed properties for stores
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
@@ -52,6 +54,7 @@ const store = new Vuex.Store({
 		candidateList: [],
 		current: [],
 		delimiter: '-1',
+		delimiters: fred.listDelimiters(),
 		disqualifiedCandidates: [],
 		rawLength: 0,
 	},

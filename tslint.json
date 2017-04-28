@@ -2,6 +2,7 @@
   "extends": "tslint:recommended",
   "rules": {
     "indent": [true, "tabs"],
+    "no-console": false,
     "quotemark": [true, "single", "avoid-escape"],
     "trailing-comma": [true, {"multiline": "always", "singleline": "never"}]
   },

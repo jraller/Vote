@@ -2,6 +2,41 @@ export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
 
+export class Delimiters {
+	private delims = {};
+
+	public constructor() {
+		this.delims = {
+			auto: {
+				code: 0,
+				description: 'Auto Select',
+				order: 0,
+			},
+			comma: {
+				code: 44,
+				description: 'Comma',
+				order: 1,
+			},
+			pipe: {
+				code: 124,
+				description: 'Pipe: |',
+				order: 3,
+			},
+			tab: {
+				code: 9,
+				description: 'Tab',
+				order: 2,
+			},
+		};
+	}
+
+	public listDelimiters() {
+		return Object.keys(this.delims).sort((a, b) => {
+			return this.delims[a].order - this.delims[b].order;
+		});
+	}
+}
+
 export function pickDelimiter(input: string): string {
 	let delimiter;
 
