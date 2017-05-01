@@ -13,5 +13,6 @@ module.exports = {
         changeDisqualified: function() {
             this.$store.commit('updateDisqualified', this.disqualifyCandidates);
         }
-    }
+    },
+    name: 'DisqualifyCandidatesList',
 };

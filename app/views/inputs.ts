@@ -4,7 +4,7 @@ import {Delimiters} from '../scripts/delimiters';
 
 const delimiters = new Delimiters;
 
-module.exports = {
+export default {
 	computed: {
 		delimiter() {
 			return this.$store.state.delimiter;
@@ -15,9 +15,8 @@ module.exports = {
 	},
 	data: function () {
 		return {
+			rawInput: '',
 			voteValues: false,
-			trigger: '',
-			rawInput: ''
 		}
 	},
 	methods: {
@@ -53,5 +52,6 @@ module.exports = {
 		getDisabled: (d) => {
 			return d === 'auto';
 		},
-	}
+	},
+	name: 'TallyInputs',
 };

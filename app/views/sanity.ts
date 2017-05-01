@@ -8,5 +8,6 @@ module.exports = {
         ...mapGetters([
             'skippedBallots'
         ])
-    }
+    },
+    name: 'SanityChecks',
 };

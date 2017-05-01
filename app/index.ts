@@ -1,14 +1,16 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import VueX from 'vuex';
 
 import {Delimiters} from './scripts/delimiters';
 import * as library from './scripts/library';
 
-Vue.use(Vuex);
+Vue.use(VueX);
+
+// https://forum.vuejs.org/t/vuex-best-practices-for-complex-objects/10143/2 for design of state object
 
 const delimiters = new Delimiters();
 
-const store = new Vuex.Store({
+const store = new VueX.Store({
 	getters: { // computed properties for stores
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
 			return state.rawLength > 1 && state.rawLength - state.ballotCount > 0;

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import {sankey} from 'd3-sankey';
 
-module.exports = {
+export default {
     mounted: function() {
 
         const history = {
@@ -43,9 +43,7 @@ module.exports = {
         const path = sk.link();
         const g = svg.append('g')
             .attr('transform', `translate(${margin.left}, ${margin.right})`);
-
-        sk
-            .nodes(history.nodes)
+        sk.nodes(history.nodes)
             .links(history.links)
             .layout(32);
 
@@ -67,5 +65,6 @@ module.exports = {
             .text(function(d) {
                 return `${d.source['name']} → ${d.target['name']}`;
             });
-    }
+    },
+    name: 'TallyChart',
 };

@@ -11,11 +11,7 @@
             <div class="form-group">
                 <label for="delimiter">Delimiter:</label>
                 <select id="delimiter" class="form-control" v-on:change="changeDelimiter" v-model="delimiter" ref="delimiter">
-                    <option v-for="(delim, index) in delimiterList" v-bind:value="delim" :disabled="getDisabled(delim)">{{ getDescription(delim) }}</option>
-                    <!--<option value="-1" selected disabled>Auto</option>-->
-                    <!--<option value="9">tab</option>-->
-                    <!--<option value="44">comma</option>-->
-                    <!--<option value="124">pipe</option>-->
+                    <option v-for="delim in delimiterList" v-bind:value="delim" :disabled="getDisabled(delim)">{{ getDescription(delim) }}</option>
                 </select>
             </div>
             <div class="form-group">

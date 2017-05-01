@@ -30,3 +30,9 @@
 </template>
 
 <script lang="ts" src="./app.ts"></script>
+
+<style>
+    [v-cloak] {
+        display: none;
+    }
+</style>
