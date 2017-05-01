@@ -1,7 +1,7 @@
 import 'bootstrap-loader';
 import 'jquery';
-import Vue from 'vue';
-import Vuex from 'vuex';
+import * as Vue from 'vue';
+import * as Vuex from 'vuex';
 
 import {Delimiters} from './scripts/delimiters';
 import * as library from './scripts/library';
