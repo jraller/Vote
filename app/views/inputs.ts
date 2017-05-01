@@ -4,6 +4,10 @@ import {Delimiters} from '../scripts/delimiters';
 
 const delimiters = new Delimiters;
 
+// look into https://github.com/vuejs/vue-class-component
+// which seems to want https://github.com/ktsn/vuex-class
+// also look at https://github.com/kaorun343/vue-property-decorator
+
 export default {
 	computed: {
 		delimiter() {
