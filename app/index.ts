@@ -1,7 +1,5 @@
-import 'bootstrap-loader';
-import 'jquery';
-import * as Vue from 'vue';
-import * as Vuex from 'vuex';
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 import {Delimiters} from './scripts/delimiters';
 import * as library from './scripts/library';
@@ -15,6 +13,10 @@ const store = new Vuex.Store({
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
 			return state.rawLength > 1 && state.rawLength - state.ballotCount > 0;
 		},
+	},
+	modules: {
+		// for dividing the store into modules: https://vuex.vuejs.org/en/modules.html
+		// also http://vuetips.com/vuex-module-syntax
 	},
 	mutations: {
 		newBallots(state, raw) {

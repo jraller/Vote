@@ -3,6 +3,7 @@ const {resolve} = require('path');
 const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 const Visualizer = require('webpack-visualizer-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const PATHS = {
 	app: resolve(__dirname, 'app'),
@@ -15,12 +16,16 @@ const commonConfig = merge ([
 	{
 		entry: {
 			// the entry point of our app
-			app: PATHS.app
+			app: PATHS.app,
+			vendor: [
+				'bootstrap-loader',
+				'jquery'
+			]
 		},
 		output: {
 			path: PATHS.build,
 			publicPath: '/dist',
-			filename: 'bundle.js' // '[name].js'
+			filename: '[name].js'
 		},
 		module: {
 			rules: [
@@ -73,11 +78,30 @@ const commonConfig = merge ([
 const productionConfig = merge([
 	{
 		plugins: [
+			new CleanWebpackPlugin(
+				['dist']
+			),
+			new webpack.optimize.CommonsChunkPlugin(
+				{
+					filename: '[name].bundle.js',
+					minChunks: Infinity,
+					names: ['vendor'],
+				}
+			),
 			new webpack.DefinePlugin({
 				'process.env': {
 					NODE_ENV: JSON.stringify('production')
 				}
-			})
+			}),
+			// only for prod:
+			new webpack.optimize.UglifyJsPlugin({
+				comments: true,
+				mangle: false,
+				compress: {
+					warnings: true
+				}
+			}),
+			new Visualizer()
 		]
 	}
 ]);
@@ -125,7 +149,7 @@ const developmentConfig = merge([
 				aggregateTimeout: 300
 			}
 		},
-		entry: [
+		// entry: [
 			// 'webpack-dev-server/client?http://localhost:8000',
 			// bundle the client for webpack-dev-server
 			// and connect to the provided endpoint
@@ -135,8 +159,8 @@ const developmentConfig = merge([
 			// only- means to only hot reload for successful updates
 
 			// the entry point of our app
-			'./app/index.ts'
-		],
+			// './app/index.ts'
+		// ],
 		module: {
 			rules: [
 				{
@@ -162,19 +186,10 @@ const developmentConfig = merge([
 		},
 		plugins: [
 			// new webpack.HotModuleReplacementPlugin(),
-			new webpack.NamedModulesPlugin(),
-			// only for prod:
-			// new webpack.optimize.UglifyJsPlugin({
-			// 	comments: true,
-			// 	mangle: false,
-			// 	compress: {
-			// 		warnings: true
-			// 	}
-			// })
+			// new webpack.NamedModulesPlugin(),
 			new webpack.WatchIgnorePlugin([
 				resolve(__dirname, 'node_modules')
-			]),
-			new Visualizer()
+			])
 		]
 	}
 ]);
