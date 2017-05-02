@@ -1,8 +1,14 @@
+/// <reference types="node" />
+
 import Vue from 'vue';
 import VueX from 'vuex';
 
 import {Delimiters} from './scripts/delimiters';
 import * as library from './scripts/library';
+
+Vue.config.silent = false;
+Vue.config.devtools = process.env.NODE_ENV === 'development';
+Vue.config.performance = false;
 
 Vue.use(VueX);
 

@@ -1,13 +1,13 @@
 const webpack = require('webpack');
-const {resolve} = require('path');
+const path = require('path');
 const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 const Visualizer = require('webpack-visualizer-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const PATHS = {
-	app: resolve(__dirname, 'app'),
-	build: resolve (__dirname, 'dist')
+	app: path.resolve(__dirname, 'app'),
+	build: path.resolve(__dirname, 'dist')
 };
 
 // merge sect 4.2 of SurviveJS - Webpack -- refactor
@@ -61,7 +61,12 @@ const commonConfig = merge ([
 				jQuery: 'jquery',
 				$: 'jquery',
 				jquery: 'jquery'
-			})
+			}),
+			new webpack.EnvironmentPlugin(
+				{
+					'NODE_ENV': 'development'
+				}
+			),
 		],
 		resolve: {
 			// Add '.ts' and '.tsx' as a resolvable extension.
@@ -110,7 +115,7 @@ const developmentConfig = merge([
 	{
 		devtool: 'source-map',
 		devServer: {
-			contentBase: resolve(__dirname, 'app'),
+			contentBase: path.resolve(__dirname, 'app'),
 			compress: true,
 
 			// Enable history API fallback so HTML5 History API based
@@ -188,9 +193,9 @@ const developmentConfig = merge([
 			// new webpack.HotModuleReplacementPlugin(),
 			// new webpack.NamedModulesPlugin(),
 			new webpack.WatchIgnorePlugin([
-				resolve(__dirname, 'node_modules')
+				path.resolve(__dirname, 'node_modules')
 			])
-		]
+		],
 	}
 ]);
 

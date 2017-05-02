@@ -11,6 +11,7 @@
   "author": "Jason Aller",
   "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
+    "@types/node": "^7.0.15",
     "bootstrap-loader": "^2.0.0",
     "bootstrap-sass": "^3.3.7",
     "chai": "^3.5.0",
