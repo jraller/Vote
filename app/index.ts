@@ -94,6 +94,14 @@ const store = new VueX.Store({
 	},
 });
 
+const eventHub = new Vue();
+
+Vue.mixin({
+	data: () => {
+		return {eventHub};
+	},
+});
+
 const vm = new Vue({
 	components: {
 		app: require('./views/app.vue'),

@@ -14,7 +14,7 @@ export default {
 	methods: {
 		changeDelimiter: function () {
 			this.$store.commit('setDelimiter', this.$refs.delimiter.value);
-			// refresh from votes to current here
+			this.eventHub.$emit('getNewBallots');
 			this.$store.commit('newCandidates');
 		},
 		getDescription: (d) => {

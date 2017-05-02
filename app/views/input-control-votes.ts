@@ -1,4 +1,10 @@
 export default {
+	created: function() {
+		this.eventHub.$on('getNewBallots', data => {
+			this.$store.commit('newBallots', this.rawInput);
+			this.$store.commit('newCandidates');
+		});
+	},
 	data: function () {
 		return {
 			rawInput: '',
