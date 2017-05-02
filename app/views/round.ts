@@ -8,8 +8,6 @@ module.exports = {
 			return this.$store.state.positions;
 		},
 		candidates() {
-			console.log('round', this.round);
-			console.log('candidates', this.$store.state.round[this.index].candidates);
 			return this.$store.state.round[this.index].candidates;
 		},
 		roundType() {

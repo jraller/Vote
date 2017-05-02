@@ -10,7 +10,6 @@
                 </div>
             </li>
         </ul>
-        <p>disqualified: {{ disqualifyCandidates }}</p>
     </div>
 </template>
 
