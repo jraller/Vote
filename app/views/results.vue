@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Results</h2>
-        <round v-for="round in rounds" :key="round.name" :name="round.name"></round>
+        <round v-for="(round, index) in roundCount" v-bind:key="round" v-bind:round="round" v-bind:index="index"></round>
     </div>
 </template>
 

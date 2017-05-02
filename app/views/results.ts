@@ -1,17 +1,11 @@
 module.exports = {
-    components: {
-        round: require('./round.vue'),
-    },
-    data: function() {
-        return {
-            rounds: [
-                {
-                    name: '1'
-                },
-                {
-                    name: '2'
-                }
-            ]
-        }
-    }
+	components: {
+		round: require('./round.vue'),
+	},
+	computed: {
+		roundCount() {
+			console.log('round count', this.$store.state.round.length);
+			return this.$store.state.round.length;
+		},
+	},
 };

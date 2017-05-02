@@ -18,8 +18,11 @@ const delimiters = new Delimiters();
 
 const store = new VueX.Store({
 	getters: { // computed properties for stores
+		noCandidatesLeft: (state) => {
+			return (state.rawLength > 0) && (state.candidateList.length - state.disqualifiedCandidates.length < state.positions);
+		},
 		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
-			return state.rawLength > 1 && state.rawLength - state.ballotCount > 0;
+			return (state.rawLength > 1) && (state.rawLength - state.ballotCount > 0);
 		},
 	},
 	modules: {
@@ -89,6 +92,10 @@ const store = new VueX.Store({
 		disqualifiedCandidates: [],
 		positions: 1,
 		rawLength: 0,
+		round: [
+			{candidates: ['fred', 'sally', 'john'], roundType: 'roundSummary'},
+			{candidates: ['fred', 'sally'], roundType: 'roundSummary'},
+		],
 		sortOrder: 'u',
 		voteValues: false,
 	},

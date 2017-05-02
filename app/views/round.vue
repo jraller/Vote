@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Round {{ name }}</h3>
+        <h3>Round {{ round }}</h3>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
