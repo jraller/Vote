@@ -50,9 +50,9 @@ const store = new VueX.Store({
 		newCandidates(state) {
 			state.candidateList = [];
 			for (const row of state.current) {
-				for (const entry of row) {
-					if (state.candidateList.indexOf(entry) === -1) {
-						state.candidateList.push(entry);
+				for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
+					if (state.candidateList.indexOf(row[index]) === -1) {
+						state.candidateList.push(row[index]);
 					}
 				}
 			}
@@ -61,14 +61,23 @@ const store = new VueX.Store({
 		pickDelimiter(state, raw) {
 			state.delimiter = delimiters.pickDelimiter(raw);
 		},
+		pickWeightedValues(state, raw) {
+			state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));
+		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
 		},
 		updateDisqualified(state, value) {
 			state.disqualifiedCandidates = value;
 		},
+		updatePositions(state, value) {
+			state.positions = value;
+		},
 		updateSortOrder(state, value) {
 			state.sortOrder = value;
+		},
+		updateVoteValues(state, value) {
+			state.voteValues = value;
 		},
 	},
 	state: {
@@ -78,8 +87,10 @@ const store = new VueX.Store({
 		delimiter: 'auto',
 		delimiterList: delimiters.listDelimiters(),
 		disqualifiedCandidates: [],
+		positions: 1,
 		rawLength: 0,
 		sortOrder: 'u',
+		voteValues: false,
 	},
 });
 

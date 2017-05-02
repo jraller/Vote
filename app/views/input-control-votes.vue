@@ -2,7 +2,7 @@
     <div class="form-group">
         <label for="votes">Votes:</label>
         <br />
-        <textarea id="votes" v-on:change="changeVotes" v-model="rawInput" class="form-control" rows="10"></textarea>
+        <textarea id="votes" v-model="rawInput" v-on:change="changeVotes" class="form-control" rows="10"></textarea>
     </div>
 </template>
 

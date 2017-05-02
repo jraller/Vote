@@ -2,7 +2,7 @@
     <div class="form-group">
         <div class="checkbox">
             <label for="voteValue">
-                <input id="voteValue" type="checkbox" v-model="voteValues">First column is vote values {{ voteValues }}
+                <input id="voteValue" type="checkbox" v-model="voteValues" v-on:change="changeVoteValues" ref="voteValues">First column is vote values {{ voteValues }}
             </label>
         </div>
     </div>

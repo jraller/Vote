@@ -4,13 +4,12 @@ import Component from 'vue-class-component';
 
 @Component
 export default class inputControlWeightedValues extends Vue {
-    voteValues = []; // component local data
+	get voteValues() {
+		return this.$store.state.voteValues;
+	}
 
-    get candidates() { //computed
-        return this.$store.state.voteValues;
-    }
-
-    changeDisqualified() { //method
-        this.$store.commit('updateVoteValues', this.voteValues);
-    }
+	changeVoteValues() { //method
+		this.$store.commit('updateVoteValues', (this.$refs.voteValues as HTMLFormElement).checked);
+		this.$store.commit('newCandidates');
+	}
 }

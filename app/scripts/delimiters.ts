@@ -44,7 +44,7 @@ export class Delimiters {
 		let delimiter;
 
 		const tabs = (input.match(/\t/g) || []).length;
-		const commas = (input.match(/,/g) || []).length;
+		const commas = (input.match(/\,/g) || []).length;
 		const pipes = (input.match(/\|/g) || []).length;
 
 		if (pipes > 0) {
