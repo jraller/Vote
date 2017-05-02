@@ -4,7 +4,17 @@
             <h2>Input Controls</h2>
         </div>
         <div class="row">
-            <inputs></inputs>
+            <form action="">
+                <div class="col-sm-6">
+                    <inputControlVotes></inputControlVotes>
+                </div>
+                <div class="col-sm-6">
+                    <inputControlDelimiter></inputControlDelimiter>
+                    <inputControlPositions></inputControlPositions>
+                    <inputControlSortOrder></inputControlSortOrder>
+                    <inputControlWeightedValues></inputControlWeightedValues>
+                </div>
+            </form>
         </div>
         <div v-show="showDisqualify" class="row">
             <div class="col-xs-12">

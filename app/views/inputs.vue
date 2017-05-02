@@ -36,11 +36,3 @@
 </template>
 
 <script lang="ts" src="./inputs.ts"></script>
-
-<style>
-    #votes {
-        white-space: pre;
-        overflow-wrap: normal;
-        overflow-y: scroll;
-    }
-</style>

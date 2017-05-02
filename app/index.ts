@@ -28,18 +28,24 @@ const store = new VueX.Store({
 	},
 	mutations: {
 		newBallots(state, raw) {
-			let temp = raw.toString().trim().split('\n');
-			state.rawLength = temp.length;
-			temp = temp.filter(library.nonEmpty);
-			state.ballotCount = temp.length;
+			if (raw) {
+				let temp = raw.toString().trim().split('\n');
+				state.rawLength = temp.length;
+				temp = temp.filter(library.nonEmpty);
+				state.ballotCount = temp.length;
 
-			for (let index = 0; index < temp.length; index++) {
-				temp[index] = temp[index].split(String.fromCharCode(delimiters.getCode(state.delimiter)));
-				for (let ind = 0; ind < temp[index].length; ind++) {
-					temp[index][ind] = temp[index][ind].trim();
+				for (let index = 0; index < temp.length; index++) {
+					temp[index] = temp[index].split(String.fromCharCode(delimiters.getCode(state.delimiter)));
+					for (let ind = 0; ind < temp[index].length; ind++) {
+						temp[index][ind] = temp[index][ind].trim();
+					}
 				}
+				state.current = temp;
+			} else {
+				state.rawLength = 0;
+				state.ballotCount = 0;
+				state.current = [];
 			}
-			state.current = temp;
 		},
 		newCandidates(state) {
 			state.candidateList = [];
@@ -50,6 +56,7 @@ const store = new VueX.Store({
 					}
 				}
 			}
+			library.sortCandidateList(state.candidateList, state.sortOrder);
 		},
 		pickDelimiter(state, raw) {
 			state.delimiter = delimiters.pickDelimiter(raw);
@@ -60,6 +67,9 @@ const store = new VueX.Store({
 		updateDisqualified(state, value) {
 			state.disqualifiedCandidates = value;
 		},
+		updateSortOrder(state, value) {
+			state.sortOrder = value;
+		},
 	},
 	state: {
 		ballotCount: 0,
@@ -69,6 +79,7 @@ const store = new VueX.Store({
 		delimiterList: delimiters.listDelimiters(),
 		disqualifiedCandidates: [],
 		rawLength: 0,
+		sortOrder: 'u',
 	},
 });
 

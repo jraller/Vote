@@ -2,18 +2,20 @@ module.exports = {
     components: {
         chart: require('./chart.vue'),
         disqualify: require('./disqualify.vue'),
-        inputs: require('./inputs.vue'),
+        inputControlVotes: require('./input-control-votes.vue'),
+        inputControlDelimiter: require('./input-control-delimiter.vue'),
+        inputControlPositions: require('./input-control-positions.vue'),
+        inputControlSortOrder: require('./input-control-sort-order.vue'),
+        inputControlWeightedValues: require('./input-control-weighted-values.vue'),
         results: require('./results.vue'),
         sanity: require('./sanity.vue')
     },
     data: function() {
         return {
-            message: 'app level message',
             showDisqualify: true,
             showSanity: true,
             showResults: true,
             showChart: true,
-            workingCopy: []
         }
     }
 };

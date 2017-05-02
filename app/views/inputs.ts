@@ -27,9 +27,6 @@ export default {
 		// ...mapMutations([
 		//     'changeDelimiter' // payload for this isn't fully handled?
 		// ]),
-		// ...mapMutations({
-		//     fred: 'changeFred'
-		// }),
 		changeVotes: function () {
 			this.$emit('inputChange', 'votes');
 			if (this.rawInput === '') {
