@@ -12,7 +12,9 @@ const PATHS = {
 
 // merge sect 4.2 of SurviveJS - Webpack -- refactor
 
-const commonConfig = merge ([
+// https://webpack.js.org/guides/code-splitting-async/
+
+const commonConfig = merge([
 	{
 		entry: {
 			// the entry point of our app
@@ -31,7 +33,7 @@ const commonConfig = merge ([
 			rules: [
 				{
 					test: /\.vue$/,
-					loader: 'vue-loader',
+					loader: 'vue-loader'
 				},
 				{
 					test: /\.tsx?$/,
@@ -66,7 +68,7 @@ const commonConfig = merge ([
 				{
 					'NODE_ENV': 'development'
 				}
-			),
+			)
 		],
 		resolve: {
 			// Add '.ts' and '.tsx' as a resolvable extension.
@@ -90,7 +92,7 @@ const productionConfig = merge([
 				{
 					filename: '[name].bundle.js',
 					minChunks: Infinity,
-					names: ['vendor'],
+					names: ['vendor']
 				}
 			),
 			new webpack.DefinePlugin({
@@ -155,16 +157,16 @@ const developmentConfig = merge([
 			}
 		},
 		// entry: [
-			// 'webpack-dev-server/client?http://localhost:8000',
-			// bundle the client for webpack-dev-server
-			// and connect to the provided endpoint
+		// 'webpack-dev-server/client?http://localhost:8000',
+		// bundle the client for webpack-dev-server
+		// and connect to the provided endpoint
 
-			// 'webpack/hot/only-dev-server',
-			// bundle the client for hot reloading
-			// only- means to only hot reload for successful updates
+		// 'webpack/hot/only-dev-server',
+		// bundle the client for hot reloading
+		// only- means to only hot reload for successful updates
 
-			// the entry point of our app
-			// './app/index.ts'
+		// the entry point of our app
+		// './app/index.ts'
 		// ],
 		module: {
 			rules: [
@@ -195,7 +197,7 @@ const developmentConfig = merge([
 			new webpack.WatchIgnorePlugin([
 				path.resolve(__dirname, 'node_modules')
 			])
-		],
+		]
 	}
 ]);
 
