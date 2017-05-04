@@ -1,6 +1,5 @@
-import * as library from './../app/scripts/library';
 import {expect} from 'chai';
-// import 'mocha';
+import * as library from './../app/scripts/library';
 
 describe('library', () => {
 	describe('nonEmpty', () => {

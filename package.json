@@ -12,6 +12,7 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
     "@types/node": "^7.0.15",
+    "avoriaz": "^1.11.2",
     "babel": "^6.23.0",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",

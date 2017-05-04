@@ -13,14 +13,17 @@ module.exports = function (wallaby) {
 			type: 'browser',
 		},
 		files: [
+			// {pattern: 'node_modules/chai/chai.js', instrument: false},
 			{pattern: 'tsconfig.json', load: false},
-			{pattern: 'app/**/*.ts', load: false}
+			{pattern: 'app/**/*.ts', load: false},
+			{pattern: 'app/**/*.vue', load: false, instrument: false}
 		],
 		hints: {
 			ignoreCoverage: /ignore coverage/
 		},
 		postprocessor: wallabyPostprocessor,
 		setup: function () {
+			// window.expect = chai.expect;
 			window.__moduleBundler.loadTests();
 		},
 		testFramework: 'mocha',
