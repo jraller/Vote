@@ -2,8 +2,9 @@ const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
-const Visualizer = require('webpack-visualizer-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const StatsPlugin = require('stats-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 const PATHS = {
 	app: path.resolve(__dirname, 'app'),
@@ -14,6 +15,16 @@ const PATHS = {
 
 // https://webpack.js.org/guides/code-splitting-async/
 
+const babelOptions = {
+	'presets': [
+		['es2015',
+			{
+				'modules': false
+			}
+		]
+	]
+};
+
 const commonConfig = merge([
 	{
 		entry: {
@@ -22,7 +33,7 @@ const commonConfig = merge([
 			vendor: [
 				'bootstrap-loader',
 				'jquery'
-			]
+			],
 		},
 		output: {
 			path: PATHS.build,
@@ -37,12 +48,28 @@ const commonConfig = merge([
 				},
 				{
 					test: /\.tsx?$/,
-					loader: 'ts-loader',
 					exclude: /node_modules/,
-					options: {
-						appendTsSuffixTo: [
-							/\.vue$/
-						]
+					use: [
+						{
+							loader: 'babel-loader',
+							options: babelOptions
+						},
+						{
+							loader: 'ts-loader',
+							options: {
+								appendTsSuffixTo: [
+									/\.vue$/
+								]
+							}
+						}
+					]
+				},
+				{
+					test: /\.js$/,
+					exclude: /node_modules/,
+					use: {
+						loader: 'babel-loader',
+						options: babelOptions
 					}
 				},
 				{
@@ -50,11 +77,12 @@ const commonConfig = merge([
 					loaders: ['style-loader', 'css-loader', 'postcss', 'sass']
 				},
 				{
-					test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url-loader?limit=10000'
+					test: /\.(woff2?|ttf|eot|svg)$/,
+					loader: 'url-loader?limit=10000'
 				},
 				{
-					test: /bootstrap\/dist\/js\/umd\//,
-					loader: 'imports?jQuery=jquery'
+					test: /bootstrap-sass\/assets\/javascripts\//,
+					use: 'imports-loader?jQuery=jquery'
 				}
 			]
 		},
@@ -62,7 +90,8 @@ const commonConfig = merge([
 			new webpack.ProvidePlugin({
 				jQuery: 'jquery',
 				$: 'jquery',
-				jquery: 'jquery'
+				jquery: 'jquery',
+				'window.Tether': 'tether'
 			}),
 			new webpack.EnvironmentPlugin(
 				{
@@ -100,7 +129,6 @@ const productionConfig = merge([
 					NODE_ENV: JSON.stringify('production')
 				}
 			}),
-			// only for prod:
 			new webpack.optimize.UglifyJsPlugin({
 				comments: true,
 				mangle: false,
@@ -108,6 +136,12 @@ const productionConfig = merge([
 					warnings: true
 				}
 			}),
+			new StatsPlugin(
+				'stats.json', {
+					chunkModules: true,
+					exclude: [/node_modules/]
+				}
+			),
 			new Visualizer()
 		]
 	}

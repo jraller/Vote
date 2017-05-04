@@ -5,8 +5,7 @@
     "inlineSources": true,
     "lib": [
       "dom",
-      "es5",
-      "es2015.promise"
+      "es5"
     ],
     "module": "commonjs",
     "moduleResolution": "node",
