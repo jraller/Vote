@@ -38,10 +38,14 @@ const store = new VueX.Store({
 				state.ballotCount = temp.length;
 
 				for (let index = 0; index < temp.length; index++) {
-					temp[index] = temp[index].split(String.fromCharCode(delimiters.getCode(state.delimiter)));
+					temp[index] = temp[index]
+						.split(String.fromCharCode(delimiters.getCode(state.delimiter)));
 					for (let ind = 0; ind < temp[index].length; ind++) {
 						temp[index][ind] = temp[index][ind].trim();
 					}
+					// temp = temp.filter(
+					// 	(candidate) => state.disqualifiedCandidates.indexOf(candidate) === -1,
+					// );
 				}
 				state.current = temp;
 			} else {
