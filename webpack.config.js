@@ -104,7 +104,7 @@ const commonConfig = merge([
 			alias: {
 				'vue$': 'vue/dist/vue.esm.js'
 			},
-			extensions: ['.ts', '.tsx', '.js', '.vue']
+			extensions: ['.vue', '.ts', '.tsx', '.js']
 		}
 	},
 	parts.lintJavaScript({include: PATHS.app}),
