@@ -46,6 +46,12 @@ describe('Ballot Input', () => {
 			newCandidates: sinon.stub()
 		};
 
+		const state = {
+			data: {
+				delimiter: 'auto'
+			}
+		}
+
 		before(() => {
 
 			Vue.mixin({
@@ -54,18 +60,9 @@ describe('Ballot Input', () => {
 				}
 			});
 
-			const actions = {
-				changeVotes: sinon.stub(),
-			};
-
 			const store = new Vuex.Store({
-				actions,
 				mutations,
-				state: {
-					data: {
-						delimiter: 'auto'
-					},
-				}
+				state
 			});
 
 			changeWrapper = mount(Ballots, {
@@ -94,6 +91,15 @@ describe('Ballot Input', () => {
 			expect(changeWrapper.data().rawInput).to.equal('fred');
 
 			expect(mutations.newBallots).to.have.callCount(count + 1);
+		});
+		it('triggers newBallots with the right arguments', () => {
+			const count = mutations.newBallots.callCount;
+
+			changeWrapper.setData({rawInput: 'george'});
+			changeWrapper.find('textarea')[0].simulate('change');
+			expect(changeWrapper.data().rawInput).to.equal('george');
+
+			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
 		});
 		it('triggers newBallots when called from outside', () => {
 			const count = mutations.newBallots.callCount;
