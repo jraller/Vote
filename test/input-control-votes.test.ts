@@ -1,30 +1,27 @@
-import avoriaz, {mount} from 'avoriaz';
+import * as Avoriaz from 'avoriaz';
 import * as chai from 'chai';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
+import Vue from 'vue';
 import Vuex from 'vuex';
+import 'babel-polyfill';
 
 // https://eddyerburgh.gitbooks.io/avoriaz/content/guides/using-with-vuex.html
 
 chai.use(sinonChai);
-// avoriaz.use(Vuex);
+Avoriaz.use(Vuex);
 
 const Ballots = require('!vue-loader!./../app/views/input-control-votes.vue');
 
-Ballots.created = function(){}
-
 const expect = chai.expect;
+const mount = Avoriaz.mount;
 
 describe('Ballot Input', () => {
+
 	const wrapper = mount(Ballots);
 
-	let store;
-
-	// beforeEach(() => {
-	// 	store = new Vuex.store({
-	// 		state: {}
-	// 	});
-	// });
+	beforeEach(() => {
+	});
 
 	it('has the right name', () => {
 		expect(wrapper.name()).to.equal('InputControlVotes');
@@ -39,22 +36,51 @@ describe('Ballot Input', () => {
 		expect(textarea.hasStyle('overflow-y', 'scroll')).to.be.true;
 	});
 	it('triggers on change', () => {
-		// const changeVotes = sinon.stub();
-		const changeWrapper = mount(Ballots, {
-			store
+
+		const eventHub = new Vue();
+
+		Vue.mixin({
+			data: () => {
+				return {eventHub}
+			}
 		});
 
-		// changeWrapper.vm.created = function() {};
-		// changeWrapper.vm.changeVotes = changeVotes;
+		const actions = {
+			changeVotes: sinon.stub(),
+		};
 
-		const ballotTextarea = changeWrapper.find('#votes')[0];
+		const mutations = {
+			newBallots: sinon.stub(),
+			newCandidates: sinon.stub()
+		};
 
-		expect(ballotTextarea.value).to.be.undefined;
-		ballotTextarea.value= 'fred';
-		ballotTextarea.simulate('change');
-		expect(ballotTextarea.value).to.equal('fred');
+		const store = new Vuex.Store({
+			actions,
+			mutations,
+			state: {
+				data: {
+					delimiter: 'auto'
+				},
+			}
+		});
 
-		// expect(changeVotes).to.have.been.called;
+		const changeWrapper = mount(Ballots, {
+			store,
+			attachToDocument: true
+		});
+
+		expect(changeWrapper.isVueComponent).to.be.true;
+		expect(changeWrapper.data().rawInput).to.equal('');
+		expect(changeWrapper.contains('#votes')).to.be.true;
+		expect(changeWrapper.contains('textarea')).to.be.true;
+
+		changeWrapper.setData({rawInput: 'fred'});
+		changeWrapper.find('textarea')[0].simulate('change');
+		expect(changeWrapper.data().rawInput).to.equal('fred');
+
+		eventHub.$emit('getNewBallots');
+
+		expect(mutations.newBallots).to.have.been.called;
 	});
 
 });
