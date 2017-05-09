@@ -35,52 +35,70 @@ describe('Ballot Input', () => {
 		expect(textarea.hasStyle('overflow-wrap', 'normal')).to.be.true;
 		expect(textarea.hasStyle('overflow-y', 'scroll')).to.be.true;
 	});
-	it('triggers on change', () => {
+
+	describe('Ballots',() => {
+		let changeWrapper;
 
 		const eventHub = new Vue();
-
-		Vue.mixin({
-			data: () => {
-				return {eventHub}
-			}
-		});
-
-		const actions = {
-			changeVotes: sinon.stub(),
-		};
 
 		const mutations = {
 			newBallots: sinon.stub(),
 			newCandidates: sinon.stub()
 		};
 
-		const store = new Vuex.Store({
-			actions,
-			mutations,
-			state: {
-				data: {
-					delimiter: 'auto'
-				},
-			}
+		before(() => {
+
+			Vue.mixin({
+				data: () => {
+					return {eventHub}
+				}
+			});
+
+			const actions = {
+				changeVotes: sinon.stub(),
+			};
+
+			const store = new Vuex.Store({
+				actions,
+				mutations,
+				state: {
+					data: {
+						delimiter: 'auto'
+					},
+				}
+			});
+
+			changeWrapper = mount(Ballots, {
+				store,
+				attachToDocument: true
+			});
 		});
 
-		const changeWrapper = mount(Ballots, {
-			store,
-			attachToDocument: true
+		it('is a Vue component', () => {
+			expect(changeWrapper.isVueComponent).to.be.true;
 		});
+		it('is starts out empty', () => {
+			expect(changeWrapper.data().rawInput).to.equal('');
+		});
+		it('has the right id', () => {
+			expect(changeWrapper.contains('#votes')).to.be.true;
+		});
+		it('contains a textarea', () => {
+			expect(changeWrapper.contains('textarea')).to.be.true;
+		});
+		it('triggers newBallots when the input is changed', () => {
+			const count = mutations.newBallots.callCount;
 
-		expect(changeWrapper.isVueComponent).to.be.true;
-		expect(changeWrapper.data().rawInput).to.equal('');
-		expect(changeWrapper.contains('#votes')).to.be.true;
-		expect(changeWrapper.contains('textarea')).to.be.true;
+			changeWrapper.setData({rawInput: 'fred'});
+			changeWrapper.find('textarea')[0].simulate('change');
+			expect(changeWrapper.data().rawInput).to.equal('fred');
 
-		changeWrapper.setData({rawInput: 'fred'});
-		changeWrapper.find('textarea')[0].simulate('change');
-		expect(changeWrapper.data().rawInput).to.equal('fred');
-
-		eventHub.$emit('getNewBallots');
-
-		expect(mutations.newBallots).to.have.been.called;
+			expect(mutations.newBallots).to.have.callCount(count + 1);
+		});
+		it('triggers newBallots when called from outside', () => {
+			const count = mutations.newBallots.callCount;
+			eventHub.$emit('getNewBallots');
+			expect(mutations.newBallots).to.have.callCount(count + 1);
+		});
 	});
-
 });
