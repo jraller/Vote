@@ -11,12 +11,18 @@ module.exports = {
 		runButton: require('./runButton.vue'),
 		sanity: require('./sanity.vue')
 	},
-	data: function () {
-		return {
-			showDisqualify: true,
-			showSanity: true,
-			showResults: true,
-			showChart: true,
-		}
-	}
+	computed: {
+		showChart() {
+			return this.$store.state.visible.chart;
+		},
+		showDisqualify() {
+			return this.$store.state.visible.disqualifyList;
+		},
+		showResults() {
+			return this.$store.state.visible.results;
+		},
+		showSanity() {
+			return this.$store.state.visible.sanity;
+		},
+	},
 };

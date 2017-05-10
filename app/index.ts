@@ -17,14 +17,6 @@ Vue.use(VueX);
 const delimiters = new Delimiters();
 
 const store = new VueX.Store({
-	getters: { // computed properties for stores
-		noCandidatesLeft: (state) => {
-			return (state.rawLength > 0) && (state.candidateList.length - state.disqualifiedCandidates.length < state.positions);
-		},
-		skippedBallots: (state) => { // exposed as this.$state.store.getters.skippedBallots
-			return (state.rawLength > 1) && (state.rawLength - state.ballotCount > 0);
-		},
-	},
 	modules: {
 		// for dividing the store into modules: https://vuex.vuejs.org/en/modules.html
 		// also http://vuetips.com/vuex-module-syntax
@@ -64,6 +56,7 @@ const store = new VueX.Store({
 				}
 			}
 			library.sortCandidateList(state.candidateList, state.sortOrder);
+			state.visible.disqualifyList = state.candidateList.length > 1;
 		},
 		pickDelimiter(state, raw) {
 			state.delimiter = delimiters.pickDelimiter(raw);
@@ -73,6 +66,9 @@ const store = new VueX.Store({
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
+		},
+		setVisibleSanity(state, value) {
+			state.visible.sanity = value;
 		},
 		updateDisqualified(state, value) {
 			state.disqualifiedCandidates = value;
@@ -101,6 +97,12 @@ const store = new VueX.Store({
 			{candidates: ['fred', 'sally'], roundType: 'roundSummary'},
 		],
 		sortOrder: 'u',
+		visible: {
+			chart: false,
+			disqualifyList: false,
+			results: false,
+			sanity: false,
+		},
 		voteValues: false,
 	},
 });
