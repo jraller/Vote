@@ -20,8 +20,6 @@ describe('Sanity', () => {
 
 	const eventHub = new Vue();
 
-	const mutations = {};
-
 	const state = {
 		rawLength: 0,
 		ballotCount: 0,
@@ -39,7 +37,6 @@ describe('Sanity', () => {
 		});
 
 		const store = new Vuex.Store({
-			mutations,
 			state
 		});
 
