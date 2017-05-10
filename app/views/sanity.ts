@@ -1,5 +1,3 @@
-import {mapGetters} from 'vuex';
-
 module.exports = {
 	computed: {
 		skippedBallots() {
