@@ -9,7 +9,7 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Avoriaz.use(Vuex);
 
-const Sanity = require('!vue-loader!./../app/views/sanity.vue');
+const Sanity = require('./../app/views/sanity.vue');
 
 const expect = chai.expect;
 const mount = Avoriaz.mount;
@@ -36,11 +36,16 @@ describe('Sanity', () => {
 			}
 		});
 
+		const mutations = {
+			setVisibleSsanity: sinon.stub(),
+		};
+
 		const store = new Vuex.Store({
 			state
 		});
 
 		wrapper = mount(Sanity, {
+			mutations,
 			store,
 			attachToDocument: true
 		});
@@ -75,6 +80,7 @@ describe('Sanity', () => {
 		expect(wrapper.vm.notEnoughCandidates).to.be.true;
 	});
 	it('warns about no candidates left', () => {
+		wrapper.vm.$store.state.rawLength = 0;
 		wrapper.vm.$store.state.candidateList = [];
 		wrapper.vm.$store.state.disqualifiedCandidates = [];
 		expect(wrapper.vm.noCandidatesLeft).to.be.false;

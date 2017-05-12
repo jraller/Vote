@@ -1,5 +1,10 @@
-const webpackConfig = require('./webpack.config');
+const webpackConfig = require('./webpack.config')(); // look into altering webpack.config so not function
 const wallabyWebpack = require('wallaby-webpack');
+
+webpackConfig.module.rules = webpackConfig.module.rules.filter(r => !'.ts'.match(r.test) && !'.js'.match(r.test));
+webpackConfig.resolve.extensions = ['.vue', '.jsx', '.js'];
+delete webpackConfig.devServer;
+delete webpackConfig.entry;
 
 // https://wallabyjs.com/docs/integration/webpack.html
 
