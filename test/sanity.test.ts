@@ -41,11 +41,11 @@ describe('Sanity', () => {
 		};
 
 		const store = new Vuex.Store({
+			mutations,
 			state
 		});
 
 		wrapper = mount(Sanity, {
-			mutations,
 			store,
 			attachToDocument: true
 		});
@@ -83,6 +83,7 @@ describe('Sanity', () => {
 		wrapper.vm.$store.state.rawLength = 0;
 		wrapper.vm.$store.state.candidateList = [];
 		wrapper.vm.$store.state.disqualifiedCandidates = [];
+		wrapper.vm.$store.state.rawLength = 0;
 		expect(wrapper.vm.noCandidatesLeft).to.be.false;
 		wrapper.vm.$store.state.rawLength = 1;
 		wrapper.vm.$store.state.candidateList = ['fred'];

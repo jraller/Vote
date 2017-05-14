@@ -20,9 +20,6 @@ describe('Ballot Input', () => {
 
 	const wrapper = mount(Ballots);
 
-	beforeEach(() => {
-	});
-
 	it('has the right name', () => {
 		expect(wrapper.name()).to.equal('InputControlVotes');
 	});
@@ -100,6 +97,7 @@ describe('Ballot Input', () => {
 			expect(changeWrapper.data().rawInput).to.equal('george');
 
 			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
+			expect(mutations.newBallots).to.have.callCount(count + 1);
 		});
 		it('triggers newBallots when called from outside', () => {
 			const count = mutations.newBallots.callCount;
