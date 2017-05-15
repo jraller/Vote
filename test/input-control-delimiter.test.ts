@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {mount} from 'avoriaz';
 
-const Delimiter = require('../app/views/inputs/input-control-delimiter.vue');
+const Delimiter = require('../app/views/inputs/delimiter.vue');
 
 describe('sanity', () => {
 	const wrapper = mount(Delimiter);
