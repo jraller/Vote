@@ -47,17 +47,11 @@ const store = new VueX.Store({
 			}
 		},
 		newCandidates(state) {
-			state.candidateList = [];
-			for (const row of state.current) {
-				for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
-					if (state.candidateList.indexOf(row[index]) === -1) {
-						state.candidateList.push(row[index]);
-					}
-				}
-			}
-			library.sortCandidateList(state.candidateList, state.sortOrder);
+			library.updateCandidateList(state);
+			state.candidateListFull = state.candidateList;
 			state.visible.disqualifyList = state.candidateList.length > 1;
 			state.disableRun = state.candidateList.length === 0;
+			state.visible.chart = false;
 			state.visible.results = false;
 		},
 		pickDelimiter(state, raw) {
@@ -67,8 +61,16 @@ const store = new VueX.Store({
 			state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));
 		},
 		runClicked(state) {
-			console.log('run Clicked');
+			// state.round = [];
 			state.visible.results = true;
+			// TODO remove disqualified candidates before first round
+			for (const candidate of state.disqualifiedCandidates) {
+				library.disqualify(state, candidate);
+			}
+			// TODO reset chart history by sending message through eventHub
+			eventHub.$emit('chartReset');
+			// TODO run the first round, let that round run additional rounds, or get user input
+			library.runRound(state);
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
@@ -92,6 +94,7 @@ const store = new VueX.Store({
 	state: {
 		ballotCount: 0,
 		candidateList: [],
+		candidateListFull: [],
 		current: [],
 		delimiter: 'auto',
 		delimiterList: delimiters.listDelimiters(),

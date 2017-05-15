@@ -15,12 +15,12 @@ export default class DisqualifyCandidatesList extends Vue {
 	disqualifyCandidates = []; // component local data
 
 	get candidates() { //computed
-		return this.$store.state.candidateList;
+		return this.$store.state.candidateListFull;
 	}
 
 	changeDisqualified() { //method
+		this['eventHub'].$emit('getNewBallots');
 		this.$store.commit('updateDisqualified', this.disqualifyCandidates);
-		// this['eventHub'].$emit('getNewBallots');
 		// this.$store.commit('newCandidates');
 	}
 }
