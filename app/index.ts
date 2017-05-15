@@ -103,15 +103,15 @@ const store = new VueX.Store({
 		positions: 1,
 		rawLength: 0,
 		round: [
-			{candidates: [
-				{n: 'fred', v: [3, 2]},
-				{n: 'sally', v: [2, 2]},
-				{n: 'john', v: [1, 1]},
-			], roundType: 'roundSummary'},
-			{candidates: [
-				{n: 'fred', v: [4, 2]},
-				{n: 'sally', v: [3, 2]},
-			], roundType: 'roundChoice'},
+			// {candidates: [
+			// 	{n: 'fred', v: [3, 2]},
+			// 	{n: 'sally', v: [2, 2]},
+			// 	{n: 'john', v: [1, 1]},
+			// ], roundType: 'roundSummary'},
+			// {candidates: [
+			// 	{n: 'fred', v: [4, 2]},
+			// 	{n: 'sally', v: [3, 2]},
+			// ], roundType: 'roundChoice'},
 		],
 		sortOrder: 'u',
 		visible: {

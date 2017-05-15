@@ -72,7 +72,45 @@ export function updateCandidateList(state) {
 	sortCandidateList(state.candidateList, state.sortOrder);
 }
 
+function countXPlace(state, candidate, place) {
+	console.log('counting', candidate, place);
+
+	function countFactory(voteValues) {
+		switch (voteValues) {
+			case false:
+				return (ballot) => 1;
+			case true:
+				return (ballot) => parseFloat(ballot[0]);
+		}
+	}
+
+	let value = 0;
+	const count = countFactory(state.voteValues);
+
+	// define the return function to return first column or 1
+	// and then use that function?
+
+	for (const ballot of state.current) {
+		if (ballot[place] === candidate) {
+			value = (value + count(ballot));
+		}
+	}
+
+	return value;
+}
+
 export function runRound(state) {
 	console.log('running round');
 	updateCandidateList(state);
+
+	const round = {candidates: [], roundType: ''};
+
+	for (const candidate of state.candidateList) {
+		const tally = [];
+		for (let index = 0; index < state.candidateList.length; index++) {
+			tally.push(countXPlace( state, candidate, index));
+		}
+		round.candidates.push({n: candidate, v: tally});
+	}
+	state.round.push(round);
 }
