@@ -6,7 +6,7 @@
                 <tr>
                     <th>Candidate</th>
                     <th v-for="i in positions">{{ i }}</th>
-                    <th>total</th>
+                    <th>total <span v-if="voteValues">points</span><span v-else>votes</span></th>
                     <th>%</th>
                 </tr>
             </thead>

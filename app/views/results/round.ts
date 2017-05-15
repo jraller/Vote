@@ -18,6 +18,9 @@ module.exports = {
 			const votes = this.$store.state.round[this.index].candidates
 				.reduce((a, b) => [...a, ...b.v], []);
 			return votes.reduce((a, b) => a + b);
+		},
+		voteValues() {
+			return this.$store.state.voteValues;
 		}
 	},
 	props: ['round', 'index'],

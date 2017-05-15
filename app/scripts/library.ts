@@ -107,7 +107,7 @@ export function runRound(state) {
 
 	for (const candidate of state.candidateList) {
 		const tally = [];
-		for (let index = 0; index < state.candidateList.length; index++) {
+		for (let index = (state.voteValues) ? 1 : 0; index < state.positions + (state.voteValues) ? 1 : 0; index++) {
 			tally.push(countXPlace( state, candidate, index));
 		}
 		round.candidates.push({n: candidate, v: tally});
