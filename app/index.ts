@@ -16,6 +16,9 @@ Vue.use(VueX);
 
 const delimiters = new Delimiters();
 
+// TODO look at setting up Vue modules per https://www.coding123.org/mock-vuex-in-vue-unit-tests/
+// TODO look at inject-loader and babel-plugin-rewire per https://www.coding123.org/stub-dependencies-vue-unit-tests/
+
 const store = new VueX.Store({
 	modules: {
 		// for dividing the store into modules: https://vuex.vuejs.org/en/modules.html
