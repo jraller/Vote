@@ -1,3 +1,12 @@
-/**
- * Created by Jason on 5/7/2017.
- */
+module.exports = {
+	computed: {
+		disableRun: function() {
+			return this.$store.state.disableRun;
+		},
+	},
+	methods: {
+		runClicked: function() {
+			this.$store.commit('runClicked');
+		},
+	},
+};

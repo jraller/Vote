@@ -57,12 +57,16 @@ const store = new VueX.Store({
 			}
 			library.sortCandidateList(state.candidateList, state.sortOrder);
 			state.visible.disqualifyList = state.candidateList.length > 1;
+			state.disableRun = state.candidateList.length === 0;
 		},
 		pickDelimiter(state, raw) {
 			state.delimiter = delimiters.pickDelimiter(raw);
 		},
 		pickWeightedValues(state, raw) {
 			state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));
+		},
+		runClicked(state) {
+			console.log('run Clicked');
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
@@ -89,18 +93,26 @@ const store = new VueX.Store({
 		current: [],
 		delimiter: 'auto',
 		delimiterList: delimiters.listDelimiters(),
+		disableRun: true,
 		disqualifiedCandidates: [],
 		positions: 1,
 		rawLength: 0,
 		round: [
-			{candidates: ['fred', 'sally', 'john'], roundType: 'roundSummary'},
-			{candidates: ['fred', 'sally'], roundType: 'roundSummary'},
+			{candidates: [
+				{n: 'fred', v: [3, 2]},
+				{n: 'sally', v: [2, 2]},
+				{n: 'john', v: [1, 1]},
+			], roundType: 'roundSummary'},
+			{candidates: [
+				{n: 'fred', v: [4, 2]},
+				{n: 'sally', v: [3, 2]},
+			], roundType: 'roundChoice'},
 		],
 		sortOrder: 'u',
 		visible: {
 			chart: false,
 			disqualifyList: false,
-			results: false,
+			results: true,
 			sanity: false,
 		},
 		voteValues: false,

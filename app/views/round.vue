@@ -11,17 +11,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="candidate in candidates">
-                    <td>{{ candidate }}</td>
-                    <td v-for="i in positions">{{ i }}</td>
-                    <td>t</td>
-                    <td>p</td>
-                </tr>
+				<candidateRow v-for="candidate in candidates" v-bind:key="candidate" v-bind:candidate="candidate" v-bind:round="round" v-bind:total="total"></candidateRow>
+
+                <!--<tr v-for="candidate in candidates">-->
+                    <!--<td>{{ candidate.n }}</td>-->
+                    <!--<td v-for="(p, i) in positions">{{ candidate.v[i] }}</td>-->
+                    <!--<td>{{ candidateTotal() }}</td> &lt;!&ndash; candidate.v.reduce(function(a, b) {return a + b;}) &ndash;&gt;-->
+                    <!--<td>{{ candidatePercent() }}</td>-->
+                <!--</tr>-->
             </tbody>
             <tfoot>
                 <tr>
                     <td :colspan="positions + 1"></td>
-                    <td>T</td>
+                    <td>{{ total }}</td>
                     <td></td>
                 </tr>
             </tfoot>

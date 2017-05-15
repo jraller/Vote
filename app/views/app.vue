@@ -6,7 +6,7 @@
                 Input Controls
             </div>
             <div class="panel-body">
-                <form action="">
+                <form action="" v-on:submit.prevent>
                     <div class="row">
                         <div class="col-sm-6">
                             <inputControlVotes></inputControlVotes>

@@ -1,5 +1,6 @@
 module.exports = {
 	components: {
+		candidateRow: require('./candidate-row.vue'),
 		roundSummary: require('./round-summary.vue'),
 		roundChoice: require('./round-choice.vue'),
 	},
@@ -13,6 +14,11 @@ module.exports = {
 		roundType() {
 			return this.$store.state.round[this.index].roundType;
 		},
+		total() {
+			const votes = this.$store.state.round[this.index].candidates
+				.reduce((a, b) => [...a, ...b.v], []);
+			return votes.reduce((a, b) => a + b);
+		}
 	},
 	props: ['round', 'index'],
 };
