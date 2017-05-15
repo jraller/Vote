@@ -7,4 +7,4 @@
     </div>
 </template>
 
-<script lang="ts" src="./input-control-delimiter.ts"></script>
+<script lang="ts" src="./delimiter.ts"></script>

@@ -11,7 +11,7 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Avoriaz.use(Vuex);
 
-const Ballots = require('./../app/views/input-control-votes.vue');
+const Ballots = require('../app/views/inputs/ballots.vue');
 
 const expect = chai.expect;
 const mount = Avoriaz.mount;

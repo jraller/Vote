@@ -9,7 +9,7 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Vue.use(Vuex);
 
-const Positions = require('./../app/views/input-control-positions.vue');
+const Positions = require('../app/views/inputs/positions.vue');
 
 const expect = chai.expect;
 const mount = Avoriaz.mount;

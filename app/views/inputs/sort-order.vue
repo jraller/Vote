@@ -9,4 +9,4 @@
     </div>
 </template>
 
-<script lang="ts" src="./input-control-sort-order.ts"></script>
+<script lang="ts" src="./sort-order.ts"></script>

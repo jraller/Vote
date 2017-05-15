@@ -6,7 +6,7 @@
     </div>
 </template>
 
-<script lang="ts" src="./input-control-votes.ts"></script>
+<script lang="ts" src="./ballots.ts"></script>
 
 <style>
     #votes {

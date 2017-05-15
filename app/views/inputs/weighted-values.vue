@@ -8,4 +8,4 @@
     </div>
 </template>
 
-<script lang="ts" src="./input-control-weighted-values.ts"></script>
+<script lang="ts" src="./weighted-values.ts"></script>

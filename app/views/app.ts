@@ -2,13 +2,13 @@ module.exports = {
 	components: {
 		chart: require('./chart.vue'),
 		disqualify: require('./disqualify.vue'),
-		inputControlVotes: require('./input-control-votes.vue'),
-		inputControlDelimiter: require('./input-control-delimiter.vue'),
-		inputControlPositions: require('./input-control-positions.vue'),
-		inputControlSortOrder: require('./input-control-sort-order.vue'),
-		inputControlWeightedValues: require('./input-control-weighted-values.vue'),
-		results: require('./results.vue'),
-		runButton: require('./runButton.vue'),
+		inputControlVotes: require('./inputs/ballots.vue'),
+		inputControlDelimiter: require('./inputs/delimiter.vue'),
+		inputControlPositions: require('./inputs/positions.vue'),
+		inputControlSortOrder: require('./inputs/sort-order.vue'),
+		inputControlWeightedValues: require('./inputs/weighted-values.vue'),
+		results: require('./results/results.vue'),
+		runButton: require('./inputs/runButton.vue'),
 		sanity: require('./sanity.vue')
 	},
 	computed: {

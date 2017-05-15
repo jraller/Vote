@@ -1,4 +1,4 @@
-import {Delimiters} from '../scripts/delimiters';
+import {Delimiters} from '../../scripts/delimiters';
 
 const delimiters = new Delimiters;
 

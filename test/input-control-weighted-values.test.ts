@@ -9,7 +9,7 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Avoriaz.use(Vuex);
 
-const WeightedValues = require('./../app/views/input-control-weighted-values.vue');
+const WeightedValues = require('../app/views/inputs/weighted-values.vue');
 
 const expect = chai.expect;
 const mount = Avoriaz.mount;

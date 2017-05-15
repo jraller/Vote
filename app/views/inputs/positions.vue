@@ -5,4 +5,4 @@
     </div>
 </template>
 
-<script lang="ts" src="./input-control-positions.ts"></script>
+<script lang="ts" src="./positions.ts"></script>

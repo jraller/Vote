@@ -58,6 +58,7 @@ const store = new VueX.Store({
 			library.sortCandidateList(state.candidateList, state.sortOrder);
 			state.visible.disqualifyList = state.candidateList.length > 1;
 			state.disableRun = state.candidateList.length === 0;
+			state.visible.results = false;
 		},
 		pickDelimiter(state, raw) {
 			state.delimiter = delimiters.pickDelimiter(raw);
@@ -67,6 +68,7 @@ const store = new VueX.Store({
 		},
 		runClicked(state) {
 			console.log('run Clicked');
+			state.visible.results = true;
 		},
 		setDelimiter(state, value) {
 			state.delimiter = value;
@@ -112,7 +114,7 @@ const store = new VueX.Store({
 		visible: {
 			chart: false,
 			disqualifyList: false,
-			results: true,
+			results: false,
 			sanity: false,
 		},
 		voteValues: false,
