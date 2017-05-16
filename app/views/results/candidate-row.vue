@@ -1,5 +1,5 @@
 <template>
-	<tr>
+	<tr v-bind:class="{ danger: lowVotes }">
 		<td>{{ candidate.n }}</td>
 		<td v-for="(p, i) in positions">{{ candidate.v[i] }}</td>
 		<td>{{ candidateTotal }}</td>

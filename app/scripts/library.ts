@@ -101,14 +101,42 @@ function countXPlace(state, candidate, place) {
 export function runRound(state) {
 	updateCandidateList(state);
 
-	const round = {candidates: [], roundType: ''};
+	let lowCount = 0;
+	let lowValue = Number.POSITIVE_INFINITY;
+	const round = {
+		candidates: [],
+		roundType: '',
+	};
 
 	for (const candidate of state.candidateList) {
 		const tally = [];
 		for (let index = 0; index < state.positions; index++) {
 			tally.push(countXPlace(state, candidate, index + ((state.voteValues) ? 1 : 0)));
 		}
-		round.candidates.push({n: candidate, v: tally});
+		round.candidates.push({n: candidate, v: tally, l: false});
+		const total = tally.reduce((a, b) => a + b);
+		if (total < lowValue) {
+			lowValue = total;
+		}
 	}
-	state.round.push(round);
+	if (state.candidateList.length > state.positions) {
+		for (const candidate of round.candidates) {
+			if (candidate.v.reduce((a, b) => a + b) === lowValue) {
+				candidate.l = true;
+				lowCount++;
+			}
+		}
+	}
+	if (lowCount === 1) {
+		// TODO remove candidate and then run next round
+		for (const candidate of round.candidates) {
+			if (candidate.l === true) {
+				eliminate(state, candidate.n);
+			}
+		}
+		runRound(state);
+	} else {
+		// get user input to handle tie
+	}
+	state.round.unshift(round);
 }
