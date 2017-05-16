@@ -73,7 +73,6 @@ export function updateCandidateList(state) {
 }
 
 function countXPlace(state, candidate, place) {
-	console.log('counting', candidate, place);
 
 	function countFactory(voteValues) {
 		switch (voteValues) {
@@ -100,15 +99,14 @@ function countXPlace(state, candidate, place) {
 }
 
 export function runRound(state) {
-	console.log('running round');
 	updateCandidateList(state);
 
 	const round = {candidates: [], roundType: ''};
 
 	for (const candidate of state.candidateList) {
 		const tally = [];
-		for (let index = (state.voteValues) ? 1 : 0; index < state.positions + (state.voteValues) ? 1 : 0; index++) {
-			tally.push(countXPlace( state, candidate, index));
+		for (let index = 0; index < state.positions; index++) {
+			tally.push(countXPlace(state, candidate, index + ((state.voteValues) ? 1 : 0)));
 		}
 		round.candidates.push({n: candidate, v: tally});
 	}
