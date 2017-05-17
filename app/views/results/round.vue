@@ -28,7 +28,7 @@
                 </tr>
             </tfoot>
         </table>
-        <component :is="roundType"></component>
+        <component :is="roundType" v-bind:key="round" v-bind:round="round"></component>
     </div>
 </template>
 

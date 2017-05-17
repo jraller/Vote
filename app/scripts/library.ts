@@ -101,6 +101,7 @@ function countXPlace(state, candidate, place) {
 export function runRound(state) {
 	updateCandidateList(state);
 
+	let autoRun = false;
 	let lowCount = 0;
 	let lowValue = Number.POSITIVE_INFINITY;
 	const round = {
@@ -127,16 +128,20 @@ export function runRound(state) {
 			}
 		}
 	}
-	if (lowCount === 1) {
-		// TODO remove candidate and then run next round
+	if (lowCount === 1 || lowValue === 0) {
 		for (const candidate of round.candidates) {
 			if (candidate.l === true) {
 				eliminate(state, candidate.n);
 			}
 		}
-		runRound(state);
+		round.roundType = 'roundSummary';
+		autoRun = true;
 	} else {
 		// get user input to handle tie
+		round.roundType = 'roundChoice';
 	}
-	state.round.unshift(round);
+	state.round.push(round);
+	if (autoRun) {
+		runRound(state);
+	}
 }

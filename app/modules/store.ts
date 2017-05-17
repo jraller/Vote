@@ -40,6 +40,20 @@ export default new VueX.Store({
 				state.current = [];
 			}
 		},
+		eliminateAndContinue(state, who) {
+			if (who === 'all') {
+				const candidates = state.round[state.round.length - 1]
+					.candidates
+					.filter((c) => c.l)
+					.map((c) => c.n);
+				for (const candidate of candidates) {
+					library.eliminate(state, candidate);
+				}
+			} else {
+				library.eliminate(state, who);
+			}
+			library.runRound(state);
+		},
 		newCandidates(state) {
 			library.updateCandidateList(state);
 			state.candidateListFull = state.candidateList;
