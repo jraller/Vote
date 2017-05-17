@@ -101,7 +101,7 @@ function countXPlace(state, candidate, place) {
 export function runRound(state) {
 	updateCandidateList(state);
 
-	let autoRun = false;
+	let proceed = false;
 	let lowCount = 0;
 	let lowValue = Number.POSITIVE_INFINITY;
 	const round = {
@@ -135,13 +135,18 @@ export function runRound(state) {
 			}
 		}
 		round.roundType = 'roundSummary';
-		autoRun = true;
+		proceed = true;
 	} else {
 		// get user input to handle tie
 		round.roundType = 'roundChoice';
 	}
 	state.round.push(round);
-	if (autoRun) {
-		runRound(state);
+	if (proceed) {
+		finishRound(state);
 	}
+}
+
+export function finishRound(state) {
+	// TODO build out the rest
+	runRound(state);
 }
