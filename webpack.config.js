@@ -15,6 +15,9 @@ const PATHS = {
 
 // https://webpack.js.org/guides/code-splitting-async/
 
+// look into https://github.com/addyosmani/webpack-lighthouse-plugin
+// it might get integrated into Chrome 60
+
 const babelOptions = {
 	'presets': [
 		['es2015',
