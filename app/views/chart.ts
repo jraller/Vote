@@ -1,5 +1,7 @@
-import * as d3 from 'd3';
 import {sankey} from 'd3-sankey';
+import {format} from "d3-format";
+import {scaleOrdinal, schemeCategory20} from "d3-scale";
+import {select} from "d3-selection";
 
 export default {
     mounted: function() {
@@ -30,9 +32,9 @@ export default {
             ]
         };
 
-        const formatNumber = d3.format(',.1f');
-        const color = d3.scaleOrdinal(d3.schemeCategory20);
-        const svg = d3.select('#chart');
+        const formatNumber = format(',.1f');
+        const color = scaleOrdinal(schemeCategory20);
+        const svg = select('#chart');
         const margin = {top: 20, right: 20, bottom: 20, left: 20};
         const width = parseInt(svg.attr('width'), 10) - margin.left - margin.right;
         const height = parseInt(svg.attr('height'), 10) - margin.top - margin.bottom;

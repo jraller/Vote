@@ -18,8 +18,11 @@ const PATHS = {
 // look into https://github.com/addyosmani/webpack-lighthouse-plugin
 // it might get integrated into Chrome 60
 
+// look into imports-loader https://github.com/webpack-contrib/imports-loader
+
 const babelOptions = {
 	'presets': [
+		// 'env'
 		['es2015',
 			{
 				'modules': false
@@ -35,7 +38,7 @@ const commonConfig = merge([
 			app: PATHS.app,
 			vendor: [
 				'bootstrap-loader',
-				'jquery'
+				'jquery' // imports-loader?$=
 			],
 		},
 		output: {
@@ -47,7 +50,12 @@ const commonConfig = merge([
 			rules: [
 				{
 					test: /\.vue$/,
-					loader: 'vue-loader'
+					loader: 'vue-loader',
+					options: {
+						loaders: {
+							ts: 'ts-loader'
+						}
+					}
 				},
 				{
 					test: /\.tsx?$/,
@@ -64,7 +72,7 @@ const commonConfig = merge([
 									/\.vue$/
 								]
 							}
-						}
+						},
 					]
 				},
 				{
@@ -91,9 +99,10 @@ const commonConfig = merge([
 		},
 		plugins: [
 			new webpack.ProvidePlugin({
-				jQuery: 'jquery',
 				$: 'jquery',
-				jquery: 'jquery',
+				jQuery: 'jquery',
+				'window.jquery': 'jquery',
+				Tether: 'tether',
 				'window.Tether': 'tether'
 			}),
 			new webpack.EnvironmentPlugin(
@@ -120,6 +129,11 @@ const productionConfig = merge([
 			new CleanWebpackPlugin(
 				['dist']
 			),
+			new webpack.DefinePlugin({
+				'process.env': {
+					NODE_ENV: JSON.stringify('production')
+				}
+			}),
 			new webpack.optimize.CommonsChunkPlugin(
 				{
 					filename: '[name].bundle.js',
@@ -127,11 +141,6 @@ const productionConfig = merge([
 					names: ['vendor']
 				}
 			),
-			new webpack.DefinePlugin({
-				'process.env': {
-					NODE_ENV: JSON.stringify('production')
-				}
-			}),
 			new webpack.optimize.UglifyJsPlugin({
 				comments: true,
 				mangle: false,

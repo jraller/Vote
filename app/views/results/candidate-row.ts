@@ -1,17 +1,31 @@
 module.exports = {
 	computed: {
-		candidateTotal() {
-			return this.candidate.v.reduce((a, b) => a + b);
+		candidateTotal: function () {
+			return this.candidate.v.reduce(function(a, b) {
+				return a + b;
+			});
 		},
-		candidatePercent() {
-			return  (this.candidateTotal/this.total * 100).toFixed(2) + '%';
+		candidatePercent: function () {
+			return (this.candidateTotal / this.total * 100).toFixed(2) + '%';
 		},
-		lowVotes() {
+		lowVotes: function () {
 			return this.candidate.l;
 		},
-		positions() {
+		positions: function () {
 			return this.$store.state.positions;
 		},
+		// candidateTotal() {
+		// 	return this.candidate.v.reduce((a, b) => a + b);
+		// },
+		// candidatePercent() {
+		// 	return (this.candidateTotal / this.total * 100).toFixed(2) + '%';
+		// },
+		// lowVotes() {
+		// 	return this.candidate.l;
+		// },
+		// positions() {
+		// 	return this.$store.state.positions;
+		// },
 	},
 	props: ['candidate', 'round', 'total'],
 };

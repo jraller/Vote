@@ -6,6 +6,10 @@ function isNot(value) {
 	return value !== this.toString();
 }
 
+if (process.env.NODE_ENV === 'development') {
+	exports.isNot = isNot;
+}
+
 export function sortCandidateList(candidates, order) {
 	let result = [];
 

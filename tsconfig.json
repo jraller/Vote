@@ -1,17 +1,26 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+//    "declaration": true,
+//    "declarationDir": "dist/types",
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [
       "dom",
-      "es5"
+      "es5",
+      "es2016"
     ],
     "module": "commonjs",
     "moduleResolution": "node",
+//    "noImplicitAny": true,
     "sourceMap": true,
+//    "strictNullChecks": true,
 //    "strict": true,
-    "target": "es5"
+    "target": "es5" // changed from es5 to es2015 while testing tree shaking
+    // conflict between uglifysj which needs es5 and tree shaking
+//    "typeRoots": [
+//      "node_modules/@types"
+//    ]
   },
   "exclude": [
     "node_modules",
