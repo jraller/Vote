@@ -1,5 +1,7 @@
 import {expect} from 'chai';
-import {nonEmpty, sortCandidateList, eliminate, disqualify, updateCandidateList} from './../app/scripts/library'; //exported functions
+import * as sinon from 'sinon';
+import * as sinonChai from 'sinon-chai'
+import {nonEmpty, sortCandidateList, eliminate, disqualify, updateCandidateList, runRound} from './../app/scripts/library'; //exported functions
 
 const library = require('./../app/scripts/library'); // non-exported (except by if statement)
 const isNot = library.isNot;
@@ -105,6 +107,30 @@ describe('library', () => {
 			expect(countXPlace(state, 'a', 2)).to.equal(2);
 			expect(countXPlace(state, 'b', 2)).to.equal(1);
 			expect(countXPlace(state, 'c', 2)).to.equal(0);
+		});
+	});
+	describe('runRound', () => {
+		it('should not explode for voteValues false', () => {
+			const state = {
+				candidates: ['a', 'b'],
+				current: [
+					['a'],
+					['a', 'b']
+				],
+				positions: 1,
+				round: [],
+				voteValues: false
+			};
+			const finishRound = sinon.stub();
+
+			runRound(state, finishRound);
+			expect(state.round[0].candidates[0]).to.eql({n: 'a', v: [2], l: false});
+			expect(state.round[0].candidates[1]).to.eql({n: 'b', v: [0], l: true});
+
+			expect(finishRound.called).to.be.true;
+
+			expect(state.round[0].roundType).to.equal('roundSummary');
+			expect(state.round.length).to.equal(1);
 		});
 	});
 });
