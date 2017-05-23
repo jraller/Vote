@@ -6,12 +6,6 @@ function isNot(value) {
 	return value !== this.toString();
 }
 
-// have a single one of these at the end of the library
-// to enable testing of non-exported functions
-if (process.env.NODE_ENV !== 'production') {
-	exports.isNot = isNot;
-}
-
 export function sortCandidateList(candidates, order) {
 	let result = [];
 
@@ -155,4 +149,11 @@ export function runRound(state) {
 export function finishRound(state) {
 	// TODO build out the rest
 	runRound(state);
+}
+
+// have a single one of these at the end of the library
+// to enable testing of non-exported functions
+if (process.env.NODE_ENV !== 'production') {
+	exports.isNot = isNot;
+	exports.countXPlace = countXPlace;
 }
