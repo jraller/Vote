@@ -6,7 +6,9 @@ function isNot(value) {
 	return value !== this.toString();
 }
 
-if (process.env.NODE_ENV === 'development') {
+// have a single one of these at the end of the library
+// to enable testing of non-exported functions
+if (process.env.NODE_ENV !== 'production') {
 	exports.isNot = isNot;
 }
 

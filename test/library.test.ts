@@ -1,5 +1,8 @@
 import {expect} from 'chai';
-import {nonEmpty, isNot, sortCandidateList} from './../app/scripts/library';
+import {nonEmpty, sortCandidateList} from './../app/scripts/library'; //exported functions
+
+const library = require('./../app/scripts/library'); // non-exported (except by if statement)
+const isNot = library.isNot;
 
 describe('library', () => {
 	describe('nonEmpty', () => {
