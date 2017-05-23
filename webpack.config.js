@@ -2,6 +2,11 @@ const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
+
+const dev = require('./webpack.dev');
+const prod = require('./webpack.prod');
+const test = require('./webpack.test');
+
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
@@ -247,9 +252,22 @@ const developmentConfig = merge([
 	}
 ]);
 
+const testConfig = developmentConfig;
+
 module.exports = (env) => {
-	if (env === 'production') {
-		return merge(commonConfig, productionConfig);
+	let config = {};
+	switch(env) {
+		case 'development':
+			config = merge(commonConfig, developmentConfig);
+			break;
+		case 'production':
+			config = merge(commonConfig, productionConfig);
+			break;
+		default:
+		case 'test':
+			config = merge(commonConfig, testConfig);
+			break;
 	}
-	return merge(commonConfig, developmentConfig);
+
+	return config;
 };

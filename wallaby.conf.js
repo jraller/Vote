@@ -1,4 +1,4 @@
-const webpackConfig = require('./webpack.config')(); // look into altering webpack.config so not function
+const webpackConfig = require('./webpack.config')('test');
 const wallabyWebpack = require('wallaby-webpack');
 
 webpackConfig.module.rules = webpackConfig.module.rules.filter(r => !'.ts'.match(r.test) && !'.js'.match(r.test));
@@ -8,7 +8,7 @@ delete webpackConfig.entry;
 
 // https://wallabyjs.com/docs/integration/webpack.html
 
-module.exports = function (wallaby) {
+module.exports = function () {
 
 	const wallabyPostprocessor = wallabyWebpack(webpackConfig);
 
