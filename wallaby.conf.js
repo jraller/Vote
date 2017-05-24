@@ -18,10 +18,9 @@ module.exports = function () {
 			type: 'browser',
 		},
 		files: [
-			// {pattern: 'node_modules/chai/chai.js', instrument: false},
-			{pattern: 'tsconfig.json', load: false},
+			{pattern: 'tsconfig.json', load: false, instrument: false},
 			{pattern: 'app/**/*.ts', load: false},
-			{pattern: 'app/**/*.vue', load: false, instrument: false}
+			{pattern: 'app/**/*.vue', load: false, instrument: false},
 		],
 		hints: {
 			ignoreCoverage: /ignore coverage/

@@ -15,6 +15,9 @@ export default {
 // when the tool chain supports it this should be written like the following:
 
 // import Vue from 'vue';
+// import VueX from 'vuex';
+//
+// Vue.use(VueX);
 //
 // import Component from 'vue-class-component';
 //
