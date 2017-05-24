@@ -63,7 +63,7 @@ export default new VueX.Store({
 			state.visible.results = false;
 		},
 		pickDelimiter(state, raw) {
-			state.delimiter = delimiters.pickDelimiter(raw);
+			state.delimiter = Delimiters.pickDelimiter(raw);
 		},
 		pickWeightedValues(state, raw) {
 			state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));

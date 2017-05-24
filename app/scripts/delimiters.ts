@@ -40,11 +40,11 @@ export class Delimiters {
 		return this.delims[d].description;
 	}
 
-	public pickDelimiter(input: string): string {
+	public static pickDelimiter(input: string): string {
 		let delimiter;
 
 		const tabs = (input.match(/\t/g) || []).length;
-		const commas = (input.match(/\,/g) || []).length;
+		const commas = (input.match(/,/g) || []).length;
 		const pipes = (input.match(/\|/g) || []).length;
 
 		if (pipes > 0 /*ignore coverage*/ ) {

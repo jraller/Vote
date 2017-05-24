@@ -20,13 +20,13 @@ describe('delimiters', () => {
 	});
 	describe('pickDelimiter', () => {
 		it('should select the right delimiter for a comma separated input', () => {
-			expect(delimiter.pickDelimiter('fred,sally\nsally')).to.equal('comma');
+			expect(Delimiters.pickDelimiter('fred,sally\nsally')).to.equal('comma');
 		});
 		it('should select the right delimiter for a tab separated input', () => {
-			expect(delimiter.pickDelimiter('fred\tsally\nsally')).to.equal('tab');
+			expect(Delimiters.pickDelimiter('fred\tsally\nsally')).to.equal('tab');
 		});
 		it('should default to tab', () => {
-			expect(delimiter.pickDelimiter('fred\nsally\nsally')).to.equal('tab');
+			expect(Delimiters.pickDelimiter('fred\nsally\nsally')).to.equal('tab');
 		});
 	});
 });
