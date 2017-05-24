@@ -1,4 +1,23 @@
 export class Delimiters {
+	public static pickDelimiter(input: string): string {
+		let delimiter;
+
+		const tabs = (input.match(/\t/g) || []).length;
+		const commas = (input.match(/,/g) || []).length;
+		const pipes = (input.match(/\|/g) || []).length;
+
+		if (pipes > 0 /*ignore coverage*/ ) {
+			delimiter = 'pipe';
+		} else if (tabs > 0 && commas === 0) {
+			delimiter = 'tab';
+		} else if (commas > 0 && tabs === 0) {
+			delimiter = 'comma';
+		} else {
+			delimiter = 'tab';
+		}
+		return delimiter;
+	}
+
 	private delims = {};
 
 	public constructor() {
@@ -39,24 +58,4 @@ export class Delimiters {
 	public getDescription(d) {
 		return this.delims[d].description;
 	}
-
-	public static pickDelimiter(input: string): string {
-		let delimiter;
-
-		const tabs = (input.match(/\t/g) || []).length;
-		const commas = (input.match(/,/g) || []).length;
-		const pipes = (input.match(/\|/g) || []).length;
-
-		if (pipes > 0 /*ignore coverage*/ ) {
-			delimiter = 'pipe';
-		} else if (tabs > 0 && commas === 0) {
-			delimiter = 'tab';
-		} else if (commas > 0 && tabs === 0) {
-			delimiter = 'comma';
-		} else {
-			delimiter = 'tab';
-		}
-		return delimiter;
-	}
-
 }
