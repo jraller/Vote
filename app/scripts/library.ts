@@ -2,11 +2,11 @@ export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
 
-function isNot(value) {
+function isNot(value: string): boolean {
 	return value !== this.toString();
 }
 
-export function sortCandidateList(candidates, order) {
+export function sortCandidateList(candidates: string[], order: string): string[] {
 	let result = [];
 
 	if (order === 'u') {
@@ -31,8 +31,7 @@ export function sortCandidateList(candidates, order) {
 	return result;
 }
 
-export function eliminate(state, candidate) {
-	console.log('eliminate', candidate);
+export function eliminate(state, candidate: string|string[]): void {
 	const eliminations = [];
 
 	// normalize to candidate allowing function to handle
