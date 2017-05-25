@@ -1,6 +1,8 @@
 import { Delimiters } from '../scripts/delimiters';
 import Visible from './visible';
 
+// change some strings to enums?
+
 interface ICandidateType {
 	n: string; // name of candidate
 	v: number[]; // array of counted votes or vote values
