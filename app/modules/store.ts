@@ -3,7 +3,7 @@ import VueX from 'vuex';
 
 import eventHub from './eventHub';
 
-import { State } from './state';
+import State from './state';
 
 import * as library from '../scripts/library';
 

@@ -1,5 +1,5 @@
 import { Delimiters } from '../scripts/delimiters';
-import { Visible } from './visible';
+import Visible from './visible';
 
 interface ICandidateType {
 	n: string; // name of candidate
@@ -12,7 +12,7 @@ interface IRoundType {
 	roundType: string;
 }
 
-export class State {
+export default class State {
 	public ballotCount: number = 0;
 	public candidateList: string[] = [];
 	public candidateListFull: string[] = [];
@@ -25,7 +25,7 @@ export class State {
 	public rawLength: number = 0;
 	public round: IRoundType[] = [];
 	public sortOrder: string = 'u';
-	public visible: Visible;
+	public visible = new Visible();
 	public voteValues: boolean = false;
 }
 
