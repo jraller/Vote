@@ -104,8 +104,17 @@ describe('store', () => {
 		});
 	});
 	describe('runClicked', () => {
-		it('should', () => {
-			// TODO fix test
+		const state = new State();
+		const { runClicked } = mutations;
+		it('should make results visible', () => {
+			runClicked(state);
+			expect(state.visible.results).to.be.true;
+		});
+		it('should make results visible', () => {
+			state.disqualifiedCandidates = ['fred'];
+			state.current = [['fred', 'sally']];
+			runClicked(state);
+			expect(state.current).to.eql([['sally']]);
 		});
 	});
 });
