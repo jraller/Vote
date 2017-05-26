@@ -14,7 +14,7 @@
     "@types/node": "^7.0.22",
     "@types/sinon": "^2.2.2",
     "@types/sinon-chai": "^2.7.27",
-    "avoriaz": "^1.13.3",
+    "avoriaz": "^1.14.0",
     "babel": "^6.23.0",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",

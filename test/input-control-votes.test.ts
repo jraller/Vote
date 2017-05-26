@@ -47,7 +47,7 @@ describe('Ballot Input', () => {
 			data: {
 				delimiter: 'auto'
 			}
-		}
+		};
 
 		before(() => {
 
@@ -84,7 +84,8 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'fred'});
-			changeWrapper.find('textarea')[0].simulate('change');
+			changeWrapper.find('textarea')[0].dispatch('change');
+
 			expect(changeWrapper.data().rawInput).to.equal('fred');
 
 			expect(mutations.newBallots).to.have.callCount(count + 1);
@@ -93,7 +94,7 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'george'});
-			changeWrapper.find('textarea')[0].simulate('change');
+			changeWrapper.find('textarea')[0].dispatch('change');
 			expect(changeWrapper.data().rawInput).to.equal('george');
 
 			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
