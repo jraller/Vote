@@ -5,6 +5,7 @@ const parts = require('./webpack.parts');
 
 const developmentConfig = require('./webpack.dev');
 const productionConfig = require('./webpack.prod');
+//const lighthouseConfig = require('./webpack.lighthouse');
 const test = require('./webpack.test');
 
 const PATHS = {
@@ -129,6 +130,11 @@ const testConfig = developmentConfig;
 module.exports = (env) => {
 	let config = {};
 	switch(env) {
+
+		// once lighthouse is fixed use lighthouseConfig in combination with
+		// serving a prod built
+		// see https://github.com/addyosmani/webpack-lighthouse-plugin/issues/5
+
 		case 'development':
 			config = merge(commonConfig, developmentConfig);
 			break;

@@ -55,6 +55,7 @@
     "wallaby-webpack": "0.0.38",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5",
+    "webpack-lighthouse-plugin": "^1.0.2",
     "webpack-merge": "^4.1.0",
     "webpack-visualizer-plugin": "^0.1.11"
   },

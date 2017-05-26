@@ -1,7 +1,17 @@
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
-import {nonEmpty, sortCandidateList, eliminate, disqualify, updateCandidateList, runRound, finishRound} from './../app/scripts/library'; //exported functions
+import {
+	nonEmpty,
+	sortCandidateList,
+	eliminate,
+	disqualify,
+	updateCandidateList,
+	runRound,
+	finishRound
+} from '../app/scripts/library'; //exported functions
+
+import State from '../app/modules/state';
 
 const library = require('./../app/scripts/library'); // non-exported (except by if statement)
 const isNot = library.isNot;
@@ -18,7 +28,7 @@ describe('library', () => {
 	});
 	describe('isNot', () => {
 		it('should work as a filter function', () => {
-			expect(['a','b'].filter(isNot, 'a')).to.eql(['b']);
+			expect(['a', 'b'].filter(isNot, 'a')).to.eql(['b']);
 			expect(['b', 'a', 'b'].filter(isNot, 'a')).to.eql(['b', 'b']);
 			expect(['a'].filter(isNot, 'a')).to.eql([]);
 			expect(['aa'].filter(isNot, 'a')).to.eql(['aa']);
@@ -26,65 +36,61 @@ describe('library', () => {
 	});
 	describe('sortCandidateList', () => {
 		it('should return the input if unsorted is selected', () => {
-			expect(sortCandidateList(['b','a','c'],'u')).to.eql(['b','a','c']);
+			expect(sortCandidateList(['b', 'a', 'c'], 'u')).to.eql(['b', 'a', 'c']);
 		});
 		it('should return sorted values if first name is selected', () => {
-			expect(sortCandidateList(['b','a','c'],'f')).to.eql(['a','b','c']);
+			expect(sortCandidateList(['b', 'a', 'c'], 'f')).to.eql(['a', 'b', 'c']);
 		});
 		it('should return sorted values if last name is selected', () => {
-			expect(sortCandidateList(['a b','a a','a c'],'l')).to.eql(['a a','a b','a c']);
+			expect(sortCandidateList(['a b', 'a a', 'a c'], 'l')).to.eql(['a a', 'a b', 'a c']);
 		});
 	});
 	describe('eliminate', () => {
 		it('should remove targeted candidate', () => {
-			const state = {
-				current: [
-					['a', 'b'],
-					['b', 'a'],
-					['c']
-				]
-			};
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
 			eliminate(state, 'a');
 			expect(state.current).to.eql([['b'], ['b'], ['c']]);
 		});
 	});
 	describe('disqualify', () => {
 		it('should remove targeted candidate', () => {
-			const state = {
-				current: [
-					['a', 'b'],
-					['b', 'a'],
-					['c']
-				]
-			};
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
 			disqualify(state, 'a');
 			expect(state.current).to.eql([['b'], ['b'], ['c']]);
 		});
 	});
 	describe('updateCandidateList', () => {
 		it('should rebuild a candidate list', () => {
-			const state = {
-				candidateList : [],
-				current: [
-					['a', 'b'],
-					['b', 'a'],
-					['c']
-				]
-			};
+			const state = new State();
+			state.candidateList = [];
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
 			updateCandidateList(state);
 			expect(state.candidateList).to.eql(['a', 'b', 'c']);
 		});
 	});
 	describe('countXPlace', () => {
 		it('should count correctly for voteValues equals false', () => {
-			const state = {
-				current: [
-					['a', 'b'],
-					['b', 'a'],
-					['c']
-				],
-				voteValues: false
-			};
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
+			state.voteValues = false;
 			expect(countXPlace(state, 'a', 0)).to.equal(1);
 			expect(countXPlace(state, 'b', 0)).to.equal(1);
 			expect(countXPlace(state, 'c', 0)).to.equal(1);
@@ -93,14 +99,13 @@ describe('library', () => {
 			expect(countXPlace(state, 'c', 1)).to.equal(0);
 		});
 		it('should count correctly for voteValues equals true', () => {
-			const state = {
-				current: [
-					[1, 'a', 'b'],
-					[2, 'b', 'a'],
-					[3, 'c']
-				],
-				voteValues: true
-			};
+			const state = new State();
+			state.current = [
+				['1', 'a', 'b'],
+				['2', 'b', 'a'],
+				['3', 'c']
+			];
+			state.voteValues = true;
 			expect(countXPlace(state, 'a', 1)).to.equal(1);
 			expect(countXPlace(state, 'b', 1)).to.equal(2);
 			expect(countXPlace(state, 'c', 1)).to.equal(3);
@@ -111,16 +116,15 @@ describe('library', () => {
 	});
 	describe('runRound', () => {
 		it('should not explode for voteValues false', () => {
-			const state = {
-				candidates: ['a', 'b'],
-				current: [
-					['a'],
-					['a', 'b']
-				],
-				positions: 1,
-				round: [],
-				voteValues: false
-			};
+			const state = new State();
+			state.candidateList = ['a', 'b'];
+			state.current = [
+				['a'],
+				['a', 'b']
+			];
+			state.positions = 1;
+			state.round = [];
+			state.voteValues = false;
 			const finishStub = sinon.stub();
 
 			runRound(state, finishStub);
@@ -137,16 +141,15 @@ describe('library', () => {
 
 		});
 		it('should not explode for voteValues true', () => {
-			const state = {
-				candidates: ['a', 'b'],
-				current: [
-					[2, 'a'],
-					[1, 'a', 'b']
-				],
-				positions: 1,
-				round: [],
-				voteValues: true
-			};
+			const state = new State();
+			state.candidateList = ['a', 'b'];
+			state.current = [
+				['2', 'a'],
+				['1', 'a', 'b']
+			];
+			state.positions = 1;
+			state.round = [];
+			state.voteValues = true;
 			const finishStub = sinon.stub();
 
 			runRound(state, finishStub);

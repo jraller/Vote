@@ -18,7 +18,7 @@ export default class State {
 	public ballotCount: number = 0;
 	public candidateList: string[] = [];
 	public candidateListFull: string[] = [];
-	public current: string[][]|string[] = [];
+	public current: string[][] = [];
 	public delimiter: string = 'auto';
 	public delimiterList = new Delimiters().listDelimiters();
 	public disableRun: boolean = true;

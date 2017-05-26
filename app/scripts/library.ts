@@ -1,3 +1,5 @@
+import State from '../modules/state';
+
 export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
@@ -31,7 +33,7 @@ export function sortCandidateList(candidates: string[], order: string): string[]
 	return result;
 }
 
-export function eliminate(state, candidate: string|string[]): void {
+export function eliminate(state: State, candidate: string|string[]): void {
 	const eliminations = [];
 
 	// normalize to candidate allowing function to handle
@@ -54,12 +56,12 @@ export function eliminate(state, candidate: string|string[]): void {
 	// state.eventHub.$emit('eliminated', eliminations);
 }
 
-export function disqualify(state, candidate) {
+export function disqualify(state: State, candidate) {
 	console.log('disqualify', candidate);
 	eliminate(state, candidate);
 }
 
-export function updateCandidateList(state) {
+export function updateCandidateList(state: State) {
 	state.candidateList = [];
 	for (const row of state.current) {
 		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
@@ -71,7 +73,7 @@ export function updateCandidateList(state) {
 	sortCandidateList(state.candidateList, state.sortOrder);
 }
 
-function countXPlace(state, candidate, place) {
+function countXPlace(state: State, candidate: string, place: number): number {
 
 	function countFactory(voteValues) {
 		switch (voteValues) {
