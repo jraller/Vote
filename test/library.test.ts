@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
 import {
@@ -10,6 +10,9 @@ import {
 	runRound,
 	finishRound
 } from '../app/scripts/library'; //exported functions
+
+chai.use(sinonChai);
+const expect = chai.expect;
 
 import State from '../app/modules/state';
 
