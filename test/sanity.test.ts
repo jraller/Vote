@@ -2,7 +2,6 @@ import * as Avoriaz from 'avoriaz';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
-import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';
 
@@ -18,33 +17,19 @@ const mount = Avoriaz.mount;
 
 describe('Sanity', () => {
 
-	let wrapper;
-
-	const eventHub = new Vue();
-
-	const state = new State();
-
 	const mutations = {
 		setVisibleSanity: sinon.stub(),
 	};
+
+	const state = new State();
 
 	const store = new Vuex.Store({
 		mutations,
 		state
 	});
 
-	before(() => {
-
-		Vue.mixin({
-			data: () => {
-				return {eventHub}
-			}
-		});
-
-		wrapper = mount(Sanity, {
-			store,
-			attachToDocument: true
-		});
+	const wrapper = mount(Sanity, {
+		store,
 	});
 
 	it('is a Vue component', () => {
