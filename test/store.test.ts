@@ -117,4 +117,58 @@ describe('store', () => {
 			expect(state.current).to.eql([['sally']]);
 		});
 	});
+	describe('setDelimiter', () => {
+		const state = new State();
+		const { setDelimiter } = mutations;
+		it('should assign value', () => {
+			expect(state.delimiter).to.equal('auto');
+			setDelimiter(state, 'tab');
+			expect(state.delimiter).to.equal('tab');
+		});
+	});
+	describe('setVisibleSanity', () => {
+		const state = new State();
+		const { setVisibleSanity } = mutations;
+		it('should assing visibility', () => {
+			expect(state.visible.sanity).to.be.false;
+			setVisibleSanity(state, true);
+			expect(state.visible.sanity).to.be.true;
+		});
+	});
+	describe('updateDisqualified', () => {
+		const state = new State();
+		const { updateDisqualified } = mutations;
+		it('should assing visibility', () => {
+			expect(state.disqualifiedCandidates).to.eql([]);
+			updateDisqualified(state, ['fred']);
+			expect(state.disqualifiedCandidates).to.eql(['fred']);
+		});
+	});
+	describe('updatePositions', () => {
+		const state = new State();
+		const { updatePositions } = mutations;
+		it('should assing visibility', () => {
+			expect(state.positions).to.equal(1);
+			updatePositions(state, 4);
+			expect(state.positions).to.equal(4);
+		});
+	});
+	describe('updateSortOrder', () => {
+		const state = new State();
+		const { updateSortOrder } = mutations;
+		it('should assing visibility', () => {
+			expect(state.sortOrder).to.equal('u');
+			updateSortOrder(state, 'f');
+			expect(state.sortOrder).to.equal('f');
+		});
+	});
+	describe('updateVoteValues', () => {
+		const state = new State();
+		const { updateVoteValues } = mutations;
+		it('should assing visibility', () => {
+			expect(state.voteValues).to.be.false;
+			updateVoteValues(state, true);
+			expect(state.voteValues).to.be.true;
+		});
+	});
 });

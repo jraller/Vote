@@ -80,25 +80,12 @@ export const mutations = {
 		// TODO run the first round, let that round run additional rounds, or get user input
 		library.runRound(state);
 	},
-	setDelimiter(state: State, value: string): void {
-		state.delimiter = value;
-	},
-	setVisibleSanity(state: State, value: boolean): void {
-		state.visible.sanity = value;
-	},
-	updateDisqualified(state: State, value: string[]): void {
-		state.disqualifiedCandidates = value;
-	},
-	updatePositions(state: State, value: number): void {
-		state.positions = value;
-	},
-	updateSortOrder(state: State, value: string): void {
-		state.sortOrder = value;
-	},
-	updateVoteValues(state: State, value: boolean): void {
-		state.voteValues = value;
-	},
-
+	setDelimiter: (state: State, value: string) => state.delimiter = value,
+	setVisibleSanity: (state: State, value: boolean) => state.visible.sanity = value,
+	updateDisqualified: (state: State, value: string[]) => state.disqualifiedCandidates = value,
+	updatePositions: (state: State, value: number) => state.positions = value,
+	updateSortOrder: (state: State, value: string) => state.sortOrder = value,
+	updateVoteValues: (state: State, value: boolean) => state.voteValues = value,
 };
 
 export default new VueX.Store({
