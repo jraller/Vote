@@ -168,5 +168,30 @@ describe('library', () => {
 			expect(state.round.length).to.equal(2);
 
 		});
+		it('should work for multiple positions', () => {
+			const state = new State();
+			state.current = [
+				['3', 'b', 'a'],
+				['2', 'a', 'c'],
+				['1', 'a', 'b']
+			];
+			state.positions = 2;
+			state.sortOrder = 'f';
+			state.voteValues = true;
+			const finishStub = sinon.stub();
+
+			runRound(state, finishStub);
+			expect(state.round[0].candidates[0]).to.eql({n: 'a', v: [3, 3], l: false});
+			expect(state.round[0].candidates[1]).to.eql({n: 'b', v: [3, 1], l: false});
+			expect(state.round[0].candidates[2]).to.eql({n: 'c', v: [0, 2], l: true});
+
+			expect(finishStub.called).to.be.true;
+
+			expect(state.round[0].roundType).to.equal('roundSummary');
+			expect(state.round.length).to.equal(1);
+
+			finishRound(state);
+			expect(state.round.length).to.equal(2);
+		});
 	});
 });
