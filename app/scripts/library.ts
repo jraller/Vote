@@ -99,7 +99,7 @@ function countXPlace(state: State, candidate: string, place: number): number {
 	return value;
 }
 
-export function runRound(state, callNext?) {
+export function runRound(state, callNext = finishRound) {
 	updateCandidateList(state);
 
 	let proceed = false;
@@ -143,11 +143,7 @@ export function runRound(state, callNext?) {
 	}
 	state.round.push(round);
 	if (proceed) {
-		if (callNext) {
-			callNext(state);
-		} else {
-			finishRound(state);
-		}
+		callNext(state);
 	}
 }
 
