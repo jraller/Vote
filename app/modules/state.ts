@@ -21,6 +21,7 @@ export default class State {
 	public current: string[][] = [];
 	public delimiter: string = 'auto';
 	public delimiterList = new Delimiters().listDelimiters();
+	public disableReset: boolean = true;
 	public disableRun: boolean = true;
 	public disqualifiedCandidates: string[] = [];
 	public positions: number = 1;

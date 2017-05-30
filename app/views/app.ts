@@ -9,6 +9,7 @@ module.exports = {
 		inputControlWeightedValues: require('./inputs/weighted-values.vue'),
 		results: require('./results/results.vue'),
 		runButton: require('./inputs/runButton.vue'),
+		resetButton: require('./inputs/resetButton.vue'),
 		sanity: require('./sanity.vue')
 	},
 	computed: {

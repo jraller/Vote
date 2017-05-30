@@ -66,8 +66,15 @@ export const mutations = {
 	pickWeightedValues(state: State, raw: string): void {
 		state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));
 	},
+	resetClicked(state: State): void {
+		state.visible.results = false;
+		state.round = [];
+		eventHub.$emit('getNewBallots');
+		state.disableReset = true;
+	},
 	runClicked(state: State): void {
-		// state.round = [];
+		state.disableRun = true;
+		state.disableReset = false;
 		state.visible.results = true;
 		// TODO remove disqualified candidates before first round
 		for (const candidate of state.disqualifiedCandidates) {

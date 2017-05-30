@@ -128,18 +128,18 @@ export function runRound(state, callNext = finishRound) {
 				lowCount++;
 			}
 		}
-	}
-	if (lowCount === 1 || lowValue === 0) {
-		for (const candidate of round.candidates) {
-			if (candidate.l === true) {
-				eliminate(state, candidate.n);
+		if (lowCount === 1 || lowValue === 0) {
+			for (const candidate of round.candidates) {
+				if (candidate.l === true) {
+					eliminate(state, candidate.n);
+				}
 			}
+			round.roundType = 'roundSummary';
+			proceed = true;
+		} else {
+			// get user input to handle tie
+			round.roundType = 'roundChoice';
 		}
-		round.roundType = 'roundSummary';
-		proceed = true;
-	} else {
-		// get user input to handle tie
-		round.roundType = 'roundChoice';
 	}
 	state.round.push(round);
 	if (proceed) {

@@ -31,6 +31,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <runButton></runButton>
+                            <resetButton></resetButton>
                         </div>
                     </div>
                 </form>
