@@ -37,6 +37,9 @@ export const mutations = {
 			state.ballotCount = 0;
 			state.current = [];
 		}
+		state.visible.results = false;
+		state.round = [];
+		state.disableReset = true;
 	},
 	eliminateAndContinue(state: State, who: string): void {
 		if (who === 'all') {
