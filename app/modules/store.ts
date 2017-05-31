@@ -15,7 +15,13 @@ Vue.use(VueX);
 
 export const actions = {};
 
-export const getters = {};
+export const getters = {
+	// atomic parts of state
+	// latest round
+};
+
+// what is a DRY way to handle UI state changes in mutations?
+// should they be internal to store, or modularized?
 
 export const mutations = {
 	newBallots(state: State, raw: string): void {
