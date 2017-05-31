@@ -13,6 +13,10 @@ const delimiters = new Delimiters();
 
 Vue.use(VueX);
 
+export const actions = {};
+
+export const getters = {};
+
 export const mutations = {
 	newBallots(state: State, raw: string): void {
 		if (raw) {
@@ -99,10 +103,13 @@ export const mutations = {
 };
 
 export default new VueX.Store({
+	actions,
+	getters,
 	modules: {
 		// for dividing the store into modules: https://vuex.vuejs.org/en/modules.html
 		// also http://vuetips.com/vuex-module-syntax
 	},
 	mutations,
 	state: new State(),
+	strict: process.env.NODE_ENV !== 'production',
 });

@@ -14,13 +14,13 @@
     "moduleResolution": "node",
 //    "noImplicitAny": true,
     "sourceMap": true,
-//    "strictNullChecks": true,
+    "strictNullChecks": true,
 //    "strict": true,
-    "target": "es5" // changed from es5 to es2015 while testing tree shaking
+    "target": "es5", // changed from es5 to es2015 while testing tree shaking
     // conflict between uglifysj which needs es5 and tree shaking
-//    "typeRoots": [
-//      "node_modules/@types"
-//    ]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules",

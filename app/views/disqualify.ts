@@ -12,7 +12,7 @@ import { // this may not be needed?
 
 @Component
 export default class DisqualifyCandidatesList extends Vue {
-	disqualifyCandidates = []; // component local data
+	disqualifyCandidates: string[] = []; // component local data
 
 	get candidates() { //computed
 		return this.$store.state.candidateListFull;

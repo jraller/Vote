@@ -1,4 +1,4 @@
-import State from '../modules/state';
+import State, {ICandidateType, IRoundType} from '../modules/state';
 
 export function nonEmpty(value: string): boolean {
 	return value !== '';
@@ -9,7 +9,7 @@ function isNot(value: string): boolean {
 }
 
 export function sortCandidateList(candidates: string[], order: string): string[] {
-	let result = [];
+	let result: string[] = [];
 
 	if (order === 'u') {
 		result = candidates;
@@ -34,7 +34,7 @@ export function sortCandidateList(candidates: string[], order: string): string[]
 }
 
 export function eliminate(state: State, candidate: string|string[]): void {
-	const eliminations = [];
+	const eliminations: object[] = [];
 
 	// normalize to candidate allowing function to handle
 	// a single elimination via string
@@ -56,7 +56,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	// state.eventHub.$emit('eliminated', eliminations);
 }
 
-export function disqualify(state: State, candidate) {
+export function disqualify(state: State, candidate: string) {
 	console.log('disqualify', candidate);
 	eliminate(state, candidate);
 }
@@ -75,7 +75,7 @@ export function updateCandidateList(state: State) {
 
 function countXPlace(state: State, candidate: string, place: number): number {
 
-	function countFactory(voteValues) {
+	function countFactory(voteValues: boolean) {
 		switch (voteValues) {
 			case false:
 				return (ballot) => 1;
@@ -99,31 +99,31 @@ function countXPlace(state: State, candidate: string, place: number): number {
 	return value;
 }
 
-export function runRound(state, callNext = finishRound) {
+export function runRound(state: State, callNext = finishRound) {
 	updateCandidateList(state);
 
 	let proceed = false;
 	let lowCount = 0;
 	let lowValue = Number.POSITIVE_INFINITY;
-	const round = {
+	const round: IRoundType = {
 		candidates: [],
 		roundType: '',
 	};
 
 	for (const candidate of state.candidateList) {
-		const tally = [];
+		const tally: number[] = [];
 		for (let index = 0; index < state.positions; index++) {
 			tally.push(countXPlace(state, candidate, index + ((state.voteValues) ? 1 : 0)));
 		}
 		round.candidates.push({n: candidate, v: tally, l: false});
-		const total = tally.reduce((a, b) => a + b);
+		const total: number = tally.reduce((a: number, b: number) => a + b);
 		if (total < lowValue) {
 			lowValue = total;
 		}
 	}
 	if (state.candidateList.length > state.positions) {
 		for (const candidate of round.candidates) {
-			if (candidate.v.reduce((a, b) => a + b) === lowValue) {
+			if (candidate.v.reduce((a: number, b: number) => a + b) === lowValue) {
 				candidate.l = true;
 				lowCount++;
 			}
@@ -147,7 +147,7 @@ export function runRound(state, callNext = finishRound) {
 	}
 }
 
-export function finishRound(state) {
+export function finishRound(state: State) {
 	// TODO build out the rest
 	runRound(state);
 }

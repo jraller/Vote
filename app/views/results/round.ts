@@ -1,3 +1,5 @@
+import {ICandidateType} from '../../modules/state';
+
 module.exports = {
 	components: {
 		candidateRow: require('./candidate-row.vue'),
@@ -16,8 +18,8 @@ module.exports = {
 		},
 		total() {
 			const votes = this.$store.state.round[this.index].candidates
-				.reduce((a, b) => [...a, ...b.v], []);
-			return votes.reduce((a, b) => a + b);
+				.reduce((a: ICandidateType[], b: ICandidateType) => [...a, ...b.v], []);
+			return votes.reduce((a: number, b: number) => a + b);
 		},
 		voteValues() {
 			return this.$store.state.voteValues;

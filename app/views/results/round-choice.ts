@@ -1,9 +1,11 @@
+import {ICandidateType} from '../../modules/state';
+
 module.exports = {
 	computed: {
-		choices() {
+		choices(): string[] {
 			let response = this.$store.state.round[this.round - 1].candidates;
-			response = response.filter((c) => c.l === true)
-				.map((c) => c.n);
+			response = response.filter((c: ICandidateType) => c.l === true)
+				.map((c: ICandidateType) => c.n);
 			if (response.length < this.$store.state.candidateList.length) {
 				response = response.concat(['all']);
 			}
@@ -17,7 +19,7 @@ module.exports = {
 		}
 	},
 	methods: {
-		eliminate(who) {
+		eliminate(who: string) {
 			if (who === 'all') {
 				this.chosen = 'Everyone who tied for last'
 			} else {

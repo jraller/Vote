@@ -51,11 +51,11 @@ export class Delimiters {
 		});
 	}
 
-	public getCode(d) {
+	public getCode(d: string): number {
 		return this.delims[d].code;
 	}
 
-	public getDescription(d) {
+	public getDescription(d: string): string {
 		return this.delims[d].description;
 	}
 }

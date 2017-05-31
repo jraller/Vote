@@ -17,10 +17,10 @@ export default {
 			this.eventHub.$emit('getNewBallots');
 			this.$store.commit('newCandidates');
 		},
-		getDescription: (d) => {
+		getDescription: (d: string) => {
 			return delimiters.getDescription(d);
 		},
-		getDisabled: (d) => {
+		getDisabled: (d: string) => {
 			return d === 'auto';
 		},
 	},

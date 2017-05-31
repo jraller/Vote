@@ -3,13 +3,13 @@ import Visible from './visible';
 
 // change some strings to enums?
 
-interface ICandidateType {
+export interface ICandidateType {
 	n: string; // name of candidate
 	v: number[]; // array of counted votes or vote values
 	l: boolean; // flag for low vote count or value in round, may be tie
 }
 
-interface IRoundType {
+export interface IRoundType {
 	candidates: ICandidateType[];
 	roundType: string;
 }
