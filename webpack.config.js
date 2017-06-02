@@ -22,16 +22,18 @@ const PATHS = {
 
 // look into imports-loader https://github.com/webpack-contrib/imports-loader
 
-const babelOptions = {
-	'presets': [
-		// 'env'
-		['es2015',
-			{
-				'modules': false
-			}
-		]
-	]
-};
+// const babelOptions = {
+// 	'presets': [
+// 		// 'env'
+// 		['es2015',
+// 			{
+// 				'modules': false
+// 			}
+// 		]
+// 	]
+// };
+
+// https://webpack.js.org/guides/webpack-and-typescript/#enabling-tree-shaking
 
 const commonConfig = merge([
 	{
@@ -65,7 +67,7 @@ const commonConfig = merge([
 					use: [
 						{
 							loader: 'babel-loader',
-							options: babelOptions
+							// options: babelOptions
 						},
 						{
 							loader: 'ts-loader',
@@ -82,7 +84,7 @@ const commonConfig = merge([
 					exclude: /node_modules/,
 					use: {
 						loader: 'babel-loader',
-						options: babelOptions
+						// options: babelOptions
 					}
 				},
 				{

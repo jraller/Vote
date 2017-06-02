@@ -30,3 +30,10 @@
     "app/scripts/library.ts"
   ]
 }
+
+//{
+//  "compilerOptions": {
+//    "module": "es6",
+//    "target": "es6"
+//  }
+//}
