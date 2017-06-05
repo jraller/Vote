@@ -6,6 +6,7 @@ gen
 
 # npm
 node_modules
+package-lock.json
 
 # for now
 dist
