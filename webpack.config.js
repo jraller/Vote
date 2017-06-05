@@ -98,6 +98,10 @@ const commonConfig = merge([
 				{
 					test: /bootstrap-sass\/assets\/javascripts\//,
 					use: 'imports-loader?jQuery=jquery'
+				},
+				{ // only added to address brittleness in chai, see https://github.com/chaijs/chai/issues/985
+					test: /\.json$/,
+					loader: 'json-loader',
 				}
 			]
 		},
@@ -120,7 +124,7 @@ const commonConfig = merge([
 			alias: {
 				'vue$': 'vue/dist/vue.esm.js'
 			},
-			extensions: ['.vue', '.ts', '.tsx', '.js']
+			extensions: ['.vue', '.ts', '.tsx', '.js', '.json']
 		}
 	},
 	parts.lintJavaScript({include: PATHS.app}),

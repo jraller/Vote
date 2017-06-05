@@ -2,7 +2,8 @@ const webpackConfig = require('./webpack.config')('test');
 const wallabyWebpack = require('wallaby-webpack');
 
 webpackConfig.module.rules = webpackConfig.module.rules.filter(r => !'.ts'.match(r.test) && !'.js'.match(r.test));
-webpackConfig.resolve.extensions = ['.vue', '.jsx', '.js'];
+webpackConfig.resolve.extensions = ['.vue', '.jsx', '.js', '.json'];
+// json only needed for brittleness in Chai, remove when fixed
 delete webpackConfig.devServer;
 delete webpackConfig.entry;
 
