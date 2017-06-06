@@ -11,7 +11,7 @@
   "author": "Jason Aller",
   "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
-    "@types/node": "^7.0.27",
+    "@types/node": "^7.0.28",
     "@types/sinon": "^2.3.1",
     "@types/sinon-chai": "^2.7.28",
     "avoriaz": "^1.15.0",
@@ -41,7 +41,7 @@
     "stats-webpack-plugin": "^0.6.0",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.1.0",
-    "tslint": "^5.4.2",
+    "tslint": "^5.4.3",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.3.4",
     "url-loader": "^0.5.8",
