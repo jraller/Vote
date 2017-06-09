@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	components: {
 		chart: require('./chart.vue'),
 		disqualify: require('./disqualify.vue'),

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	computed: {
 		candidateTotal: function () {
 			return this.candidate.v.reduce(function(a, b) {
@@ -15,5 +15,6 @@ module.exports = {
 			return this.$store.state.positions;
 		},
 	},
+	name: 'candidateRow',
 	props: ['candidate', 'round', 'total'],
 };

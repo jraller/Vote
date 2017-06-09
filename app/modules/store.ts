@@ -37,9 +37,6 @@ export const mutations = {
 				for (let ind = 0; ind < temp[index].length; ind++) {
 					temp[index][ind] = temp[index][ind].trim();
 				}
-				// temp = temp.filter(
-				// 	(candidate) => state.disqualifiedCandidates.indexOf(candidate) === -1,
-				// );
 			}
 			state.current = temp;
 		} else {

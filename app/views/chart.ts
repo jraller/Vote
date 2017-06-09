@@ -1,7 +1,15 @@
-import {sankey, sankeyLinkHorizontal} from 'd3-sankey';
-import {format} from "d3-format";
-import {scaleOrdinal, schemeCategory20} from "d3-scale";
-import {select} from "d3-selection";
+// import {sankey, sankeyLinkHorizontal} from 'd3-sankey';
+// import {format} from 'd3-format';
+// import {scaleOrdinal, schemeCategory20} from 'd3-scale';
+// import {select} from 'd3-selection';
+
+const sankey = require('d3-sankey');
+const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
+const format = require('d3-format');
+const scale = require('d3-scale');
+const scaleOrdinal = scale.scaleOrdinal;
+const schemeCategory20 = scale.schemeCategory20;
+const select = require('d3-selection');
 
 export default {
 	mounted: function () {
