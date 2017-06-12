@@ -40,16 +40,16 @@ export default {
 			]
 		};
 
-		const formatNumber = format(',.1f');
+		const formatNumber = format.format(',.1f');
 		const color = scaleOrdinal(schemeCategory20);
-		const svg = select('#chart');
+		const svg = select.select('#chart');
 		const margin = {top: 20, right: 20, bottom: 20, left: 20};
 		const width = parseInt(svg.attr('width'), 10) - margin.left - margin.right;
 		const height = parseInt(svg.attr('height'), 10) - margin.top - margin.bottom;
 		const path = sankeyLinkHorizontal();
 		const g = svg.append('g')
 			.attr('transform', `translate(${margin.left}, ${margin.right})`);
-		const sk = sankey()
+		const sk = sankey.sankey()
 			.nodeWidth(15)
 			.nodePadding(10)
 			.extent([[1, 1], [width, height]])
