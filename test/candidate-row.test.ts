@@ -4,7 +4,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';
 
-import State from '../app/modules/state';
+import Store from '../app/modules/store';
 
 // require('jsdom-global')();
 
@@ -23,13 +23,9 @@ describe('Candidate Row', () => {
 		total: 10
 	};
 
-	const state = new State;
+	const store = Store;
 
-	state.positions = 2;
-
-	const store = new Vuex.Store({
-		state
-	});
+	store.state.positions = 2;
 
 	// const Table = {
 	// 	components: {
@@ -64,11 +60,16 @@ describe('Candidate Row', () => {
 		expect(wrapper.name()).to.equal('candidateRow');
 	});
 	it('has the right props', () => {
-		expect(wrapper.propsData().candidate.n).to.equal('a');
-		expect(wrapper.propsData().candidate.v).to.eql([3, 0]);
-		expect(wrapper.propsData().candidate.l).to.be.false;
-		expect(wrapper.propsData().round).to.equal(1);
-		expect(wrapper.propsData().total).to.equal(10);
+		// expect(wrapper.propsData().candidate.n).to.equal('a');
+		expect(wrapper.vm.$props.candidate.n).to.equal('a');
+		// expect(wrapper.propsData().candidate.v).to.eql([3, 0]);
+		expect(wrapper.vm.$props.candidate.v).to.eql([3, 0]);
+		// expect(wrapper.propsData().candidate.l).to.be.false;
+		expect(wrapper.vm.$props.candidate.l).to.be.false;
+		// expect(wrapper.propsData().round).to.equal(1);
+		expect(wrapper.vm.$props.round).to.equal(1);
+		// expect(wrapper.propsData().total).to.equal(10);
+		expect(wrapper.vm.$props.total).to.equal(10);
 	});
 	describe('computed', () => {
 		it('candidateTotal', () => {

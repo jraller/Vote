@@ -84,7 +84,7 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'fred'});
-			changeWrapper.find('textarea')[0].dispatch('change');
+			changeWrapper.find('textarea')[0].trigger('change');
 
 			expect(changeWrapper.data().rawInput).to.equal('fred');
 
@@ -94,7 +94,7 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'george'});
-			changeWrapper.find('textarea')[0].dispatch('change');
+			changeWrapper.find('textarea')[0].trigger('change');
 			expect(changeWrapper.data().rawInput).to.equal('george');
 
 			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');

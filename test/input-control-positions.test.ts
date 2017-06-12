@@ -44,7 +44,7 @@ describe('Positions', () => {
 		const count = mutations.updatePositions.callCount;
 
 		wrapper.setData({positions: 2});
-		wrapper.find('#positions')[0].simulate('change');
+		wrapper.find('#positions')[0].trigger('change');
 
 		expect(mutations.updatePositions).to.have.callCount(count + 1);
 		expect(mutations.updatePositions).to.have.been.calledWith(state, 2);
