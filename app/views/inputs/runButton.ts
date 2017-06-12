@@ -9,4 +9,5 @@ module.exports = {
 			this.$store.commit('runClicked');
 		},
 	},
+	name: 'runButton'
 };
