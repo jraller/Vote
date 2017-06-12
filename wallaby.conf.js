@@ -16,7 +16,8 @@ module.exports = function () {
 	return {
 		debug: true,
 		env: {
-			type: 'browser',
+			type: 'browser', // browser or node
+			// runner: 'node',
 		},
 		files: [
 			{pattern: 'tsconfig.json', load: false, instrument: false},

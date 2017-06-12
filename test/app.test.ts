@@ -4,17 +4,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';
 
-import State from '../app/modules/state';
+import store from '../app/modules/store';
 
 Vue.use(Vuex);
 
 const App = require('../app/views/app.vue');
 
 describe('App', () => {
-	const state = new State;
-	const store = new Vuex.Store({
-		state
-	});
 	const wrapper = mount(App, {store, attachToDocument: true});
 	it('renders the correct output', () => {
 		expect(wrapper.isVueComponent).to.be.true;
@@ -28,29 +24,28 @@ describe('App', () => {
 		expect(wrapper.find('.panel').length).to.be.greaterThan(0);
 		expect(wrapper.is('.container')).to.be.true;
 	});
-
 	// it('reports correct results', () => {
-	// 	expect(wrapper.find('button').length).to.equal(2);
+	// 	const votes = wrapper.find('#votes')[0];
+	// 	votes.element.value = 'a\na\na\nb\nb\nc';
+	// 	votes.trigger('change');
 	//
-	// 	const RunButton = require('../app/views/inputs/runButton.vue');
+	// 	console.log(wrapper.find('.panel-heading').length);
+	// 	console.log(wrapper.find('.panel-heading')[0].hasStyle('display', ''));
+	// 	console.log(wrapper.find('.panel-heading')[0].text());
+	// 	console.log(wrapper.find('.panel-heading')[1].hasStyle('display', ''));
+	// 	console.log(wrapper.find('.panel-heading')[1].text());
+	// 	console.log(wrapper.find('.panel-heading')[2].hasStyle('display', ''));
+	// 	console.log(wrapper.find('.panel-heading')[2].text());
 	//
-	// 	const runButton = wrapper.find(RunButton)[0];
+	// 	console.log(wrapper.find('button')[0].element.disabled);
+	// 	console.log(wrapper.find('button')[1].element.disabled);
 	//
-	// 	console.log(runButton.isVueComponent);
-	// 	// console.log(runButton.trigger);
+	// 	wrapper.find('button')[0].trigger('click');
 	//
-	// 	Object.keys(runButton).forEach(key => {
-	// 		console.log(key);
-	// 	});
+	// 	const results = wrapper.find('tbody');
 	//
-	// 	// console.log(votes);
+	// 	console.log(results.length);
 	//
-	//
-	// 	runButton.trigger('click');
-	//
-	//
-	// 	expect(true).to.be.false;
+	// 	expect(results[0].find('tr')[0].find('td')[0]).to.equal('a');
 	// });
-
-
 });
