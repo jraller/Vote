@@ -4,12 +4,19 @@ export default {
 			positions: 1
 		}
 	},
-	methods: {
-		changePositions: function() {
-			this.$store.commit('updatePositions', this.positions);
-		}
-	},
+	// methods: {
+	// 	changePositions: function () {
+	// 		this.$store.commit('updatePositions', this.positions);
+	// 	}
+	// },
 	name: 'inputControlPositions',
+	watch: {
+		// TODO consider using watch instead of method?
+		positions: function () {
+			this.$store.commit('updatePositions', this.positions);
+			// TODO on changes clear results? or handle it at the store level?
+		}
+	}
 }
 
 // when the tool chain supports it this should be written like the following:
