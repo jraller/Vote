@@ -1,12 +1,14 @@
 const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
+
+//const lighthouseConfig = require('./webpack.lighthouse');
+
 const parts = require('./webpack.parts');
 
 const developmentConfig = require('./webpack.dev');
 const productionConfig = require('./webpack.prod');
-//const lighthouseConfig = require('./webpack.lighthouse');
-const test = require('./webpack.test');
+const testConfig = require('./webpack.test');
 
 const PATHS = {
 	app: path.resolve(__dirname, 'app'),
@@ -131,8 +133,6 @@ const commonConfig = merge([
 	parts.loadCSS()
 ]);
 
-const testConfig = developmentConfig;
-
 module.exports = (env) => {
 	let config = {};
 	switch(env) {
@@ -149,7 +149,7 @@ module.exports = (env) => {
 			break;
 		default:
 		case 'test':
-			config = merge(commonConfig, testConfig);
+			config = merge(commonConfig, developmentConfig, testConfig);
 			break;
 	}
 
