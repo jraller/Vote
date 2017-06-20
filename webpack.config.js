@@ -121,7 +121,8 @@ const commonConfig = merge([
 				{
 					'NODE_ENV': 'development'
 				}
-			)
+			),
+			new webpack.optimize.ModuleConcatenationPlugin()
 		],
 		resolve: {
 			// Add '.ts' and '.tsx' as a resolvable extension.
