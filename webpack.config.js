@@ -37,6 +37,8 @@ const PATHS = {
 
 // https://webpack.js.org/guides/webpack-and-typescript/#enabling-tree-shaking
 
+// TODO this can be a .ts file https://medium.com/webpack/unambiguous-webpack-config-with-typescript-8519def2cac7
+
 const commonConfig = merge([
 	{
 		entry: {
