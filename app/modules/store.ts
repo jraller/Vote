@@ -22,6 +22,7 @@ export const getters = {
 
 // what is a DRY way to handle UI state changes in mutations?
 // should they be internal to store, or modularized?
+// TODO handle chart visibility by detecting end of run conditions, or as part of library runRound
 
 export const mutations = {
 	newBallots(state: State, raw: string): void {

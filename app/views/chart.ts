@@ -10,8 +10,12 @@ const scale = require('d3-scale');
 const scaleOrdinal = scale.scaleOrdinal;
 const schemeCategory20 = scale.schemeCategory20;
 const select = require('d3-selection');
+const color = require('d3-color');
+const rgb = color.rgb;
 
 export default {
+	// TODO data
+	// TODO interface with eventHub to recieve data and clear signal
 	mounted: function () {
 
 		const history = {
@@ -41,6 +45,9 @@ export default {
 		};
 
 		const formatNumber = format.format(',.1f');
+		const formatVote = function(d) {
+			return formatNumber(d) + ' votes';
+		};
 		const color = scaleOrdinal(schemeCategory20);
 		const svg = select.select('#chart');
 		const margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -67,16 +74,60 @@ export default {
 			.attr('class', 'link')
 			.attr('d', path)
 			.style('stroke-width', function (d) {
-				return Math.max(1, d['dy']);
+				return Math.max(1, d.width);
 			})
 			.sort(function (a, b) {
-				return a['dy'] - b['dy'];
+				return a.y0 - b.y0;
 			});
 
 		link.append('title')
 			.text(function (d) {
 				return `${d.source['name']} → ${d.target['name']}`;
 			});
+
+		const node = g.append('g')
+			.selectAll('.node')
+			.data(history.nodes)
+			.enter()
+			.append('g')
+			.attr('class', 'node')
+			.attr('transform', function(d) {
+				return 'translate(' + d.x0 + ',' + d.y0 + ')';
+			});
+
+		node.append('rect')
+			.attr('height', function (d) {
+				return d.y1 - d.y0;
+			})
+			.attr('width', sk.nodeWidth())
+			.style('fill', function (d) {
+				return d.color = color(d.name.replace(/ .*/, ''));
+			})
+			.style('stroke', function (d) {
+				return rgb(d.color).darker(2);
+			})
+			.append('title')
+			.text(function (d, i) {
+				return d.name + '\n' + formatVote(d.value) + '\n' + i;
+			});
+
+		node.append('text')
+			.attr('x', -6)
+			.attr('y', function (d) {
+				return (d.y1 - d.y0) / 2;
+			})
+			.attr('dy', '.35em')
+			.attr('text-anchor', 'end')
+			.attr('transform', null)
+			.text(function (d) {
+				return d.name;
+			})
+			.filter(function (d, i) { // only for the first entry align text the other way
+				return i === 0; //d.x < width / 2;
+			})
+			.attr('x', 6 + sk.nodeWidth())
+			.attr('text-anchor', 'start');
+
 	},
 	name: 'TallyChart',
 };
