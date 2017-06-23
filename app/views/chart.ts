@@ -14,35 +14,65 @@ const color = require('d3-color');
 const rgb = color.rgb;
 
 export default {
+	// TODO interface with eventHub to receive data and clear signal
+	created: function() {
+		this.eventHub.$on('clearChart', data => { // if some other component requests
+			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
+			// this.$store.commit('newCandidates');
+		});
+		this.eventHub.$on('addLink', data => {
+			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
+			// this.$store.commit('newCandidates');
+		});
+		this.eventHub.$on('addNode', data => {
+			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
+			// this.$store.commit('newCandidates');
+		});
+	},
 	// TODO data
-	// TODO interface with eventHub to recieve data and clear signal
+	data: function () {
+		return {
+			history: {
+				links: [
+					{
+						'source': 0,
+						'target': 1,
+						'value': 10
+					},
+					{
+						'source': 0,
+						'target': 2,
+						'value': 5
+					},
+					{
+						'source': 1,
+						'target': 3,
+						'value': 10
+					},
+					{
+						'source': 2,
+						'target': 3,
+						'value': 5
+					}
+				],
+				nodes: [
+					{
+						'name': 'all cast'
+					},
+					{
+						'name': 'a'
+					},
+					{
+						'name': 'b'
+					},
+					{
+						'name': 'a - winner'
+					}
+				]
+			}
+		}
+	},
 	mounted: function () {
-
-		const history = {
-			links: [
-				{
-					'source': 0,
-					'target': 2,
-					'value': 10
-				},
-				{
-					'source': 1,
-					'target': 2,
-					'value': 5
-				}
-			],
-			nodes: [
-				{
-					'name': 'a'
-				},
-				{
-					'name': 'b'
-				},
-				{
-					'name': 'c'
-				}
-			]
-		};
 
 		const formatNumber = format.format(',.1f');
 		const formatVote = function(d) {
@@ -60,15 +90,15 @@ export default {
 			.nodeWidth(15)
 			.nodePadding(10)
 			.extent([[1, 1], [width, height]])
-			.nodes(history.nodes)
-			.links(history.links)
+			.nodes(this.history.nodes)
+			.links(this.history.links)
 			.iterations(32);
 
 		sk();
 
 		const link = g.append('g')
 			.selectAll('.link')
-			.data(history.links)
+			.data(this.history.links)
 			.enter()
 			.append('path')
 			.attr('class', 'link')
@@ -87,7 +117,7 @@ export default {
 
 		const node = g.append('g')
 			.selectAll('.node')
-			.data(history.nodes)
+			.data(this.history.nodes)
 			.enter()
 			.append('g')
 			.attr('class', 'node')
