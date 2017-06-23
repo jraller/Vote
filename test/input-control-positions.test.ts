@@ -3,8 +3,10 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
 import Vue from 'vue';
+import Vuex from 'vuex';
 import 'babel-polyfill';
 
+Vue.use(Vuex);
 chai.use(sinonChai);
 
 const Positions = require('../app/views/inputs/positions.vue');
@@ -14,7 +16,21 @@ const mount = Avoriaz.mount;
 
 describe('Positions', () => {
 
-	const wrapper = mount(Positions, {});
+	const state = require('../app/modules/state');
+
+	const mutations = {
+		updatePositions: sinon.stub(),
+	};
+
+	const store = new Vuex.Store({
+		mutations,
+		state
+	});
+
+	const wrapper = mount(Positions, {
+		store,
+		attachToDocument: true
+	});
 
 	it('is a Vue component', () => {
 		expect(wrapper.isVueComponent).to.be.true;
