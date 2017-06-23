@@ -48,6 +48,14 @@ export const mutations = {
 		state.visible.results = false;
 		state.round = [];
 		state.disableReset = true;
+		eventHub.$emit('clearChart');
+		eventHub.$emit('addNode', {name: 'start'});
+		eventHub.$emit('addNode', {name: 'end'});
+		eventHub.$emit('addLink', {
+			source: 0,
+			target: 1,
+			value: 10,
+		});
 	},
 	eliminateAndContinue(state: State, who: string): void {
 		if (who === 'all') {
@@ -68,8 +76,10 @@ export const mutations = {
 		state.candidateListFull = state.candidateList;
 		state.visible.disqualifyList = state.candidateList.length > 1;
 		state.disableRun = state.candidateList.length === 0;
-		state.visible.chart = false;
+		// state.visible.chart = false;
 		state.visible.results = false;
+		// eventHub.$emit('clearChart');
+		// eventHub.$emit('addNode', {name: 'all ballots'});
 	},
 	pickDelimiter(state: State, raw: string): void {
 		state.delimiter = Delimiters.pickDelimiter(raw);

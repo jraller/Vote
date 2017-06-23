@@ -9,7 +9,7 @@
 
 <style>
     .node rect {
-        cursor: move;
+        /*cursor: move;*/
         fill-opacity: .9;
         shape-rendering: crispEdges; }
 

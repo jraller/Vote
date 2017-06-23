@@ -3,6 +3,7 @@
 // import {scaleOrdinal, schemeCategory20} from 'd3-scale';
 // import {select} from 'd3-selection';
 
+import {interval} from "d3-timer";
 const sankey = require('d3-sankey');
 const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
 const format = require('d3-format');
@@ -17,16 +18,17 @@ export default {
 	// TODO interface with eventHub to receive data and clear signal
 	created: function() {
 		this.eventHub.$on('clearChart', data => { // if some other component requests
-			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
-			// this.$store.commit('newCandidates');
+			console.log('clearChart');
+			this.history.links = [];
+			this.history.nodes = [];
 		});
 		this.eventHub.$on('addLink', data => {
-			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
-			// this.$store.commit('newCandidates');
+			console.log('addLink', data);
+			this.history.links.push(data);
 		});
 		this.eventHub.$on('addNode', data => {
-			// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
-			// this.$store.commit('newCandidates');
+			console.log('addNode', data);
+			this.history.nodes.push(data);
 		});
 	},
 	// TODO data
@@ -52,7 +54,12 @@ export default {
 					{
 						'source': 2,
 						'target': 3,
-						'value': 5
+						'value': 3
+					},
+					{
+						'source': 2,
+						'target': 4,
+						'value': 2
 					}
 				],
 				nodes: [
@@ -67,6 +74,9 @@ export default {
 					},
 					{
 						'name': 'a - winner'
+					},
+					{
+						'name': 'choices eliminated'
 					}
 				]
 			}
@@ -86,78 +96,97 @@ export default {
 		const path = sankeyLinkHorizontal();
 		const g = svg.append('g')
 			.attr('transform', `translate(${margin.left}, ${margin.right})`);
+		const linkGroup = g.append('g')
+			.attr('id', 'linkGroup');
+		const nodeGroup = g.append('g')
+			.attr('id', 'nodeGroup');
+
 		const sk = sankey.sankey()
 			.nodeWidth(15)
 			.nodePadding(10)
 			.extent([[1, 1], [width, height]])
-			.nodes(this.history.nodes)
-			.links(this.history.links)
 			.iterations(32);
 
-		sk();
+		function update(data) {
+			sk.nodes(data.nodes)
+				.links(data.links);
+			sk();
 
-		const link = g.append('g')
-			.selectAll('.link')
-			.data(this.history.links)
-			.enter()
-			.append('path')
-			.attr('class', 'link')
-			.attr('d', path)
-			.style('stroke-width', function (d) {
-				return Math.max(1, d.width);
-			})
-			.sort(function (a, b) {
-				return a.y0 - b.y0;
-			});
+			const link = linkGroup.selectAll('.link')
+				.data(data.links);
 
-		link.append('title')
-			.text(function (d) {
-				return `${d.source['name']} → ${d.target['name']}`;
-			});
+			link.enter()
+				.append('path')
+				.attr('class', 'link')
+				.attr('d', path)
+				.style('stroke-width', function (d) {
+					return Math.max(1, d.width);
+				})
+				.sort(function (a, b) {
+					return a.y0 - b.y0;
+				})
+				.append('title')
+				.text(function (d) {
+					return `${d.source['name']} → ${d.target['name']}`;
+				});
 
-		const node = g.append('g')
-			.selectAll('.node')
-			.data(this.history.nodes)
-			.enter()
-			.append('g')
-			.attr('class', 'node')
-			.attr('transform', function(d) {
-				return 'translate(' + d.x0 + ',' + d.y0 + ')';
-			});
+			link.exit().remove();
 
-		node.append('rect')
-			.attr('height', function (d) {
-				return d.y1 - d.y0;
-			})
-			.attr('width', sk.nodeWidth())
-			.style('fill', function (d) {
-				return d.color = color(d.name.replace(/ .*/, ''));
-			})
-			.style('stroke', function (d) {
-				return rgb(d.color).darker(2);
-			})
-			.append('title')
-			.text(function (d, i) {
-				return d.name + '\n' + formatVote(d.value) + '\n' + i;
-			});
+			const node = nodeGroup.selectAll('.node')
+				.data(data.nodes);
 
-		node.append('text')
-			.attr('x', -6)
-			.attr('y', function (d) {
-				return (d.y1 - d.y0) / 2;
-			})
-			.attr('dy', '.35em')
-			.attr('text-anchor', 'end')
-			.attr('transform', null)
-			.text(function (d) {
-				return d.name;
-			})
-			.filter(function (d, i) { // only for the first entry align text the other way
-				return i === 0; //d.x < width / 2;
-			})
-			.attr('x', 6 + sk.nodeWidth())
-			.attr('text-anchor', 'start');
+			const cnode = node.enter()
+				.append('g')
+				.attr('class', 'node')
+				.attr('transform', function(d) {
+					return 'translate(' + d.x0 + ',' + d.y0 + ')';
+				});
 
+			cnode.append('rect')
+				.attr('height', function (d) {
+					return d.y1 - d.y0;
+				})
+				.attr('width', sk.nodeWidth())
+				.style('fill', function (d) {
+					return d.color = color(d.name.replace(/ .*/, ''));
+				})
+				.style('stroke', function (d) {
+					return rgb(d.color).darker(2);
+				})
+				.append('title')
+				.text(function (d, i) {
+					return d.name + '\n' + formatVote(d.value) + '\n' + i;
+				});
+
+			cnode.append('text')
+				.attr('x', -6)
+				.attr('y', function (d) {
+					return (d.y1 - d.y0) / 2;
+				})
+				.attr('dy', '.35em')
+				.attr('text-anchor', 'end')
+				.attr('transform', null)
+				.text(function (d) {
+					return d.name;
+				})
+				.filter(function (d, i) { // only for the first entry align text the other way
+					return i === 0; //d.x < width / 2;
+				})
+				.attr('x', 6 + sk.nodeWidth())
+				.attr('text-anchor', 'start');
+
+			node.exit().remove();
+		}
+
+		update(this.history);
+
+		interval(() => {
+			update(this.history)
+		}, 5000);
+
+	},
+	updated: function () {
+		// console.log('data update?');
 	},
 	name: 'TallyChart',
 };
