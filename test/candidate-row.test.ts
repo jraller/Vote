@@ -90,8 +90,8 @@ describe('Candidate Row', () => {
 
 		// console.log(document.body.outerHTML.split('\n')[7]);
 
-		console.log('[', wrapper.text(), ']');
-		console.log(wrapper.html());
+		// console.log('[', wrapper.text(), ']');
+		// console.log(wrapper.html());
 
 		// console.log(wrapper.vm.$el);
 
@@ -99,7 +99,7 @@ describe('Candidate Row', () => {
 		//
 		// console.log(document.body.innerHTML.split('\n')[7]);
 
-		console.log(wrapper.find('td')[0].html());
+		// console.log(wrapper.find('td')[0].html());
 
 		const cells = wrapper.find('td');
 
@@ -111,8 +111,8 @@ describe('Candidate Row', () => {
 
 		wrapper.update();
 
-		console.log('[', wrapper.text(), ']');
-		console.log(wrapper.html());
+		// console.log('[', wrapper.text(), ']');
+		// console.log(wrapper.html());
 
 		// console.log(wrapper)
 

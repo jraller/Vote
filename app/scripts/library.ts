@@ -57,7 +57,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 }
 
 export function disqualify(state: State, candidate: string) {
-	console.log('disqualify', candidate);
 	eliminate(state, candidate);
 }
 
