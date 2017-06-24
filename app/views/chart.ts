@@ -14,6 +14,8 @@ const select = require('d3-selection');
 const color = require('d3-color');
 const rgb = color.rgb;
 
+let update;
+
 export default {
 	// TODO interface with eventHub to receive data and clear signal
 	created: function() {
@@ -29,6 +31,10 @@ export default {
 		this.eventHub.$on('addNode', data => {
 			console.log('addNode', data);
 			this.history.nodes.push(data);
+		});
+		this.eventHub.$on('redraw', () => {
+			console.log('redraw');
+			update()
 		});
 	},
 	// TODO data
@@ -107,15 +113,15 @@ export default {
 			.extent([[1, 1], [width, height]])
 			.iterations(32);
 
-		function update(data) {
-			sk.nodes(data.nodes)
-				.links(data.links);
+		update = () => {
+			sk.nodes(this.history.nodes)
+				.links(this.history.links);
 			sk();
 
 			// links
 
 			const link = linkGroup.selectAll('.link')
-				.data(data.links);
+				.data(this.history.links);
 
 			link.exit().remove();
 
@@ -136,7 +142,7 @@ export default {
 			// nodes
 
 			const node = nodeGroup.selectAll('.node')
-				.data(data.nodes);
+				.data(this.history.nodes);
 
 			node.exit().remove();
 
@@ -188,13 +194,9 @@ export default {
 				.attr('x', 6 + sk.nodeWidth())
 				.attr('text-anchor', 'start');
 
-		}
+		};
 
-		update(this.history);
-
-		interval(() => {
-			update(this.history)
-		}, 5000);
+		update();
 
 	},
 	updated: function () {

@@ -56,6 +56,7 @@ export const mutations = {
 			target: 1,
 			value: 10,
 		});
+		eventHub.$emit('redraw');
 	},
 	eliminateAndContinue(state: State, who: string): void {
 		if (who === 'all') {
