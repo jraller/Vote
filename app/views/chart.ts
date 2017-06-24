@@ -112,37 +112,49 @@ export default {
 				.links(data.links);
 			sk();
 
+			// links
+
 			const link = linkGroup.selectAll('.link')
 				.data(data.links);
 
-			link.enter()
+			link.exit().remove();
+
+			const linkEnter = link.enter()
 				.append('path')
-				.attr('class', 'link')
+				.attr('class', 'link');
+
+			linkEnter.append('title');
+
+			link.merge(linkEnter)
 				.attr('d', path)
 				.style('stroke-width', function (d) {
 					return Math.max(1, d.width);
 				})
-				.sort(function (a, b) {
-					return a.y0 - b.y0;
-				})
-				.append('title')
-				.text(function (d) {
-					return `${d.source['name']} → ${d.target['name']}`;
-				});
+				.select('title')
+				.text(d => `${d.source['name']} → ${d.target['name']}`)
 
-			link.exit().remove();
+			// nodes
 
 			const node = nodeGroup.selectAll('.node')
 				.data(data.nodes);
 
-			const cnode = node.enter()
+			node.exit().remove();
+
+			const nodeEnter = node.enter()
 				.append('g')
-				.attr('class', 'node')
+				.attr('class', 'node');
+
+			nodeEnter.append('rect')
+				.append('title');
+			nodeEnter.append('text');
+
+			node.merge(nodeEnter)
 				.attr('transform', function(d) {
 					return 'translate(' + d.x0 + ',' + d.y0 + ')';
 				});
 
-			cnode.append('rect')
+			node.merge(nodeEnter)
+				.select('rect')
 				.attr('height', function (d) {
 					return d.y1 - d.y0;
 				})
@@ -153,12 +165,13 @@ export default {
 				.style('stroke', function (d) {
 					return rgb(d.color).darker(2);
 				})
-				.append('title')
+				.select('title')
 				.text(function (d, i) {
 					return d.name + '\n' + formatVote(d.value) + '\n' + i;
 				});
 
-			cnode.append('text')
+			node.merge(nodeEnter)
+				.select('text')
 				.attr('x', -6)
 				.attr('y', function (d) {
 					return (d.y1 - d.y0) / 2;
@@ -175,7 +188,6 @@ export default {
 				.attr('x', 6 + sk.nodeWidth())
 				.attr('text-anchor', 'start');
 
-			node.exit().remove();
 		}
 
 		update(this.history);
