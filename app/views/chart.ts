@@ -24,15 +24,15 @@ export default {
 			this.history.links = [];
 			this.history.nodes = [];
 		});
-		this.eventHub.$on('addLink', data => {
+		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 			console.log('addLink', data);
 			this.history.links.push(data);
 		});
-		this.eventHub.$on('addNode', data => {
+		this.eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 			console.log('addNode', data);
 			this.history.nodes.push(data);
 		});
-		this.eventHub.$on('redraw', () => {
+		this.eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
 			console.log('redraw');
 			update()
 		});
