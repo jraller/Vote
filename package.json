@@ -11,10 +11,14 @@
   "author": "Jason Aller",
   "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/d3": "^4.9.0",
     "@types/node": "^8.0.3",
+    "@types/mocha": "^2.2.41",
     "@types/sinon": "^2.3.1",
     "@types/sinon-chai": "^2.7.28",
     "@types/webpack": "^3.0.0",
+    "@types/webpack-env": "^1.13.0",
     "avoriaz": "^2.3.0",
     "babel": "^6.23.0",
     "babel-core": "^6.25.0",
@@ -66,10 +70,6 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "dependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/d3": "^4.9.0",
-    "@types/mocha": "^2.2.41",
-    "@types/webpack-env": "^1.13.0",
     "bootstrap-sass": "^3.3.7",
     "d3": "^4.9.1",
     "d3-sankey": "^0.7.1",

@@ -3,7 +3,6 @@
 // import {scaleOrdinal, schemeCategory20} from 'd3-scale';
 // import {select} from 'd3-selection';
 
-import {interval} from "d3-timer";
 const sankey = require('d3-sankey');
 const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
 const format = require('d3-format');
@@ -19,22 +18,18 @@ let update;
 export default {
 	// TODO interface with eventHub to receive data and clear signal
 	created: function() {
-		this.eventHub.$on('clearChart', data => { // if some other component requests
-			console.log('clearChart');
+		this.eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
 			this.history.nodes = [];
 		});
 		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
-			console.log('addLink', data);
 			this.history.links.push(data);
 		});
 		this.eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
-			console.log('addNode', data);
 			this.history.nodes.push(data);
 		});
 		this.eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
-			console.log('redraw');
-			update()
+			update();
 		});
 	},
 	// TODO data
@@ -137,7 +132,7 @@ export default {
 					return Math.max(1, d.width);
 				})
 				.select('title')
-				.text(d => `${d.source['name']} → ${d.target['name']}`)
+				.text(d => `${d.source['name']} → ${d.target['name']}`);
 
 			// nodes
 
