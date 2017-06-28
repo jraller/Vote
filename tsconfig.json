@@ -11,6 +11,7 @@
       "es2016"
     ],
     "module": "commonjs",
+//    "module": "es2015", // will support tree shaking
     "moduleResolution": "node",
 //    "noImplicitAny": true,
     "sourceMap": true,
