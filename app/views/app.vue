@@ -44,7 +44,7 @@
         </div>
         <div v-show="showChart" class="row">
             <div class="col-xs-12">
-                <chart></chart>
+                <!--<chart></chart>-->
             </div>
         </div>
     </div>

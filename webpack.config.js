@@ -60,7 +60,7 @@ const commonConfig = merge([
 					test: /\.vue$/,
 					loader: 'vue-loader',
 					options: {
-						// esModule: true, // when tsconfig.json set to use es2015 modules?
+						esModule: false, // when tsconfig.json set to use es2015 modules?
 						loaders: {
 							ts: 'ts-loader'
 						}
