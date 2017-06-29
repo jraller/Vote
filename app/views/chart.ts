@@ -1,16 +1,13 @@
-// import {sankey, sankeyLinkHorizontal} from 'd3-sankey';
-// import {format} from 'd3-format';
-// import {scaleOrdinal, schemeCategory20} from 'd3-scale';
-// import {select} from 'd3-selection';
+import * as sankey from 'd3-sankey';
 
-const sankey = require('d3-sankey');
+import * as color from 'd3-color';
+import * as format from 'd3-format';
+import * as scale from 'd3-scale';
+import * as select from 'd3-selection';
+
 const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
-const format = require('d3-format');
-const scale = require('d3-scale');
 const scaleOrdinal = scale.scaleOrdinal;
 const schemeCategory20 = scale.schemeCategory20;
-const select = require('d3-selection');
-const color = require('d3-color');
 const rgb = color.rgb;
 
 let update;
@@ -108,12 +105,10 @@ export default {
 			.extent([[1, 1], [width, height]])
 			.iterations(32);
 
-		update = () => {
-			sk.nodes(this.history.nodes)
-				.links(this.history.links);
-			sk();
 
-			// links
+		update = () => {
+
+			sk(this.history);
 
 			const link = linkGroup.selectAll('.link')
 				.data(this.history.links);
@@ -128,11 +123,11 @@ export default {
 
 			link.merge(linkEnter)
 				.attr('d', path)
-				.style('stroke-width', function (d) {
+				.style('stroke-width', function (d: any) {
 					return Math.max(1, d.width);
 				})
 				.select('title')
-				.text(d => `${d.source['name']} → ${d.target['name']}`);
+				.text((d: any) => `${d.source['name']} → ${d.target['name']}`);
 
 			// nodes
 
@@ -150,37 +145,37 @@ export default {
 			nodeEnter.append('text');
 
 			node.merge(nodeEnter)
-				.attr('transform', function(d) {
+				.attr('transform', function(d: any) {
 					return 'translate(' + d.x0 + ',' + d.y0 + ')';
 				});
 
 			node.merge(nodeEnter)
 				.select('rect')
-				.attr('height', function (d) {
+				.attr('height', function (d: any) {
 					return d.y1 - d.y0;
 				})
 				.attr('width', sk.nodeWidth())
-				.style('fill', function (d) {
+				.style('fill', function (d: any) {
 					return d.color = color(d.name.replace(/ .*/, ''));
 				})
-				.style('stroke', function (d) {
+				.style('stroke', function (d: any): any {
 					return rgb(d.color).darker(2);
 				})
 				.select('title')
-				.text(function (d, i) {
+				.text(function (d: any, i) {
 					return d.name + '\n' + formatVote(d.value) + '\n' + i;
 				});
 
 			node.merge(nodeEnter)
 				.select('text')
 				.attr('x', -6)
-				.attr('y', function (d) {
+				.attr('y', function (d: any) {
 					return (d.y1 - d.y0) / 2;
 				})
 				.attr('dy', '.35em')
 				.attr('text-anchor', 'end')
 				.attr('transform', null)
-				.text(function (d) {
+				.text(function (d: any) {
 					return d.name;
 				})
 				.filter(function (d, i) { // only for the first entry align text the other way

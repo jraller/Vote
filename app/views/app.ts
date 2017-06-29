@@ -1,6 +1,6 @@
 export default {
 	components: {
-		// chart: require('./chart.vue'),
+		chart: require('./chart.vue'),
 		disqualify: require('./disqualify.vue'),
 		inputControlVotes: require('./inputs/ballots.vue'),
 		inputControlDelimiter: require('./inputs/delimiter.vue'),

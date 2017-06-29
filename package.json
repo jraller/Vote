@@ -12,7 +12,11 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "devDependencies": {
     "@types/chai": "^4.0.1",
-    "@types/d3": "^4.9.0",
+    "@types/d3-color": "^1.0.5",
+    "@types/d3-format": "^1.2.0",
+    "@types/d3-sankey": "^0.7.0",
+    "@types/d3-scale": "^1.0.10",
+    "@types/d3-selection": "^1.1.0",
     "@types/mocha": "^2.2.41",
     "@types/node": "^8.0.5",
     "@types/sinon": "^2.3.2",
@@ -72,8 +76,11 @@
   },
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
-    "d3": "^4.9.1",
+    "d3-color": "^1.0.3",
+    "d3-format": "^1.2.0",
     "d3-sankey": "^0.7.1",
+    "d3-scale": "^1.0.6",
+    "d3-selection": "^1.1.0",
     "jquery": "^3.2.1"
   }
 }
