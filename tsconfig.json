@@ -2,8 +2,10 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+//    "baseUrl": ".",
 //    "declaration": true,
 //    "declarationDir": "dist/types",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [
@@ -15,6 +17,13 @@
 //    "module": "es2015", // will support tree shaking
     "moduleResolution": "node",
 //    "noImplicitAny": true,
+//    "paths": {
+//      "d3-color": ["node_modules/d3-color"],
+//      "d3-format": ["node_modules/d3-format"],
+//      "d3-scale": ["node_modules/d3-scale"],
+//      "d3-selection": ["node_modules/d3-selection"],
+//      "d3-sankey": ["node_modules/d3-sankey"]
+//    },
     "sourceMap": true,
     "strictNullChecks": true,
 //    "strict": true,
