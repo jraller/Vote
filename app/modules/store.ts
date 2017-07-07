@@ -48,6 +48,7 @@ export const mutations = {
 		state.visible.results = false;
 		state.round = [];
 		state.disableReset = true;
+
 		eventHub.$emit('clearChart');
 		eventHub.$emit('addNode', {name: 'start'});
 		eventHub.$emit('addNode', {name: 'end'});
@@ -57,6 +58,7 @@ export const mutations = {
 			value: 10,
 		});
 		eventHub.$emit('redraw');
+
 	},
 	eliminateAndContinue(state: State, who: string): void {
 		if (who === 'all') {

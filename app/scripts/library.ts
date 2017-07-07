@@ -52,8 +52,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 			state.current[index] = state.current[index].filter(isNot, can);
 		}
 	}
-
-	// state.eventHub.$emit('eliminated', eliminations);
 }
 
 export function disqualify(state: State, candidate: string) {
