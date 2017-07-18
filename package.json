@@ -2,6 +2,7 @@
   "name": "tabulator",
   "version": "1.0.0",
   "description": "Single Transferable Vote Tabulator",
+  "repository": "git@github.com:jraller/Vote.git",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/*.test.ts",
@@ -69,7 +70,9 @@
     "vue-template-compiler": "^2.4.1",
     "vuex": "^2.3.1",
     "vuex-class": "^0.2.0",
+    "wallaby-vue-compiler": "^1.0.2",
     "wallaby-webpack": "0.0.38",
+    "watchpack": "^1.4.0",
     "webpack": "^3.3.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-dev-server": "^2.5.1",
