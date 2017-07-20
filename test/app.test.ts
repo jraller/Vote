@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {mount} from 'avoriaz';
+import {mount} from 'avoriaz'; // looks like avoriaz will be replaced byt vue-test-utils when that hits release
 import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';

@@ -8,12 +8,12 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Avoriaz.use(Vuex);
 
+const expect = chai.expect;
+const mount = Avoriaz.mount;
+
 const Sanity = require('./../app/views/sanity.vue');
 
 import State from '../app/modules/state';
-
-const expect = chai.expect;
-const mount = Avoriaz.mount;
 
 describe('Sanity', () => {
 
@@ -41,6 +41,7 @@ describe('Sanity', () => {
 	it('warns about skipped ballots', () => {
 		const count = mutations.setVisibleSanity.callCount;
 		// per https://github.com/eddyerburgh/avoriaz/issues/15
+		expect(wrapper.computed().skippedBallots()).to.be.false;
 		expect(wrapper.vm.skippedBallots).to.be.false;
 		state.rawLength = 4;
 		state.ballotCount = 2;
