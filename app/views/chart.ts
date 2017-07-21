@@ -1,9 +1,16 @@
-import * as sankey from 'd3-sankey';
+// import * as sankey from 'd3-sankey';
 
-import * as color from 'd3-color';
-import * as format from 'd3-format';
-import * as scale from 'd3-scale';
-import * as select from 'd3-selection';
+// import * as color from 'd3-color';
+// import * as format from 'd3-format';
+// import * as scale from 'd3-scale';
+// import * as select from 'd3-selection';
+
+const sankey = require('d3-sankey');
+
+const color = require('d3-color');
+const format = require('d3-format');
+const scale = require('d3-scale');
+const select = require('d3-selection');
 
 const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
 const scaleOrdinal = scale.scaleOrdinal;
