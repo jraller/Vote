@@ -60,6 +60,10 @@ export function disqualify(state: State, candidate: string) {
 
 export function updateCandidateList(state: State) {
 	state.candidateList = [];
+	// if sort order is ballot set that to start
+	if (state.sortOrder === 'b') {
+		state.candidateList = state.ballot;
+	}
 	for (const row of state.current) {
 		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
 			if (state.candidateList.indexOf(row[index]) === -1) {

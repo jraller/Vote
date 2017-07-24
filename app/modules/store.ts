@@ -113,6 +113,7 @@ export const mutations = {
 	},
 	setDelimiter: (state: State, value: string) => state.delimiter = value,
 	setVisibleSanity: (state: State, value: boolean) => state.visible.sanity = value,
+	updateBallotSort: (state: State, value: string[]) => state.ballot = value,
 	updateDisqualified: (state: State, value: string[]) => state.disqualifiedCandidates = value,
 	updatePositions: (state: State, value: number) => state.positions = value,
 	updateSortOrder: (state: State, value: string) => state.sortOrder = value,

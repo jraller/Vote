@@ -1,13 +1,20 @@
 export default {
 	data: function () {
 		return {
-			sortOrder: 'u'
+			sortOrder: 'u',
+			ballotOrder: ''
 		}
 	},
 	methods: {
 		changeSortOrder() {
 			this.$store.commit('updateSortOrder', this.sortOrder);
 			this.$store.commit('newCandidates');
+		}
+	},
+	name: 'inputSortOrder',
+	watch: {
+		ballotOrder: function () {
+			this.$store.commit('updateBallotSort', this.ballotOrder.split('\n'));
 		}
 	}
 }

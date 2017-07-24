@@ -15,6 +15,7 @@ export interface IRoundType {
 }
 
 export default class State {
+	public ballot: string[] = [];
 	public ballotCount: number = 0;
 	public candidateList: string[] = [];
 	public candidateListFull: string[] = [];
