@@ -113,7 +113,9 @@ export const mutations = {
 	},
 	resetClicked(state: State): void {
 		state.visible.results = false;
+		state.visible.chart = false;
 		state.round = [];
+		eventHub.$emit('clearChart');
 		eventHub.$emit('getNewBallots');
 		state.disableReset = true;
 	},

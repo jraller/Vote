@@ -141,6 +141,8 @@ export function runRound(state: State, callNext = finishRound) {
 			// get user input to handle tie
 			round.roundType = 'roundChoice';
 		}
+	} else {
+		state.visible.chart = true;
 	}
 	state.round.push(round);
 	if (proceed) {
