@@ -50,12 +50,33 @@ export const mutations = {
 		state.disableReset = true;
 
 		eventHub.$emit('clearChart');
-		eventHub.$emit('addNode', {name: 'start'});
-		eventHub.$emit('addNode', {name: 'end'});
+		eventHub.$emit('addNode', {name: 'a', round: 1});
+		eventHub.$emit('addNode', {name: 'b', round: 1});
 		eventHub.$emit('addLink', {
-			source: 0,
-			target: 1,
+			from: {name: 'all cast', round: 0},
+			to: {name: 'a', round: 1},
 			value: 10,
+		});
+		eventHub.$emit('addLink', {
+			from: {name: 'all cast', round: 0},
+			to: {name: 'b', round: 1},
+			value: 5,
+		});
+		eventHub.$emit('addNode', {name: 'a', round: 2});
+		eventHub.$emit('addLink', {
+			from: {name: 'a', round: 1},
+			to: {name: 'a', round: 2},
+			value: 10,
+		});
+		eventHub.$emit('addLink', {
+			from: {name: 'b', round: 1},
+			to: {name: 'a', round: 2},
+			value: 2,
+		});
+		eventHub.$emit('addLink', {
+			from: {name: 'b', round: 1},
+			to: {name: 'choices eliminated', round: 0},
+			value: 3,
 		});
 		eventHub.$emit('redraw');
 

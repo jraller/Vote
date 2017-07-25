@@ -19,23 +19,63 @@ const rgb = color.rgb;
 
 let update;
 
+function findNode(history, candidate, round) {
+	let result = -1,
+		index;
+
+	for (index = 0; index < history.nodes.length; index++) {
+		if (history.nodes[index].name === candidate && history.nodes[index].round === round) {
+			result = index;
+		}
+	}
+	return result;
+}
+
 export default {
 	// TODO interface with eventHub to receive data and clear signal
-	created: function() {
+	created: function () {
 		this.eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
-			this.history.nodes = [];
-			// named nodes
+			this.history.nodes = [
+				{
+					'name': 'all cast',
+					'round': 0
+				}
+			];
 			// all cast -- first always -- initial round are children of this node
-			// eliminated -- last always
-		});
-		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
-			this.history.links.push(data);
 		});
 		this.eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 			this.history.nodes.push(data);
 		});
+		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
+			data.source = null;
+			data.target = null;
+			this.history.links.push(data);
+		});
 		this.eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
+
+			this.history.nodes.push({
+				'name': 'choices eliminated',
+				'round': 0
+			});
+
+			// add the eliminated node
+			// resolve links
+
+			for (let index = 0; index < this.history.links.length; index++) {
+
+				this.history.links[index].source = findNode(
+					this.history,
+					this.history.links[index].from.name,
+					this.history.links[index].from.round
+				);
+				this.history.links[index].target = findNode(
+					this.history,
+					this.history.links[index].to.name,
+					this.history.links[index].to.round
+				);
+			}
+
 			update();
 		});
 	},
@@ -65,6 +105,8 @@ export default {
 						'value': 3
 					},
 					{
+						'from': {name: '', round: 0},
+						'to': {name: 'a', round: 1},
 						'source': 2,
 						'target': 4,
 						'value': 2
@@ -72,10 +114,12 @@ export default {
 				],
 				nodes: [
 					{
-						'name': 'all cast'
+						'name': 'all cast',
+						'round': 0
 					},
 					{
-						'name': 'a'
+						'name': 'a',
+						'round': 1
 					},
 					{
 						'name': 'b'
@@ -93,7 +137,7 @@ export default {
 	mounted: function () {
 
 		const formatNumber = format.format(',.1f');
-		const formatVote = function(d) {
+		const formatVote = function (d) {
 			return formatNumber(d) + ' votes';
 		};
 		const color = scaleOrdinal(schemeCategory20);
@@ -155,7 +199,7 @@ export default {
 			nodeEnter.append('text');
 
 			node.merge(nodeEnter)
-				.attr('transform', function(d: any) {
+				.attr('transform', function (d: any) {
 					return 'translate(' + d.x0 + ',' + d.y0 + ')';
 				});
 
