@@ -73,7 +73,7 @@
     "wallaby-vue-compiler": "^1.0.2",
     "wallaby-webpack": "0.0.38",
     "watchpack": "^1.4.0",
-    "webpack": "^3.3.0",
+    "webpack": "^3.4.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-dev-server": "^2.6.1",
     "webpack-lighthouse-plugin": "^1.0.2",

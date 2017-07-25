@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-				<candidateRow v-for="candidate in candidates" v-bind:key="candidate" v-bind:candidate="candidate" v-bind:round="round" v-bind:total="total"></candidateRow>
+				<candidateRow v-for="candidate, index in candidates" v-bind:key="index" v-bind:candidate="candidate" v-bind:round="round" v-bind:total="total"></candidateRow>
 
                 <!--<tr v-for="candidate in candidates">-->
                     <!--<td>{{ candidate.n }}</td>-->
@@ -28,7 +28,7 @@
                 </tr>
             </tfoot>
         </table>
-        <component :is="roundType" v-bind:key="+round" v-bind:round="round"></component>
+        <component :is="roundType" v-bind:key="round" v-bind:round="round"></component>
     </div>
 </template>
 

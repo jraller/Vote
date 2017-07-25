@@ -25,6 +25,9 @@ export default {
 		this.eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
 			this.history.nodes = [];
+			// named nodes
+			// all cast -- first always -- initial round are children of this node
+			// eliminated -- last always
 		});
 		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 			this.history.links.push(data);
