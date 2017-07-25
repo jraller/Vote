@@ -11,7 +11,7 @@ function isNot(value: string): boolean {
 export function sortCandidateList(candidates: string[], order: string): string[] {
 	let result: string[] = [];
 
-	if (order === 'u') {
+	if (order === 'u' || order === 'b') {
 		result = candidates;
 	} else if (order === 'f') {
 		result = candidates.sort();
@@ -31,6 +31,30 @@ export function sortCandidateList(candidates: string[], order: string): string[]
 		});
 	}
 	return result;
+}
+
+export function updateCandidateList(state: State) {
+	state.candidateList = [];
+	// if sort order is ballot set that to start
+	if (state.sortOrder === 'b' && state.round.length === 1) {
+		state.candidateList = state.ballot.filter(nonEmpty);
+	}
+
+	// in subsequent rounds start with ballot, remove eliminated candidates and add unlisted?
+
+	for (const row of state.current) {
+		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
+			if (state.candidateList.indexOf(row[index]) === -1) {
+				state.candidateList.push(row[index]);
+			}
+		}
+	}
+
+	console.log('pre sort', state.candidateList, state.sortOrder);
+
+	sortCandidateList(state.candidateList, state.sortOrder);
+
+	console.log('post sort', state.candidateList, state.sortOrder);
 }
 
 export function eliminate(state: State, candidate: string|string[]): void {
@@ -56,22 +80,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 
 export function disqualify(state: State, candidate: string) {
 	eliminate(state, candidate);
-}
-
-export function updateCandidateList(state: State) {
-	state.candidateList = [];
-	// if sort order is ballot set that to start
-	if (state.sortOrder === 'b') {
-		state.candidateList = state.ballot;
-	}
-	for (const row of state.current) {
-		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
-			if (state.candidateList.indexOf(row[index]) === -1) {
-				state.candidateList.push(row[index]);
-			}
-		}
-	}
-	sortCandidateList(state.candidateList, state.sortOrder);
 }
 
 function countXPlace(state: State, candidate: string, place: number): number {
