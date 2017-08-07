@@ -9,7 +9,7 @@ import 'babel-polyfill';
 // https://eddyerburgh.gitbooks.io/avoriaz/content/guides/using-with-vuex.html
 
 chai.use(sinonChai);
-Avoriaz.use(Vuex);
+Vue.use(Vuex);
 
 const Ballots = require('../app/views/inputs/ballots.vue');
 
