@@ -1,6 +1,6 @@
 export default {
-	created: function() {
-		this.eventHub.$on('getNewBallots', data => { // if some other component requests
+	created: function () {
+		this.eventHub.$on('getNewBallots', function (data) { // if some other component requests
 			this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
 			this.$store.commit('newCandidates');
 		});

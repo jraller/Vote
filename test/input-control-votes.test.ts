@@ -12,6 +12,7 @@ chai.use(sinonChai);
 Vue.use(Vuex);
 
 const Ballots = require('../app/views/inputs/ballots.vue');
+const State = require('../app/modules/state');
 
 const expect = chai.expect;
 const mount = Avoriaz.mount;
@@ -43,29 +44,23 @@ describe('Ballot Input', () => {
 			newCandidates: sinon.stub()
 		};
 
-		const state = {
-			data: {
-				delimiter: 'auto'
+		const state = State;
+		state.delimiter = 'auto';
+
+		Vue.mixin({
+			data: () => {
+				return {eventHub}
 			}
-		};
+		});
 
-		before(() => {
+		const store = new Vuex.Store({
+			mutations,
+			state
+		});
 
-			Vue.mixin({
-				data: () => {
-					return {eventHub}
-				}
-			});
-
-			const store = new Vuex.Store({
-				mutations,
-				state
-			});
-
-			changeWrapper = mount(Ballots, {
-				store,
-				attachToDocument: true
-			});
+		changeWrapper = mount(Ballots, {
+			store,
+			attachToDocument: true
 		});
 
 		it('is a Vue component', () => {
