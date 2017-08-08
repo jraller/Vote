@@ -75,7 +75,7 @@
     "watchpack": "^1.4.0",
     "webpack": "^3.5.1",
     "webpack-dev-middleware": "^1.12.0",
-    "webpack-dev-server": "^2.6.1",
+    "webpack-dev-server": "^2.7.1",
     "webpack-lighthouse-plugin": "^1.0.2",
     "webpack-merge": "^4.1.0",
     "webpack-sources": "^1.0.1",
