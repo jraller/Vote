@@ -50,11 +50,7 @@ export function updateCandidateList(state: State) {
 		}
 	}
 
-	console.log('pre sort', state.candidateList, state.sortOrder);
-
 	sortCandidateList(state.candidateList, state.sortOrder);
-
-	console.log('post sort', state.candidateList, state.sortOrder);
 }
 
 export function eliminate(state: State, candidate: string|string[]): void {

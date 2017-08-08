@@ -6,40 +6,29 @@ module.exports = merge([
 	{
 		devtool: 'source-map',
 		devServer: {
-			contentBase: path.resolve(__dirname, 'app'),
-			compress: true,
-
-			// Enable history API fallback so HTML5 History API based
-			// routing works. Good for complex setups.
-			historyApiFallback: true,
-
-			// Parse host and port from env to allow customization.
-			//
-			// If you use Docker, Vagrant or Cloud9, set
-			// host: options.host || '0.0.0.0';
-			//
-			// 0.0.0.0 is available to all network devices
-			// unlink default `localhost`.
+			compress: true, //gzip
+			contentBase: path.resolve(__dirname, 'app'), // for static files
+			disableHostCheck: true, // bypass host checking
+			historyApiFallback: {
+				disableDotRule: true
+			},
 			host: process.env.HOST,
+			hot: false, // for now
+			inline: true, // alternative is iframe
+			lazy: false,
+			noInfo: false,
+			open: false, //open web browser
+			openPage: '',
 			port: 8000, // process.env.PORT,
-
-			// can open both
-			// http://localhost:8000/webpack-dev-server/
-			// and
-			// http://localhost:8000/
-
-			// open: true,
-
 			overlay: {
 				errors: true,
 				warnings: true
 			},
-
 			publicPath: '/',
-
-			// Display only errors to reduce the amount of output.
-			stats: 'errors-only',
-
+			quiet: false,
+			stats: 'errors-only', // minimal, normal, detailed, verbose
+			// sockjsPrefix: '/app',
+			useLocalIp: false,
 			watchContentBase: true,
 			watchOptions: {
 				aggregateTimeout: 300

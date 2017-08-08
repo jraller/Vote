@@ -51,7 +51,7 @@ const commonConfig = merge([
 		},
 		output: {
 			path: PATHS.build,
-			publicPath: '/dist',
+			publicPath: '/',
 			filename: '[name].js'
 		},
 		module: {
