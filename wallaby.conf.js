@@ -20,12 +20,12 @@ module.exports = function (wallaby) {
 	const wallabyPostprocessor = wallabyWebpack(webpackConfig);
 
 	return {
-		debug: true,
 		compilers: {
 			'**/*.js': wallaby.compilers.babel({}),
 			'**/*.ts': wallaby.compilers.typeScript({}),
 			'**/*.vue': require('wallaby-vue-compiler')(wallaby.compilers.babel({}))
 		},
+		debug: true,
 		env: {
 			type: 'browser' // browser or node
 			// runner: 'node',
