@@ -1,4 +1,4 @@
-import * as Avoriaz from 'avoriaz';
+import {mount} from 'vue-test-utils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
@@ -7,12 +7,11 @@ import Vuex from 'vuex';
 import 'babel-polyfill';
 
 chai.use(sinonChai);
-Avoriaz.use(Vuex);
+Vue.use(Vuex);
 
 const WeightedValues = require('../app/views/inputs/weighted-values.vue');
 
 const expect = chai.expect;
-const mount = Avoriaz.mount;
 
 describe('Weighted Values', () => {
 

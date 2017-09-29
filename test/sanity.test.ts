@@ -1,17 +1,17 @@
-import * as Avoriaz from 'avoriaz';
+import {mount} from 'vue-test-utils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
+import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';
 
 chai.use(sinonChai);
-Avoriaz.use(Vuex);
-
-const expect = chai.expect;
-const mount = Avoriaz.mount;
+Vue.use(Vuex);
 
 const Sanity = require('./../app/views/sanity.vue');
+
+const expect = chai.expect;
 
 import State from '../app/modules/state';
 
@@ -33,7 +33,7 @@ describe('Sanity', () => {
 	});
 
 	it('is a Vue component', () => {
-		expect(wrapper.isVueComponent).to.be.true;
+		expect(wrapper.isVueInstance()).to.be.true;
 	});
 	it('has the right name', () => {
 		expect(wrapper.name()).to.equal('SanityChecks');
@@ -41,7 +41,7 @@ describe('Sanity', () => {
 	it('warns about skipped ballots', () => {
 		const count = mutations.setVisibleSanity.callCount;
 		// per https://github.com/eddyerburgh/avoriaz/issues/15
-		expect(wrapper.computed().skippedBallots()).to.be.false;
+		// expect(wrapper.computed().skippedBallots()).to.be.false;
 		expect(wrapper.vm.skippedBallots).to.be.false;
 		state.rawLength = 4;
 		state.ballotCount = 2;

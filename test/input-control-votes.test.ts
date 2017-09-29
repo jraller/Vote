@@ -1,4 +1,4 @@
-import * as Avoriaz from 'avoriaz';
+import {mount} from 'vue-test-utils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
@@ -15,7 +15,6 @@ const Ballots = require('../app/views/inputs/ballots.vue');
 const State = require('../app/modules/state');
 
 const expect = chai.expect;
-const mount = Avoriaz.mount;
 
 describe('Ballot Input', () => {
 
@@ -28,7 +27,7 @@ describe('Ballot Input', () => {
 		expect(wrapper.text()).to.contain('Votes:');
 	});
 	it('has style', () => {
-		const textarea = wrapper.find('#votes')[0]; // target the styled element
+		const textarea = wrapper.find('#votes'); // target the styled element
 		expect(textarea.hasStyle('white-space', 'pre')).to.be.true;
 		expect(textarea.hasStyle('overflow-wrap', 'normal')).to.be.true;
 		expect(textarea.hasStyle('overflow-y', 'scroll')).to.be.true;
@@ -67,7 +66,7 @@ describe('Ballot Input', () => {
 			expect(changeWrapper.isVueComponent).to.be.true;
 		});
 		it('is starts out empty', () => {
-			expect(changeWrapper.data().rawInput).to.equal('');
+			expect(changeWrapper.vm.rawInput).to.equal('');
 		});
 		it('has the right id', () => {
 			expect(changeWrapper.contains('#votes')).to.be.true;
@@ -79,9 +78,9 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'fred'});
-			changeWrapper.find('textarea')[0].trigger('change');
+			changeWrapper.find('textarea').trigger('change');
 
-			expect(changeWrapper.data().rawInput).to.equal('fred');
+			expect(changeWrapper.vm.rawInput).to.equal('fred');
 
 			expect(mutations.newBallots).to.have.callCount(count + 1);
 		});
@@ -89,8 +88,8 @@ describe('Ballot Input', () => {
 			const count = mutations.newBallots.callCount;
 
 			changeWrapper.setData({rawInput: 'george'});
-			changeWrapper.find('textarea')[0].trigger('change');
-			expect(changeWrapper.data().rawInput).to.equal('george');
+			changeWrapper.find('textarea').trigger('change');
+			expect(changeWrapper.vm.rawInput).to.equal('george');
 
 			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
 			expect(mutations.newBallots).to.have.callCount(count + 1);
