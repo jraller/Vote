@@ -42,10 +42,10 @@ describe('Sanity', () => {
 		const count = mutations.setVisibleSanity.callCount;
 		// per https://github.com/eddyerburgh/avoriaz/issues/15
 		// expect(wrapper.computed().skippedBallots()).to.be.false;
-		expect(wrapper.vm.skippedBallots).to.be.false;
+		expect(wrapper.vm['skippedBallots']).to.be.false;
 		state.rawLength = 4;
 		state.ballotCount = 2;
-		expect(wrapper.vm.skippedBallots).to.be.true;
+		expect(wrapper.vm['skippedBallots']).to.be.true;
 		expect(mutations.setVisibleSanity).to.have.callCount(count + 1);
 		expect(mutations.setVisibleSanity).to.have.been.calledWith(state, true);
 	});
@@ -55,16 +55,16 @@ describe('Sanity', () => {
 		state.candidateList = ['fred', 'sally'];
 		state.disqualifiedCandidates = [];
 		state.positions = 2;
-		expect(wrapper.vm.notEnoughCandidates).to.be.false;
+		expect(wrapper.vm['notEnoughCandidates']).to.be.false;
 		expect(mutations.setVisibleSanity).to.have.callCount(count + 1);
 
 		state.disqualifiedCandidates = ['fred'];
-		expect(wrapper.vm.notEnoughCandidates).to.be.true;
+		expect(wrapper.vm['notEnoughCandidates']).to.be.true;
 		expect(mutations.setVisibleSanity).to.have.callCount(count + 2);
 
 		state.candidateList  = ['fred','sally','paul'];
 		state.disqualifiedCandidates = ['fred', 'sally'];
-		expect(wrapper.vm.notEnoughCandidates).to.be.true;
+		expect(wrapper.vm['notEnoughCandidates']).to.be.true;
 		expect(mutations.setVisibleSanity).to.have.callCount(count + 3);
 	});
 	it('warns about no candidates left', () => {
@@ -72,10 +72,10 @@ describe('Sanity', () => {
 		state.candidateList = [];
 		state.disqualifiedCandidates = [];
 		state.rawLength = 0;
-		expect(wrapper.vm.noCandidatesLeft).to.be.false;
+		expect(wrapper.vm['noCandidatesLeft']).to.be.false;
 		state.rawLength = 1;
 		state.candidateList = ['fred'];
 		state.disqualifiedCandidates = ['fred'];
-		expect(wrapper.vm.noCandidatesLeft).to.be.true;
+		expect(wrapper.vm['noCandidatesLeft']).to.be.true;
 	});
 });
