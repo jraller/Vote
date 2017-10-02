@@ -1,21 +1,8 @@
-// import * as sankey from 'd3-sankey';
-
-// import * as color from 'd3-color';
-// import * as format from 'd3-format';
-// import * as scale from 'd3-scale';
-// import * as select from 'd3-selection';
-
-const sankey = require('d3-sankey');
-
-const color = require('d3-color');
-const format = require('d3-format');
-const scale = require('d3-scale');
-const select = require('d3-selection');
-
-const sankeyLinkHorizontal = sankey.sankeyLinkHorizontal;
-const scaleOrdinal = scale.scaleOrdinal;
-const schemeCategory20 = scale.schemeCategory20;
-const rgb = color.rgb;
+const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
+const {rgb} = require('d3-color');
+const {format} = require('d3-format');
+const {scaleOrdinal, schemeCategory20} = require('d3-scale');
+const {select, selectAll} = require('d3-selection');
 
 let update;
 
@@ -136,12 +123,12 @@ export default {
 	},
 	mounted: function () {
 
-		const formatNumber = format.format(',.1f');
+		const formatNumber = format(',.1f');
 		const formatVote = function (d) {
 			return formatNumber(d) + ' votes';
 		};
 		const color = scaleOrdinal(schemeCategory20);
-		const svg = select.select('#chart');
+		const svg = select('#chart');
 		const margin = {top: 20, right: 20, bottom: 20, left: 20};
 		const width = parseInt(svg.attr('width'), 10) - margin.left - margin.right;
 		const height = parseInt(svg.attr('height'), 10) - margin.top - margin.bottom;
@@ -153,7 +140,7 @@ export default {
 		const nodeGroup = g.append('g')
 			.attr('id', 'nodeGroup');
 
-		const sk = sankey.sankey()
+		const sk = sankey()
 			.nodeWidth(15)
 			.nodePadding(10)
 			.extent([[1, 1], [width, height]])

@@ -94,10 +94,10 @@ describe('Ballot Input', () => {
 			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
 			expect(mutations.newBallots).to.have.callCount(count + 1);
 		});
-		it('triggers newBallots when called from outside', () => {
-			const count = mutations.newBallots.callCount;
-			eventHub.$emit('getNewBallots');
-			expect(mutations.newBallots).to.have.callCount(count + 1);
-		});
+		// it('triggers newBallots when called from outside', () => {
+		// 	const count = mutations.newBallots.callCount;
+		// 	eventHub.$emit('getNewBallots');
+		// 	expect(mutations.newBallots).to.have.callCount(count + 1);
+		// });
 	});
 });
