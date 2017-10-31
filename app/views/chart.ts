@@ -1,3 +1,5 @@
+import $eventHub from '../modules/eventHub';
+
 const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {rgb} = require('d3-color');
 const {format} = require('d3-format');
@@ -19,15 +21,15 @@ function findNode(history, candidate, round) {
 }
 
 export default {
-	// TODO interface with eventHub to receive data and clear signal
+	// TODO interface with $eventHub to receive data and clear signal
 	beforeDestroy: function () {
-		this.$eventHub.$off('clearChart');
-		this.$eventHub.$off('addNode');
-		this.$eventHub.$off('addLink');
-		this.$eventHub.$off('redraw');
+		$eventHub.$off('clearChart');
+		$eventHub.$off('addNode');
+		$eventHub.$off('addLink');
+		$eventHub.$off('redraw');
 	},
 	created: function () {
-		this.$eventHub.$on('clearChart', () => { // if some other component requests
+		$eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
 			this.history.nodes = [
 				{
@@ -37,15 +39,15 @@ export default {
 			];
 			// all cast -- first always -- initial round are children of this node
 		});
-		this.$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
+		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 			this.history.nodes.push(data);
 		});
-		this.$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
+		$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 			data.source = null;
 			data.target = null;
 			this.history.links.push(data);
 		});
-		this.$eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
+		$eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
 
 			this.history.nodes.push({
 				'name': 'choices eliminated',
@@ -77,52 +79,8 @@ export default {
 		return {
 			history: {
 				links: [
-					{
-						'source': 0,
-						'target': 1,
-						'value': 10
-					},
-					{
-						'source': 0,
-						'target': 2,
-						'value': 5
-					},
-					{
-						'source': 1,
-						'target': 3,
-						'value': 10
-					},
-					{
-						'source': 2,
-						'target': 3,
-						'value': 3
-					},
-					{
-						'from': {name: '', round: 0},
-						'to': {name: 'a', round: 1},
-						'source': 2,
-						'target': 4,
-						'value': 2
-					}
 				],
 				nodes: [
-					{
-						'name': 'all cast',
-						'round': 0
-					},
-					{
-						'name': 'a',
-						'round': 1
-					},
-					{
-						'name': 'b'
-					},
-					{
-						'name': 'a - winner'
-					},
-					{
-						'name': 'choices eliminated'
-					}
 				]
 			}
 		}

@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import store from './modules/store';
 
-import eventHub from './modules/eventHub';
+import $eventHub from './modules/eventHub';
 
 Vue.config.silent = false;
 Vue.config.devtools = process.env.NODE_ENV === 'development';
@@ -13,7 +13,7 @@ Vue.config.performance = false;
 // TODO look at setting up Vue modules per https://www.coding123.org/mock-vuex-in-vue-unit-tests/
 // TODO look at inject-loader and babel-plugin-rewire per https://www.coding123.org/stub-dependencies-vue-unit-tests/
 
-Vue.prototype.$eventHub = new Vue();
+// Vue.prototype.$eventHub = new Vue();
 
 const vm = new Vue({
 	components: {

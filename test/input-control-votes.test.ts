@@ -96,7 +96,7 @@ describe('Ballot Input', () => {
 		});
 		// it('triggers newBallots when called from outside', () => {
 		// 	const count = mutations.newBallots.callCount;
-		// 	eventHub.$emit('getNewBallots');
+		// 	$eventHub.$emit('getNewBallots');
 		// 	expect(mutations.newBallots).to.have.callCount(count + 1);
 		// });
 	});

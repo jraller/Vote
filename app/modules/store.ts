@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueX from 'vuex';
 
-import eventHub from './eventHub';
+import $eventHub from './eventHub';
 
 import State from './state';
 
@@ -49,36 +49,36 @@ export const mutations = {
 		state.round = [];
 		state.disableReset = true;
 
-		eventHub.$emit('clearChart');
-		eventHub.$emit('addNode', {name: 'a', round: 1});
-		eventHub.$emit('addNode', {name: 'b', round: 1});
-		eventHub.$emit('addLink', {
+		$eventHub.$emit('clearChart');
+		$eventHub.$emit('addNode', {name: 'a', round: 1});
+		$eventHub.$emit('addNode', {name: 'b', round: 1});
+		$eventHub.$emit('addLink', {
 			from: {name: 'all cast', round: 0},
 			to: {name: 'a', round: 1},
-			value: 10,
+			value: 100,
 		});
-		eventHub.$emit('addLink', {
+		$eventHub.$emit('addLink', {
 			from: {name: 'all cast', round: 0},
 			to: {name: 'b', round: 1},
 			value: 5,
 		});
-		eventHub.$emit('addNode', {name: 'a', round: 2});
-		eventHub.$emit('addLink', {
+		$eventHub.$emit('addNode', {name: 'a', round: 2});
+		$eventHub.$emit('addLink', {
 			from: {name: 'a', round: 1},
 			to: {name: 'a', round: 2},
-			value: 10,
+			value: 100,
 		});
-		eventHub.$emit('addLink', {
+		$eventHub.$emit('addLink', {
 			from: {name: 'b', round: 1},
 			to: {name: 'a', round: 2},
 			value: 2,
 		});
-		eventHub.$emit('addLink', {
+		$eventHub.$emit('addLink', {
 			from: {name: 'b', round: 1},
 			to: {name: 'choices eliminated', round: 0},
 			value: 3,
 		});
-		eventHub.$emit('redraw');
+		$eventHub.$emit('redraw');
 
 	},
 	eliminateAndContinue(state: State, who: string): void {
@@ -102,8 +102,8 @@ export const mutations = {
 		state.disableRun = state.candidateList.length === 0;
 		// state.visible.chart = false;
 		state.visible.results = false;
-		// eventHub.$emit('clearChart');
-		// eventHub.$emit('addNode', {name: 'all ballots'});
+		// $eventHub.$emit('clearChart');
+		// $eventHub.$emit('addNode', {name: 'all ballots'});
 	},
 	pickDelimiter(state: State, raw: string): void {
 		state.delimiter = Delimiters.pickDelimiter(raw);
@@ -115,8 +115,8 @@ export const mutations = {
 		state.visible.results = false;
 		state.visible.chart = false;
 		state.round = [];
-		eventHub.$emit('clearChart');
-		eventHub.$emit('getNewBallots');
+		$eventHub.$emit('clearChart');
+		$eventHub.$emit('getNewBallots');
 		state.disableReset = true;
 		state.disableRun = false;
 	},
@@ -124,15 +124,13 @@ export const mutations = {
 		state.disableRun = true;
 		state.disableReset = false;
 		state.visible.results = true;
-		// TODO remove disqualified candidates before first round
+		// remove disqualified candidates before first round
 		for (const candidate of state.disqualifiedCandidates) {
 			library.disqualify(state, candidate);
 		}
-		// TODO reset chart history by sending message through eventHub
-
-		eventHub.$emit('chartReset');
-
-		// TODO run the first round, let that round run additional rounds, or get user input
+		// reset chart history by sending message through $eventHub
+		$eventHub.$emit('chartReset');
+		// run the first round, let that round run additional rounds, or get user input
 		library.runRound(state);
 	},
 	setDelimiter: (state: State, value: string) => state.delimiter = value,

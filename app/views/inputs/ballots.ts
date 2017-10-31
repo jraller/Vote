@@ -1,12 +1,11 @@
+import $eventHub from '../../modules/eventHub';
+
 export default {
 	beforeDestroy: function () {
-		this.$eventHub.$off('getNewBallots');
+		$eventHub.$off('getNewBallots');
 	},
 	created: function () {
-		this.$eventHub.$on('getNewBallots', function (data) { // if some other component requests
-
-			console.log('getNewBallots', this);
-
+		$eventHub.$on('getNewBallots', function (data) { // if some other component requests
 			this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
 			this.$store.commit('newCandidates');
 		});

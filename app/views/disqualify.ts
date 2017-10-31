@@ -39,7 +39,7 @@ export default {
 // 	}
 //
 // 	changeDisqualified() { //method
-// 		this['eventHub'].$emit('getNewBallots');
+// 		this['$eventHub'].$emit('getNewBallots');
 // 		this.$store.commit('updateDisqualified', this.disqualifyCandidates);
 // 		// this.$store.commit('newCandidates');
 // 	}
