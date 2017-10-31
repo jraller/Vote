@@ -1,6 +1,12 @@
 export default {
+	beforeDestroy: function () {
+		this.$eventHub.$off('getNewBallots');
+	},
 	created: function () {
-		this.eventHub.$on('getNewBallots', function (data) { // if some other component requests
+		this.$eventHub.$on('getNewBallots', function (data) { // if some other component requests
+
+			console.log('getNewBallots', this);
+
 			this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
 			this.$store.commit('newCandidates');
 		});

@@ -118,6 +118,7 @@ export const mutations = {
 		eventHub.$emit('clearChart');
 		eventHub.$emit('getNewBallots');
 		state.disableReset = true;
+		state.disableRun = false;
 	},
 	runClicked(state: State): void {
 		state.disableRun = true;

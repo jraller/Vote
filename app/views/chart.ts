@@ -20,8 +20,14 @@ function findNode(history, candidate, round) {
 
 export default {
 	// TODO interface with eventHub to receive data and clear signal
+	beforeDestroy: function () {
+		this.$eventHub.$off('clearChart');
+		this.$eventHub.$off('addNode');
+		this.$eventHub.$off('addLink');
+		this.$eventHub.$off('redraw');
+	},
 	created: function () {
-		this.eventHub.$on('clearChart', () => { // if some other component requests
+		this.$eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
 			this.history.nodes = [
 				{
@@ -31,15 +37,15 @@ export default {
 			];
 			// all cast -- first always -- initial round are children of this node
 		});
-		this.eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
+		this.$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 			this.history.nodes.push(data);
 		});
-		this.eventHub.$on('addLink', data => { // this function could detect links that need to be queued
+		this.$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 			data.source = null;
 			data.target = null;
 			this.history.links.push(data);
 		});
-		this.eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
+		this.$eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
 
 			this.history.nodes.push({
 				'name': 'choices eliminated',
