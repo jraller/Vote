@@ -2,6 +2,14 @@ import State, {ICandidateType, IRoundType} from '../modules/state';
 
 import $eventHub from '../modules/eventHub';
 
+interface IelimType {
+	c: string;
+	transfers: Array<{
+		to: string;
+		value: number;
+	}>;
+}
+
 export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
@@ -56,7 +64,7 @@ export function updateCandidateList(state: State) {
 }
 
 export function eliminate(state: State, candidate: string|string[]): void {
-	const eliminations: object[] = [];
+	const eliminations: IelimType[] = [];
 
 	// normalize to candidate allowing function to handle
 	// a single elimination via string
@@ -66,32 +74,37 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	}
 
 	for (const can of candidate) {
-		eliminations.push({c: can, transfers: {}});
+		eliminations.push({c: can, transfers: []});
 	}
 
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
-		// are there any candidates being eliminated in the scoring positions?
-		// if there are, who are they replaced by?
+		// TODO are there any candidates being eliminated in the scoring positions?
+		// TODO if there are, who are they replaced by?
 		// remove the eliminated candidates
 		for (const can of candidate) {
 			state.current[index] = state.current[index].filter(isNot, can);
 		}
 	}
 
-	// TODO rewrite to eliminate all at once and find vote reassignments
-
-	/*
+	for (const elim of eliminations) {
+		for (const trans of elim.transfers) {
 			$eventHub.$emit('addLink', {
 				from: {
-					name: ((state.round.length > 0) ? candidate.n : 'all cast'),
+					name: elim.c,
 					round: state.round.length,
 				},
-				to: {name: candidate.n, round: state.round.length + 1},
-				value: total,
+				to: {
+					name: trans.to,
+					round: state.round.length + 1,
+				},
+				value: trans.value,
 			});
+		}
+	}
 
-	*/
+	// TODO rewrite to eliminate all at once and find vote reassignments
+
 }
 
 export function disqualify(state: State, candidate: string) {
