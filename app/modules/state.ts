@@ -19,6 +19,8 @@ export default class State {
 	public ballotCount: number = 0;
 	public candidateList: string[] = [];
 	public candidateListFull: string[] = [];
+	public chartLabelPool: string = 'All Cast';
+	public chartLabelNoCount: string = 'Choices Eliminated';
 	public current: string[][] = [];
 	public delimiter: string = 'auto';
 	public delimiterList = new Delimiters().listDelimiters();

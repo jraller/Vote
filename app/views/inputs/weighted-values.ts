@@ -1,8 +1,12 @@
 module.exports = {
 	computed: {
-		voteValues() {
-			return this.$store.state.voteValues;
-		},
+		voteValues: {
+			get: function () {
+				return this.$store.state.voteValues;
+			},
+			set: function () {
+			}
+		}
 	},
 	methods: {
 		changeVoteValues() {

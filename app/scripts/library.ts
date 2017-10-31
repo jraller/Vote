@@ -1,5 +1,7 @@
 import State, {ICandidateType, IRoundType} from '../modules/state';
 
+import $eventHub from '../modules/eventHub';
+
 export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
@@ -67,11 +69,29 @@ export function eliminate(state: State, candidate: string|string[]): void {
 		eliminations.push({c: can, transfers: {}});
 	}
 
+	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
+		// are there any candidates being eliminated in the scoring positions?
+		// if there are, who are they replaced by?
+		// remove the eliminated candidates
 		for (const can of candidate) {
 			state.current[index] = state.current[index].filter(isNot, can);
 		}
 	}
+
+	// TODO rewrite to eliminate all at once and find vote reassignments
+
+	/*
+			$eventHub.$emit('addLink', {
+				from: {
+					name: ((state.round.length > 0) ? candidate.n : 'all cast'),
+					round: state.round.length,
+				},
+				to: {name: candidate.n, round: state.round.length + 1},
+				value: total,
+			});
+
+	*/
 }
 
 export function disqualify(state: State, candidate: string) {
@@ -125,13 +145,23 @@ export function runRound(state: State, callNext = finishRound) {
 		if (total < lowValue) {
 			lowValue = total;
 		}
+		$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
 	}
 	if (state.candidateList.length > state.positions) {
 		for (const candidate of round.candidates) {
-			if (candidate.v.reduce((a: number, b: number) => a + b) === lowValue) {
+			const total = candidate.v.reduce((a: number, b: number) => a + b);
+			if (total === lowValue) {
 				candidate.l = true;
 				lowCount++;
 			}
+			$eventHub.$emit('addLink', {
+				from: {
+					name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
+					round: state.round.length,
+				},
+				to: {name: candidate.n, round: state.round.length + 1},
+				value: total,
+			});
 		}
 		if (lowCount === 1 || lowValue === 0) {
 			for (const candidate of round.candidates) {
@@ -146,6 +176,7 @@ export function runRound(state: State, callNext = finishRound) {
 			round.roundType = 'roundChoice';
 		}
 	} else {
+		$eventHub.$emit('redraw');
 		state.visible.chart = true;
 	}
 	state.round.push(round);

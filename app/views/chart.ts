@@ -33,24 +33,33 @@ export default {
 			this.history.links = [];
 			this.history.nodes = [
 				{
-					'name': 'all cast',
+					'name': this.$store.state.chartLabelPool,
 					'round': 0
 				}
 			];
 			// all cast -- first always -- initial round are children of this node
 		});
 		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
+
+			console.log('addNode', data);
+
 			this.history.nodes.push(data);
 		});
 		$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
+
+			console.log('addlink', data);
+
 			data.source = null;
 			data.target = null;
 			this.history.links.push(data);
 		});
 		$eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
 
+			console.log(this.history.nodes);
+			console.log(this.history.links);
+
 			this.history.nodes.push({
-				'name': 'choices eliminated',
+				'name': this.$store.state.chartLabelNoCount,
 				'round': 0
 			});
 

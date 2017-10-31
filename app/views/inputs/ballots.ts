@@ -5,9 +5,18 @@ export default {
 		$eventHub.$off('getNewBallots');
 	},
 	created: function () {
-		$eventHub.$on('getNewBallots', function (data) { // if some other component requests
-			this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
-			this.$store.commit('newCandidates');
+		// $eventHub.$on('getNewBallots', function (data) { // if some other component requests
+		// 	this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
+		// 	this.$store.commit('newCandidates');
+		// });
+	},
+	mounted: function () {
+		this.$nextTick(function() {
+			$eventHub.$on('getNewBallots', function (data) { // if some other component requests
+				console.log(this);
+				// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
+				// this.$store.commit('newCandidates');
+			});
 		});
 	},
 	data: function () {

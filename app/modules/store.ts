@@ -50,35 +50,6 @@ export const mutations = {
 		state.disableReset = true;
 
 		$eventHub.$emit('clearChart');
-		$eventHub.$emit('addNode', {name: 'a', round: 1});
-		$eventHub.$emit('addNode', {name: 'b', round: 1});
-		$eventHub.$emit('addLink', {
-			from: {name: 'all cast', round: 0},
-			to: {name: 'a', round: 1},
-			value: 100,
-		});
-		$eventHub.$emit('addLink', {
-			from: {name: 'all cast', round: 0},
-			to: {name: 'b', round: 1},
-			value: 5,
-		});
-		$eventHub.$emit('addNode', {name: 'a', round: 2});
-		$eventHub.$emit('addLink', {
-			from: {name: 'a', round: 1},
-			to: {name: 'a', round: 2},
-			value: 100,
-		});
-		$eventHub.$emit('addLink', {
-			from: {name: 'b', round: 1},
-			to: {name: 'a', round: 2},
-			value: 2,
-		});
-		$eventHub.$emit('addLink', {
-			from: {name: 'b', round: 1},
-			to: {name: 'choices eliminated', round: 0},
-			value: 3,
-		});
-		$eventHub.$emit('redraw');
 
 	},
 	eliminateAndContinue(state: State, who: string): void {
@@ -129,7 +100,7 @@ export const mutations = {
 			library.disqualify(state, candidate);
 		}
 		// reset chart history by sending message through $eventHub
-		$eventHub.$emit('chartReset');
+		$eventHub.$emit('clearChart');
 		// run the first round, let that round run additional rounds, or get user input
 		library.runRound(state);
 	},
