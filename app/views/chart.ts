@@ -58,11 +58,20 @@ export default {
 			console.log(this.history.nodes);
 			console.log(this.history.links);
 
-			this.history.nodes.push({
-				'name': this.$store.state.chartLabelNoCount,
-				'round': 0
-			});
+			let linksToNowhere = 0;
 
+			for (const link of this.history.links) {
+				if (link.to.name === this.$store.state.chartLabelNoCount) {
+					linksToNowhere++;
+				}
+			}
+
+			if (linksToNowhere > 0) { // there were any links to it
+				this.history.nodes.push({
+					'name': this.$store.state.chartLabelNoCount,
+					'round': 0
+				});
+			}
 			// add the eliminated node
 			// resolve links
 

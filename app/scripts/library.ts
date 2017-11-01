@@ -109,7 +109,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 		if (eliminations.hasOwnProperty(from)) {
 			for (const goesto in eliminations[from]) {
 				if (eliminations[from].hasOwnProperty(goesto)) {
-					console.log('eliminations', from, goesto, eliminations[from][goesto]);
 					$eventHub.$emit('addLink', {
 						from: {
 							name: from,
@@ -179,7 +178,9 @@ export function runRound(state: State, callNext = finishRound) {
 		if (total < lowValue) {
 			lowValue = total;
 		}
-		$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
+		if (total > 0 || state.round.length > 0) {
+			$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
+		}
 	}
 	if (state.candidateList.length > state.positions) {
 		for (const candidate of round.candidates) {
@@ -188,14 +189,16 @@ export function runRound(state: State, callNext = finishRound) {
 				candidate.l = true;
 				lowCount++;
 			}
-			$eventHub.$emit('addLink', {
-				from: {
-					name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
-					round: state.round.length,
-				},
-				to: {name: candidate.n, round: state.round.length + 1},
-				value: total,
-			});
+			if (total > 0) {
+				$eventHub.$emit('addLink', {
+					from: {
+						name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
+						round: state.round.length,
+					},
+					to: {name: candidate.n, round: state.round.length + 1},
+					value: total,
+				});
+			}
 		}
 		if (lowCount === 1 || lowValue === 0) {
 			for (const candidate of round.candidates) {
@@ -210,6 +213,27 @@ export function runRound(state: State, callNext = finishRound) {
 			round.roundType = 'roundChoice';
 		}
 	} else {
+		// Add final round links for chart as nodes are already there, added above
+		for (const candidate of state.round[state.round.length - 1].candidates) {
+			// this is duplicating the prior round, but should only include active candidates?
+			let current = false;
+			for (const active of round.candidates) {
+				if (active.n === candidate.n) {
+					current = true;
+				}
+			}
+			if (current) {
+				const total = candidate.v.reduce((a: number, b: number) => a + b);
+				$eventHub.$emit('addLink', {
+					from: {
+						name: candidate.n,
+						round: state.round.length,
+					},
+					to: {name: candidate.n, round: state.round.length + 1},
+					value: total,
+				});
+			}
+		}
 		$eventHub.$emit('redraw');
 		state.visible.chart = true;
 	}
