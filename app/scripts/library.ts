@@ -2,14 +2,6 @@ import State, {ICandidateType, IRoundType} from '../modules/state';
 
 import $eventHub from '../modules/eventHub';
 
-interface IelimType {
-	c: string;
-	transfers: Array<{
-		to: string;
-		value: number;
-	}>;
-}
-
 export function nonEmpty(value: string): boolean {
 	return value !== '';
 }
@@ -64,7 +56,7 @@ export function updateCandidateList(state: State) {
 }
 
 export function eliminate(state: State, candidate: string|string[]): void {
-	const eliminations: IelimType[] = [];
+	const eliminations = {};
 
 	// normalize to candidate allowing function to handle
 	// a single elimination via string
@@ -73,38 +65,67 @@ export function eliminate(state: State, candidate: string|string[]): void {
 		candidate = [candidate];
 	}
 
+	// set up eliminations storage for each candidate being eliminated
 	for (const can of candidate) {
-		eliminations.push({c: can, transfers: []});
+		eliminations[can] = {};
 	}
 
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
-		// TODO are there any candidates being eliminated in the scoring positions?
-		// TODO if there are, who are they replaced by?
+		const offset = (state.voteValues) ? 1 : 0;
+		const consideration: string[] = state.current[index].slice(offset, state.positions);
+		// contains the portion of the ballot under consideration
+		const replacePosition: number[] = [];
+		// contains the positions in the ballot that were under consideration and removed
+		for (const can of candidate) {
+			if (consideration.indexOf(can) !== -1) {
+				// if the candidate was in consideration record where they were
+				replacePosition.push(consideration.indexOf(can));
+			}
+		}
 		// remove the eliminated candidates
 		for (const can of candidate) {
 			state.current[index] = state.current[index].filter(isNot, can);
 		}
-	}
-
-	for (const elim of eliminations) {
-		for (const trans of elim.transfers) {
-			$eventHub.$emit('addLink', {
-				from: {
-					name: elim.c,
-					round: state.round.length,
-				},
-				to: {
-					name: trans.to,
-					round: state.round.length + 1,
-				},
-				value: trans.value,
-			});
+		// for each replacement -- so only ballots that were changed
+		for (const position of replacePosition) {
+			// identify when there is not anything at state.current[index][position] and
+			// send those votes to state.chartLabelNoCount
+			let replacement = state.current[index][position];
+			if (typeof replacement === 'undefined') {
+				replacement = state.chartLabelNoCount;
+			}
+			// increment the number of times we've see x replaced by y
+			const value = (state.voteValues) ? parseFloat(state.current[index][0]) : 1;
+			if (eliminations[consideration[position]].hasOwnProperty(replacement)) {
+				eliminations[consideration[position]][replacement] += value;
+			} else {
+				eliminations[consideration[position]][replacement] = value;
+			}
 		}
 	}
+	// turn eliminations into links in the chart
+	for (const from in eliminations) {
+		if (eliminations.hasOwnProperty(from)) {
+			for (const goesto in eliminations[from]) {
+				if (eliminations[from].hasOwnProperty(goesto)) {
+					console.log('eliminations', from, goesto, eliminations[from][goesto]);
+					$eventHub.$emit('addLink', {
+						from: {
+							name: from,
+							round: state.round.length + 1,
+						},
+						to: {
+							name: goesto,
+							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2,
+						},
+						value: eliminations[from][goesto],
+					});
 
-	// TODO rewrite to eliminate all at once and find vote reassignments
-
+				}
+			}
+		}
+	}
 }
 
 export function disqualify(state: State, candidate: string) {
