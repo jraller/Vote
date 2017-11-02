@@ -59,11 +59,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	const eliminations = {};
 	let linkOffset = 0;
 
-	console.log('eliminating', candidate);
-	console.log('ROUND:', state.round.length);
-	if (state.round.length) {
-		console.log('Round Type', state.round[state.round.length - 1].roundType);
-	}
 	// normalize to candidate allowing function to handle
 	// a single elimination via string
 	// or multiple eliminations via array
@@ -80,8 +75,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	for (const can of candidate) {
 		eliminations[can] = {};
 	}
-
-	console.log('eliminations', eliminations);
 
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
@@ -120,9 +113,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	// turn eliminations into links in the chart
 	for (const from in eliminations) {
 		if (eliminations.hasOwnProperty(from)) {
-
-			console.log(from, eliminations[from]);
-
 			for (const goesto in eliminations[from]) {
 				if (eliminations[from].hasOwnProperty(goesto)) {
 					$eventHub.$emit('addLink', {
@@ -174,12 +164,7 @@ function countXPlace(state: State, candidate: string, place: number): number {
 }
 
 export function runRound(state: State, callNext = finishRound) {
-
-	console.log('runRound called');
-
 	updateCandidateList(state);
-
-	console.log('after updateCandidateList');
 
 	let proceed = false;
 	let lowCount = 0;
@@ -269,11 +254,8 @@ export function runRound(state: State, callNext = finishRound) {
 		$eventHub.$emit('redraw');
 		state.visible.chart = true;
 	}
-	console.log('adding a round(' + state.round.length + ') ' + round.roundType);
 	state.round.push(round);
 	if (proceed) {
-		console.log('calling for next round(' + state.round.length + ')');
-		console.log('');
 		callNext(state);
 	}
 }
