@@ -1,3 +1,5 @@
+import $eventHub from '../modules/eventHub'
+
 export default {
 	data: function () {
 		return {
@@ -11,7 +13,7 @@ export default {
 	},
 	methods: {
 		changeDisqualified() {
-			this['eventHub'].$emit('getNewBallots');
+			$eventHub.$emit('getNewBallots');
 			this.$store.commit('updateDisqualified', this.disqualifyCandidates);
 		}
 	}

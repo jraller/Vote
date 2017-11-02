@@ -53,17 +53,26 @@ export const mutations = {
 
 	},
 	eliminateAndContinue(state: State, who: string): void {
+		console.log('');
+		let candidates: string[] = [];
 		if (who === 'all') {
-			const candidates = state.round[state.round.length - 1]
+			candidates = state.round[state.round.length - 1]
 				.candidates
 				.filter((c) => c.l)
 				.map((c) => c.n);
-			for (const candidate of candidates) {
-				library.eliminate(state, candidate);
-			}
+
+			console.log('eliminate and continue called with all', candidates);
+
+			library.eliminate(state, candidates);
 		} else {
-			library.eliminate(state, who);
+			candidates = [who];
+			console.log('eliminate and continue called with single', who);
+
+			library.eliminate(state, candidates);
 		}
+		console.log('got user input');
+		console.log('');
+
 		library.runRound(state);
 	},
 	newCandidates(state: State): void {

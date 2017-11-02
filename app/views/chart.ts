@@ -9,16 +9,18 @@ const {select, selectAll} = require('d3-selection');
 let update;
 
 function findNode(history, candidate, round) {
-	let result = -1,
-		index;
+	let result = -1;
 
-	for (index = 0; index < history.nodes.length; index++) {
+	for (let index = 0; index < history.nodes.length; index++) {
 		if (history.nodes[index].name === candidate && history.nodes[index].round === round) {
 			result = index;
 		}
 	}
 	if (result === -1) {
-		console.log('findNode', candidate, round);
+		// TODO remove this. this is a dirty nasty hack
+		console.log('findNode ****', candidate, round);
+		$eventHub.$emit('addNode', {name: candidate, round: round});
+		result = history.nodes.length - 1;
 	}
 	return result;
 }
@@ -44,13 +46,13 @@ export default {
 		});
 		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 
-			console.log('addNode', data.name, data.round);
+			console.log(' addNode', data.name, data.round);
 
 			this.history.nodes.push(data);
 		});
 		$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 
-			console.log('addlink', data.from.name, data.from.round, data.to.name, data.to.round);
+			console.log(' addlink', data.from.name, data.from.round, data.to.name, data.to.round, data.value);
 
 			data.source = null;
 			data.target = null;
@@ -58,8 +60,8 @@ export default {
 		});
 		$eventHub.$on('redraw', () => { // this needs a dequeue functionality before the redraw
 
-			console.log(this.history.nodes);
-			console.log(this.history.links);
+			console.log('nodes', this.history.nodes);
+			console.log('links', this.history.links);
 
 			let linksToNowhere = 0;
 

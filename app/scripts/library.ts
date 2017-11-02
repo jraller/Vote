@@ -57,24 +57,36 @@ export function updateCandidateList(state: State) {
 
 export function eliminate(state: State, candidate: string|string[]): void {
 	const eliminations = {};
+	let linkOffset = 0;
 
+	console.log('eliminating', candidate);
+	console.log('ROUND:', state.round.length);
+	if (state.round.length) {
+		console.log('Round Type', state.round[state.round.length - 1].roundType);
+	}
 	// normalize to candidate allowing function to handle
 	// a single elimination via string
 	// or multiple eliminations via array
 	if (typeof candidate === 'string') {
 		candidate = [candidate];
 	}
-
+	if (candidate.length > 1 && state.round.length === 0) {
+		linkOffset = 1;
+	}
+	if (state.round.length > 0 && state.round[state.round.length - 1].roundType === 'roundChoice') {
+		linkOffset = 1;
+	}
 	// set up eliminations storage for each candidate being eliminated
 	for (const can of candidate) {
-		console.log('eliminating', can);
 		eliminations[can] = {};
 	}
+
+	console.log('eliminations', eliminations);
 
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
 		const offset = (state.voteValues) ? 1 : 0;
-		const consideration: string[] = state.current[index].slice(offset, state.positions);
+		const consideration: string[] = state.current[index].slice(offset, state.positions + offset);
 		// contains the portion of the ballot under consideration
 		const replacePosition: number[] = [];
 		// contains the positions in the ballot that were under consideration and removed
@@ -92,7 +104,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 		for (const position of replacePosition) {
 			// identify when there is not anything at state.current[index][position] and
 			// send those votes to state.chartLabelNoCount
-			let replacement = state.current[index][position];
+			let replacement = state.current[index][position + offset];
 			if (typeof replacement === 'undefined' || replacement === '') {
 				replacement = state.chartLabelNoCount;
 			}
@@ -116,11 +128,11 @@ export function eliminate(state: State, candidate: string|string[]): void {
 					$eventHub.$emit('addLink', {
 						from: {
 							name: from,
-							round: state.round.length + 1,
+							round: state.round.length + 1 - linkOffset,
 						},
 						to: {
 							name: goesto,
-							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2,
+							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2 - linkOffset,
 						},
 						value: eliminations[from][goesto],
 					});
@@ -162,7 +174,12 @@ function countXPlace(state: State, candidate: string, place: number): number {
 }
 
 export function runRound(state: State, callNext = finishRound) {
+
+	console.log('runRound called');
+
 	updateCandidateList(state);
+
+	console.log('after updateCandidateList');
 
 	let proceed = false;
 	let lowCount = 0;
@@ -172,6 +189,7 @@ export function runRound(state: State, callNext = finishRound) {
 		roundType: '',
 	};
 
+	// build candidateList from current state
 	for (const candidate of state.candidateList) {
 		const tally: number[] = [];
 		for (let index = 0; index < state.positions; index++) {
@@ -182,7 +200,7 @@ export function runRound(state: State, callNext = finishRound) {
 		if (total < lowValue) {
 			lowValue = total;
 		}
-		if (total > 0 || state.round.length > 0) {
+		if (total > 0) { // || state.round.length > 0
 			$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
 		}
 	}
@@ -213,11 +231,13 @@ export function runRound(state: State, callNext = finishRound) {
 			}
 		}
 		if (lowCount === 1 || lowValue === 0) {
+			const removeCandidates: string[] = [];
 			for (const candidate of round.candidates) {
 				if (candidate.l === true) {
-					eliminate(state, candidate.n);
+					removeCandidates.push(candidate.n);
 				}
 			}
+			eliminate(state, removeCandidates);
 			round.roundType = 'roundSummary';
 			proceed = true;
 		} else {
@@ -249,8 +269,11 @@ export function runRound(state: State, callNext = finishRound) {
 		$eventHub.$emit('redraw');
 		state.visible.chart = true;
 	}
+	console.log('adding a round(' + state.round.length + ') ' + round.roundType);
 	state.round.push(round);
 	if (proceed) {
+		console.log('calling for next round(' + state.round.length + ')');
+		console.log('');
 		callNext(state);
 	}
 }
