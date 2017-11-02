@@ -46,7 +46,7 @@ export function updateCandidateList(state: State) {
 
 	for (const row of state.current) {
 		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
-			if (state.candidateList.indexOf(row[index]) === -1) {
+			if (state.candidateList.indexOf(row[index]) === -1 && row[index].trim() !== '') {
 				state.candidateList.push(row[index]);
 			}
 		}
@@ -67,6 +67,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 
 	// set up eliminations storage for each candidate being eliminated
 	for (const can of candidate) {
+		console.log('eliminating', can);
 		eliminations[can] = {};
 	}
 
@@ -92,7 +93,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 			// identify when there is not anything at state.current[index][position] and
 			// send those votes to state.chartLabelNoCount
 			let replacement = state.current[index][position];
-			if (typeof replacement === 'undefined') {
+			if (typeof replacement === 'undefined' || replacement === '') {
 				replacement = state.chartLabelNoCount;
 			}
 			// increment the number of times we've see x replaced by y
@@ -107,6 +108,9 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	// turn eliminations into links in the chart
 	for (const from in eliminations) {
 		if (eliminations.hasOwnProperty(from)) {
+
+			console.log(from, eliminations[from]);
+
 			for (const goesto in eliminations[from]) {
 				if (eliminations[from].hasOwnProperty(goesto)) {
 					$eventHub.$emit('addLink', {
@@ -190,13 +194,21 @@ export function runRound(state: State, callNext = finishRound) {
 				lowCount++;
 			}
 			if (total > 0) {
+				let linkTotal = total;
+				if (state.round.length > 0) {
+					for (const lastRoundCandidate of state.round[state.round.length - 1].candidates) {
+						if (lastRoundCandidate.n === candidate.n) {
+							linkTotal = lastRoundCandidate.v.reduce((a: number, b: number) => a + b);
+						}
+					}
+				}
 				$eventHub.$emit('addLink', {
 					from: {
 						name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
 						round: state.round.length,
 					},
 					to: {name: candidate.n, round: state.round.length + 1},
-					value: total, // TODO need to think about which total we are using, should always be prior round?
+					value: linkTotal,
 				});
 			}
 		}

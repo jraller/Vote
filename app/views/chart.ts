@@ -17,6 +17,9 @@ function findNode(history, candidate, round) {
 			result = index;
 		}
 	}
+	if (result === -1) {
+		console.log('findNode', candidate, round);
+	}
 	return result;
 }
 
@@ -41,13 +44,13 @@ export default {
 		});
 		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 
-			console.log('addNode', data);
+			console.log('addNode', data.name, data.round);
 
 			this.history.nodes.push(data);
 		});
 		$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 
-			console.log('addlink', data);
+			console.log('addlink', data.from.name, data.from.round, data.to.name, data.to.round);
 
 			data.source = null;
 			data.target = null;

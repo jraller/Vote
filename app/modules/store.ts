@@ -71,10 +71,9 @@ export const mutations = {
 		state.candidateListFull = state.candidateList;
 		state.visible.disqualifyList = state.candidateList.length > 1;
 		state.disableRun = state.candidateList.length === 0;
-		// state.visible.chart = false;
+		state.visible.chart = false;
 		state.visible.results = false;
-		// $eventHub.$emit('clearChart');
-		// $eventHub.$emit('addNode', {name: 'all ballots'});
+		$eventHub.$emit('clearChart');
 	},
 	pickDelimiter(state: State, raw: string): void {
 		state.delimiter = Delimiters.pickDelimiter(raw);
