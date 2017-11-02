@@ -196,7 +196,7 @@ export function runRound(state: State, callNext = finishRound) {
 						round: state.round.length,
 					},
 					to: {name: candidate.n, round: state.round.length + 1},
-					value: total,
+					value: total, // TODO need to think about which total we are using, should always be prior round?
 				});
 			}
 		}
