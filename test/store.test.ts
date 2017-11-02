@@ -30,11 +30,19 @@ describe('store', () => {
 		});
 	});
 	describe('eliminateAndContinue', () => {
-		it('should work for a named canidate', () => {
+		it('should work for a named candidate', () => {
 			const state = new State();
 			const { eliminateAndContinue } = mutations;
+			state.round = [
+				{candidates: [
+					{n: 'a', v: [2], l: false},
+					{n: 'b', v: [1], l: true},
+					{n: 'c', v: [1], l: true}
+				],
+					roundType: 'roundSummary'}
+			];
 
-			eliminateAndContinue(state, 'fred');
+			eliminateAndContinue(state, 'b');
 
 			expect(state);
 		});
@@ -106,6 +114,13 @@ describe('store', () => {
 	describe('runClicked', () => {
 		const state = new State();
 		const { runClicked } = mutations;
+		state.round = [
+			{candidates: [
+				{n: 'a', v: [2], l: false},
+				{n: 'b', v: [1], l: true}
+			],
+				roundType: 'roundSummary'}
+		];
 		it('should make results visible', () => {
 			runClicked(state);
 			expect(state.visible.results).to.be.true;
