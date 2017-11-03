@@ -26,7 +26,6 @@ function findNode(history, candidate, round) {
 }
 
 export default {
-	// TODO interface with $eventHub to receive data and clear signal
 	beforeDestroy: function () {
 		$eventHub.$off('clearChart');
 		$eventHub.$off('addNode');
@@ -97,7 +96,6 @@ export default {
 			update();
 		});
 	},
-	// TODO data
 	data: function () {
 		return {
 			history: {
@@ -109,7 +107,6 @@ export default {
 		}
 	},
 	mounted: function () {
-
 		const formatNumber = format(',.1f');
 		const formatVote = function (d) {
 			return formatNumber(d) + ' votes';

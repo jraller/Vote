@@ -265,7 +265,7 @@ export function runRound(state: State, callNext = finishRound) {
 }
 
 export function finishRound(state: State) {
-	// TODO build out the rest
+	// TODO build out the rest -- is anything needed here?
 	runRound(state);
 }
 
