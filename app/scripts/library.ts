@@ -13,11 +13,11 @@ function isNot(value: string): boolean {
 export function sortCandidateList(candidates: string[], order: string): string[] {
 	let result: string[] = [];
 
-	if (order === 'u' || order === 'b') {
+	if (order === 'u' || order === 'b') { // unsorted and ballot order
 		result = candidates;
-	} else if (order === 'f') {
+	} else if (order === 'f') { // first name
 		result = candidates.sort();
-	} else if (order === 'l') {
+	} else if (order === 'l') { // last name
 		result = candidates.sort((a, b) => {
 			const lastA = a.toLowerCase().split(' ').reverse();
 			const lastB = b.toLowerCase().split(' ').reverse();
@@ -41,9 +41,7 @@ export function updateCandidateList(state: State) {
 	if (state.sortOrder === 'b' && state.round.length === 1) {
 		state.candidateList = state.ballot.filter(nonEmpty);
 	}
-
 	// in subsequent rounds start with ballot, remove eliminated candidates and add unlisted?
-
 	for (const row of state.current) {
 		for (let index = (state.voteValues) ? 1 : 0; index < row.length; index++) {
 			if (state.candidateList.indexOf(row[index]) === -1 && row[index].trim() !== '') {
@@ -51,7 +49,6 @@ export function updateCandidateList(state: State) {
 			}
 		}
 	}
-
 	sortCandidateList(state.candidateList, state.sortOrder);
 }
 
@@ -65,9 +62,11 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	if (typeof candidate === 'string') {
 		candidate = [candidate];
 	}
+	// handle tie in first round when we can't look to prior round for type
 	if (candidate.length > 1 && state.round.length === 0) {
 		linkOffset = 1;
 	}
+	// handle coming back from user tie breaking input
 	if (state.round.length > 0 && state.round[state.round.length - 1].roundType === 'roundChoice') {
 		linkOffset = 1;
 	}
@@ -75,7 +74,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	for (const can of candidate) {
 		eliminations[can] = {};
 	}
-
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
 		const offset = (state.voteValues) ? 1 : 0;
@@ -122,6 +120,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 						},
 						to: {
 							name: goesto,
+							// TODO will need to be altered to support chain of eliminated nodes
 							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2 - linkOffset,
 						},
 						value: eliminations[from][goesto],
@@ -133,12 +132,16 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	}
 }
 
-export function disqualify(state: State, candidate: string) {
-	eliminate(state, candidate);
+export function disqualify(state: State, candidate: string[]) {
+	for (let index = 0; index < state.current.length; index++) {
+		// remove the eliminated candidates
+		for (const can of candidate) {
+			state.current[index] = state.current[index].filter(isNot, can);
+		}
+	}
 }
 
 function countXPlace(state: State, candidate: string, place: number): number {
-
 	function countFactory(voteValues: boolean) {
 		switch (voteValues) {
 			case false:
@@ -153,13 +156,11 @@ function countXPlace(state: State, candidate: string, place: number): number {
 
 	// define the return function to return first column or 1
 	// and then use that function?
-
 	for (const ballot of state.current) {
 		if (ballot[place] === candidate) {
 			value = (value + count(ballot));
 		}
 	}
-
 	return value;
 }
 

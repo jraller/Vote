@@ -93,9 +93,7 @@ export const mutations = {
 		state.disableReset = false;
 		state.visible.results = true;
 		// remove disqualified candidates before first round
-		for (const candidate of state.disqualifiedCandidates) {
-			library.disqualify(state, candidate);
-		}
+		library.disqualify(state, state.disqualifiedCandidates);
 		// reset chart history by sending message through $eventHub
 		$eventHub.$emit('clearChart'); // TODO is this needed, or is it handled later on?
 		// run the first round, let that round run additional rounds, or get user input
