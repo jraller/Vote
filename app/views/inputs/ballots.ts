@@ -14,7 +14,9 @@ export default {
 		this.$nextTick(function() {
 			$eventHub.$on('getNewBallots', function (data) { // if some other component requests
 				console.log(this);
-				// TODO fix this
+				// TODO fix this scoping or
+				// change calls to getNewBallots to go to the store and have the store pull rawInput
+
 				// this.$store.commit('newBallots', this.rawInput); // trigger ballot parsing
 				// this.$store.commit('newCandidates');
 			});
