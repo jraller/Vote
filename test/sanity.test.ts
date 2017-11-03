@@ -9,7 +9,7 @@ import 'babel-polyfill';
 chai.use(sinonChai);
 Vue.use(Vuex);
 
-const Sanity = require('./../app/views/sanity.vue');
+const Sanity = require('../app/views/checks/sanity.vue');
 
 const expect = chai.expect;
 

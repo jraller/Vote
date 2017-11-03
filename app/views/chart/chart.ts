@@ -1,4 +1,4 @@
-import $eventHub from '../modules/eventHub';
+import $eventHub from '../../modules/eventHub';
 
 const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {rgb} = require('d3-color');

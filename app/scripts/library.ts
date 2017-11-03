@@ -174,6 +174,9 @@ export function runRound(state: State, callNext = finishRound) {
 		roundType: '',
 	};
 
+	// TODO consider adding choices eliminated to each round
+	// in which it could be to avoid vertical shift in chart?
+
 	// build candidateList from current state
 	for (const candidate of state.candidateList) {
 		const tally: number[] = [];

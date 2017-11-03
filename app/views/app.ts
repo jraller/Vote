@@ -1,16 +1,16 @@
 export default {
 	components: {
-		chart: require('./chart.vue'),
-		disqualify: require('./disqualify.vue'),
+		chart: require('./chart/chart.vue'),
+		disqualify: require('./inputs/disqualify.vue'),
 		inputControlVotes: require('./inputs/ballots.vue'),
 		inputControlDelimiter: require('./inputs/delimiter.vue'),
 		inputControlPositions: require('./inputs/positions.vue'),
 		inputControlSortOrder: require('./inputs/sort-order.vue'),
 		inputControlWeightedValues: require('./inputs/weighted-values.vue'),
 		results: require('./results/results.vue'),
-		runButton: require('./inputs/runButton.vue'),
-		resetButton: require('./inputs/resetButton.vue'),
-		sanity: require('./sanity.vue')
+		runButton: require('./buttons/runButton.vue'),
+		resetButton: require('./buttons/resetButton.vue'),
+		sanity: require('./checks/sanity.vue')
 	},
 	computed: {
 		showChart() {
@@ -26,6 +26,7 @@ export default {
 			return this.$store.state.visible.sanity;
 		},
 	},
+	name: 'STVRunner',
 };
 
 // TODO consider adding button next to run that unlocks inputs, lock (disable) inputs on run?

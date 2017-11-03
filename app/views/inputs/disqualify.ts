@@ -1,4 +1,4 @@
-import $eventHub from '../modules/eventHub'
+import $eventHub from '../../modules/eventHub'
 
 export default {
 	data: function () {
