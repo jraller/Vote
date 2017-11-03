@@ -9,9 +9,15 @@ export interface ICandidateType {
 	l: boolean; // flag for low vote count or value in round, may be tie
 }
 
+export enum roundTypeEnum {
+	unset = '',
+	roundSummary = 'roundSummary',
+	roundChoice = 'roundChoice',
+}
+
 export interface IRoundType {
 	candidates: ICandidateType[];
-	roundType: string; // this might be enum?
+	roundType: roundTypeEnum;
 }
 
 export default class State {

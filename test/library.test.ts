@@ -1,6 +1,7 @@
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
+import {roundTypeEnum} from '../app/modules/state'
 import {
 	nonEmpty,
 	sortCandidateList,
@@ -68,7 +69,7 @@ describe('library', () => {
 				['b', 'a'],
 				['c']
 			];
-			disqualify(state, 'a');
+			disqualify(state, ['a']);
 			expect(state.current).to.eql([['b'], ['b'], ['c']]);
 		});
 	});
@@ -136,7 +137,7 @@ describe('library', () => {
 
 			expect(finishStub.called).to.be.true;
 
-			expect(state.round[0].roundType).to.equal('roundSummary');
+			expect(state.round[0].roundType).to.equal(roundTypeEnum.roundSummary);
 			expect(state.round.length).to.equal(1);
 
 			finishRound(state);
@@ -161,7 +162,7 @@ describe('library', () => {
 
 			expect(finishStub.called).to.be.true;
 
-			expect(state.round[0].roundType).to.equal('roundSummary');
+			expect(state.round[0].roundType).to.equal(roundTypeEnum.roundSummary);
 			expect(state.round.length).to.equal(1);
 
 			finishRound(state);
@@ -187,7 +188,7 @@ describe('library', () => {
 
 			expect(finishStub.called).to.be.true;
 
-			expect(state.round[0].roundType).to.equal('roundSummary');
+			expect(state.round[0].roundType).to.equal(roundTypeEnum.roundSummary);
 			expect(state.round.length).to.equal(1);
 
 			finishRound(state);

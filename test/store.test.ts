@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'babel-polyfill';
 
-import State from '../app/modules/state';
+import State, {roundTypeEnum} from '../app/modules/state';
 import { mutations } from '../app/modules/store';
 
 describe('store', () => {
@@ -39,7 +39,7 @@ describe('store', () => {
 					{n: 'b', v: [1], l: true},
 					{n: 'c', v: [1], l: true}
 				],
-					roundType: 'roundSummary'}
+					roundType: roundTypeEnum.roundSummary}
 			];
 
 			eliminateAndContinue(state, 'b');
@@ -55,7 +55,7 @@ describe('store', () => {
 					{n: 'b', v: [1], l: true},
 					{n: 'c', v: [1], l: true}
 				],
-				roundType: 'roundSummary'}
+				roundType: roundTypeEnum.roundSummary}
 			];
 
 			eliminateAndContinue(state, 'all');
@@ -119,7 +119,7 @@ describe('store', () => {
 				{n: 'a', v: [2], l: false},
 				{n: 'b', v: [1], l: true}
 			],
-				roundType: 'roundSummary'}
+				roundType: roundTypeEnum.roundSummary}
 		];
 		it('should make results visible', () => {
 			runClicked(state);

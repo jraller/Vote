@@ -1,4 +1,4 @@
-import State, {ICandidateType, IRoundType} from '../modules/state';
+import State, {ICandidateType, IRoundType, roundTypeEnum} from '../modules/state';
 
 import $eventHub from '../modules/eventHub';
 
@@ -67,7 +67,7 @@ export function eliminate(state: State, candidate: string|string[]): void {
 		linkOffset = 1;
 	}
 	// handle coming back from user tie breaking input
-	if (state.round.length > 0 && state.round[state.round.length - 1].roundType === 'roundChoice') {
+	if (state.round.length > 0 && state.round[state.round.length - 1].roundType === roundTypeEnum.roundChoice) {
 		linkOffset = 1;
 	}
 	// set up eliminations storage for each candidate being eliminated
@@ -172,7 +172,7 @@ export function runRound(state: State, callNext = finishRound) {
 	let lowValue = Number.POSITIVE_INFINITY;
 	const round: IRoundType = {
 		candidates: [],
-		roundType: '',
+		roundType: roundTypeEnum.unset,
 	};
 
 	// TODO consider adding choices eliminated to each round
@@ -227,11 +227,11 @@ export function runRound(state: State, callNext = finishRound) {
 				}
 			}
 			eliminate(state, removeCandidates);
-			round.roundType = 'roundSummary';
+			round.roundType = roundTypeEnum.roundSummary;
 			proceed = true;
 		} else {
 			// get user input to handle tie
-			round.roundType = 'roundChoice';
+			round.roundType = roundTypeEnum.roundChoice;
 		}
 	} else {
 		// Add final round links for chart as nodes are already there, added above
