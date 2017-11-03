@@ -28,13 +28,12 @@ export const mutations = {
 	newBallots(state: State, raw: string): void {
 		if (raw) {
 			let temp: any = raw.toString().trim().split('\n');
+			const delimiter = String.fromCharCode(delimiters.getCode(state.delimiter));
 			state.rawLength = temp.length;
 			temp = temp.filter(library.nonEmpty);
 			state.ballotCount = temp.length;
-
 			for (let index = 0; index < temp.length; index++) {
-				temp[index] = temp[index]
-					.split(String.fromCharCode(delimiters.getCode(state.delimiter)));
+				temp[index] = temp[index].split(delimiter);
 				for (let ind = 0; ind < temp[index].length; ind++) {
 					temp[index][ind] = temp[index][ind].trim();
 				}
@@ -46,12 +45,12 @@ export const mutations = {
 			state.current = [];
 		}
 		state.visible.results = false;
+		state.visible.chart = false;
 		state.round = [];
 		state.disableReset = true;
 		$eventHub.$emit('clearChart');
 	},
 	eliminateAndContinue(state: State, who: string): void {
-		console.log('');
 		let candidates: string[] = [];
 		if (who === 'all') {
 			candidates = state.round[state.round.length - 1]
@@ -70,8 +69,8 @@ export const mutations = {
 		state.candidateListFull = state.candidateList;
 		state.visible.disqualifyList = state.candidateList.length > 1;
 		state.disableRun = state.candidateList.length === 0;
-		state.visible.chart = false;
 		state.visible.results = false;
+		state.visible.chart = false;
 		$eventHub.$emit('clearChart');
 	},
 	pickDelimiter(state: State, raw: string): void {
@@ -87,7 +86,7 @@ export const mutations = {
 		$eventHub.$emit('clearChart');
 		$eventHub.$emit('getNewBallots');
 		state.disableReset = true;
-		state.disableRun = false;
+		state.disableRun = false; // TODO should check to see if there are identified candidates?
 	},
 	runClicked(state: State): void {
 		state.disableRun = true;
@@ -98,7 +97,7 @@ export const mutations = {
 			library.disqualify(state, candidate);
 		}
 		// reset chart history by sending message through $eventHub
-		$eventHub.$emit('clearChart');
+		$eventHub.$emit('clearChart'); // TODO is this needed, or is it handled later on?
 		// run the first round, let that round run additional rounds, or get user input
 		library.runRound(state);
 	},

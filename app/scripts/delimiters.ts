@@ -1,3 +1,6 @@
+// defines delimiters that are used to separate
+// choices on a single ballot
+
 export class Delimiters {
 	public static pickDelimiter(input: string): string {
 		let delimiter;

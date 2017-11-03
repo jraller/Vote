@@ -34,8 +34,7 @@
 //    ]
   },
   "exclude": [
-    "node_modules",
-    "app/scripts/tally.ts"
+    "node_modules"
   ],
   "include": [
     "app/scripts/library.ts"
