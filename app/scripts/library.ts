@@ -74,6 +74,21 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	for (const can of candidate) {
 		eliminations[can] = {};
 	}
+
+	if (state.chartNoCount > 0) {
+		$eventHub.$emit('addLink', {
+			from: {
+				name: state.chartLabelNoCount,
+				round: state.round.length + 1 - linkOffset,
+			},
+			to: {
+				name: state.chartLabelNoCount,
+				round: state.round.length + 2 - linkOffset,
+			},
+			value: state.chartNoCount,
+		});
+	}
+
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
 		const offset = (state.voteValues) ? 1 : 0;
@@ -132,6 +147,12 @@ export function eliminate(state: State, candidate: string|string[]): void {
 			}
 		}
 	}
+	if (state.chartNoCount > 0) {
+		$eventHub.$emit('addNode', {
+			name: state.chartLabelNoCount,
+			round: state.round.length + 2 - linkOffset,
+		});
+	}
 }
 
 export function disqualify(state: State, candidate: string[]) {
@@ -180,20 +201,6 @@ export function runRound(state: State, callNext = finishRound) {
 	// TODO consider adding choices eliminated to each round
 	// in which it could be to avoid vertical shift in chart?
 
-	if (state.chartNoCount > 0 && state.round.length > 1) {
-		$eventHub.$emit('addLink', {
-			from: {
-				name: state.chartLabelNoCount,
-				round: state.round.length,
-			},
-			to: {
-				name: state.chartLabelNoCount,
-				round: state.round.length + 1,
-			},
-			value: state.chartNoCount,
-		});
-	}
-
 	// build candidateList from current state
 	for (const candidate of state.candidateList) {
 		const tally: number[] = [];
@@ -206,7 +213,10 @@ export function runRound(state: State, callNext = finishRound) {
 			lowValue = total;
 		}
 		if (total > 0) { // || state.round.length > 0
-			$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
+			$eventHub.$emit('addNode', {
+				name: candidate,
+				round: state.round.length + 1,
+			});
 		}
 	}
 	if (state.candidateList.length > state.positions) {
@@ -276,12 +286,6 @@ export function runRound(state: State, callNext = finishRound) {
 		}
 		$eventHub.$emit('redraw');
 		state.visible.chart = true;
-	}
-	if (state.chartNoCount > 0 && state.round.length > 1) {
-		$eventHub.$emit('addNode', {
-			name: state.chartLabelNoCount,
-			round: state.round.length + 1,
-		});
 	}
 	state.round.push(round);
 	if (proceed) {
