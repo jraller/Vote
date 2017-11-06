@@ -121,11 +121,13 @@ export function eliminate(state: State, candidate: string|string[]): void {
 						to: {
 							name: goesto,
 							// TODO will need to be altered to support chain of eliminated nodes
-							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2 - linkOffset,
+							round: state.round.length + 2 - linkOffset,
 						},
 						value: eliminations[from][goesto],
 					});
-
+					if (goesto === state.chartLabelNoCount) {
+						state.chartNoCount += eliminations[from][goesto];
+					}
 				}
 			}
 		}
@@ -178,6 +180,20 @@ export function runRound(state: State, callNext = finishRound) {
 	// TODO consider adding choices eliminated to each round
 	// in which it could be to avoid vertical shift in chart?
 
+	if (state.chartNoCount > 0 && state.round.length > 1) {
+		$eventHub.$emit('addLink', {
+			from: {
+				name: state.chartLabelNoCount,
+				round: state.round.length,
+			},
+			to: {
+				name: state.chartLabelNoCount,
+				round: state.round.length + 1,
+			},
+			value: state.chartNoCount,
+		});
+	}
+
 	// build candidateList from current state
 	for (const candidate of state.candidateList) {
 		const tally: number[] = [];
@@ -214,7 +230,10 @@ export function runRound(state: State, callNext = finishRound) {
 						name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
 						round: state.round.length,
 					},
-					to: {name: candidate.n, round: state.round.length + 1},
+					to: {
+						name: candidate.n,
+						round: state.round.length + 1,
+					},
 					value: linkTotal,
 				});
 			}
@@ -257,6 +276,12 @@ export function runRound(state: State, callNext = finishRound) {
 		}
 		$eventHub.$emit('redraw');
 		state.visible.chart = true;
+	}
+	if (state.chartNoCount > 0 && state.round.length > 1) {
+		$eventHub.$emit('addNode', {
+			name: state.chartLabelNoCount,
+			round: state.round.length + 1,
+		});
 	}
 	state.round.push(round);
 	if (proceed) {

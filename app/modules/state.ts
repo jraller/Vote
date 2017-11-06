@@ -25,6 +25,7 @@ export default class State {
 	public candidateListFull: string[] = []; // version of list without disqualified candidates
 	public chartLabelPool: string = 'All Cast'; // TODO advanced setting, expose later?
 	public chartLabelNoCount: string = 'Choices Eliminated'; // TODO advanced setting, expose later?
+	public chartNoCount: number = 0;
 	public current: string[][] = []; // the parsed current state of ballots at any point
 	public delimiter: string = 'auto'; // delimiter setting, initally auto to improve UI
 	public delimiterList = new Delimiters().listDelimiters();

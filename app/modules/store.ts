@@ -99,6 +99,7 @@ export const mutations = {
 		// run the first round, let that round run additional rounds, or get user input
 		library.runRound(state);
 	},
+	setChartNoCount: (state: State, value: number) => state.chartNoCount = value,
 	setDelimiter: (state: State, value: string) => state.delimiter = value,
 	setVisibleSanity: (state: State, value: boolean) => state.visible.sanity = value,
 	updateBallotSort: (state: State, value: string[]) => state.ballot = value,
