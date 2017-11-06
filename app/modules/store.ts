@@ -13,11 +13,41 @@ const delimiters = new Delimiters();
 
 Vue.use(VueX);
 
-export const actions = {};
+export const actions = {
+	inputChange(context): void {
+		if (context.getters.raw === '') { // if input is empty
+			context.commit('setDelimiter', 'auto'); // reset delimiter to auto select
+		} else if (context.getters.delimiter === 'auto') { // if input has content and delimiter is auto
+			context.commit('pickDelimiter', context.getters.raw); // select delimiter
+			context.commit('pickWeightedValues', context.getters.raw); // select weighted values as well
+		}
+		context.commit('newBallots'); // trigger ballot parsing
+		context.commit('newCandidates'); // trigger building of candidate list
+	},
+	resetClicked(context): void {
+		context.visible.results = false;
+		context.visible.chart = false;
+		context.round = [];
+		$eventHub.$emit('clearChart');
+		$eventHub.$emit('getNewBallots');
+		context.disableReset = true;
+		context.disableRun = false; // TODO should check to see if there are identified candidates?
+	},
+	runClicked(context): void {
+		// context.disableRun = true;
+		context.commit('setRunButtonEnable', false);
+		context.disableReset = false;
+
+		// context.visible.results = true;
+		// context.commit('setVisible', {results: true}); // TODO see below about this form
+		context.commit('setVisibleResults', true);
+		context.commit('startRun');
+	},
+};
 
 export const getters = {
-	// atomic parts of state
-	// latest round
+	delimiter: (state) => state.delimiter,
+	raw: (state) => state.raw,
 };
 
 // what is a DRY way to handle UI state changes in mutations?
@@ -25,9 +55,9 @@ export const getters = {
 // TODO handle chart visibility by detecting end of run conditions, or as part of library runRound
 
 export const mutations = {
-	newBallots(state: State, raw: string): void {
-		if (raw) {
-			let temp: any = raw.toString().trim().split('\n');
+	newBallots(state: State): void {
+		if (state.raw) {
+			let temp: any = state.raw.toString().trim().split('\n');
 			const delimiter = String.fromCharCode(delimiters.getCode(state.delimiter));
 			state.rawLength = temp.length;
 			temp = temp.filter(library.nonEmpty);
@@ -47,7 +77,7 @@ export const mutations = {
 		state.visible.results = false;
 		state.visible.chart = false;
 		state.round = [];
-		state.disableReset = true;
+		state.resetButtonEnabled = false;
 		$eventHub.$emit('clearChart');
 	},
 	eliminateAndContinue(state: State, who: string): void {
@@ -68,7 +98,7 @@ export const mutations = {
 		library.updateCandidateList(state);
 		state.candidateListFull = state.candidateList;
 		state.visible.disqualifyList = state.candidateList.length > 1;
-		state.disableRun = state.candidateList.length === 0;
+		state.runButtonEnabled = state.candidateList.length > 0;
 		state.visible.results = false;
 		state.visible.chart = false;
 		$eventHub.$emit('clearChart');
@@ -79,29 +109,24 @@ export const mutations = {
 	pickWeightedValues(state: State, raw: string): void {
 		state.voteValues = !isNaN(parseInt(raw.substring(0, 1), 10));
 	},
-	resetClicked(state: State): void {
-		state.visible.results = false;
-		state.visible.chart = false;
-		state.round = [];
-		$eventHub.$emit('clearChart');
-		$eventHub.$emit('getNewBallots');
-		state.disableReset = true;
-		state.disableRun = false; // TODO should check to see if there are identified candidates?
-	},
-	runClicked(state: State): void {
-		state.disableRun = true;
-		state.disableReset = false;
-		state.visible.results = true;
-		// remove disqualified candidates before first round
-		library.disqualify(state, state.disqualifiedCandidates);
-		// reset chart history by sending message through $eventHub
-		$eventHub.$emit('clearChart'); // TODO is this needed, or is it handled later on?
-		// run the first round, let that round run additional rounds, or get user input
-		library.runRound(state);
-	},
 	setChartNoCount: (state: State, value: number) => state.chartNoCount = value,
 	setDelimiter: (state: State, value: string) => state.delimiter = value,
+	setRaw: (state: State, value: string) => state.raw = value,
+	setResetButtonEnable: (state: State, value: boolean) => state.resetButtonEnabled = value,
+	setRunButtonEnable: (state: State, value: boolean) => state.runButtonEnabled = value,
+
+	setVisible: (state: State, value: object) => {
+		// TODO this version might be better than separate ones?
+		// TODO change object to a specific type
+	},
+
+	setVisibleResults: (state: State, value: boolean) => state.visible.results = value,
 	setVisibleSanity: (state: State, value: boolean) => state.visible.sanity = value,
+
+	startRun: (state: State) => {
+		library.disqualify(state, state.disqualifiedCandidates);
+		library.runRound(state);
+	},
 	updateBallotSort: (state: State, value: string[]) => state.ballot = value,
 	updateDisqualified: (state: State, value: string[]) => state.disqualifiedCandidates = value,
 	updatePositions: (state: State, value: number) => state.positions = value,

@@ -8,7 +8,7 @@ export default {
 	methods: {
 		changeSortOrder() {
 			this.$store.commit('updateSortOrder', this.sortOrder);
-			this.$store.commit('newCandidates');
+			this.$store.dispatch('inputChange');
 		}
 	},
 	name: 'inputSortOrder',

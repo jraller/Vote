@@ -38,6 +38,10 @@ describe('Ballot Input', () => {
 
 		const eventHub = new Vue();
 
+		const actions = {
+			inputChange: sinon.stub()
+		};
+
 		const mutations = {
 			newBallots: sinon.stub(),
 			newCandidates: sinon.stub()
@@ -53,6 +57,7 @@ describe('Ballot Input', () => {
 		});
 
 		const store = new Vuex.Store({
+			actions,
 			mutations,
 			state
 		});
@@ -75,29 +80,14 @@ describe('Ballot Input', () => {
 			expect(changeWrapper.contains('textarea')).to.be.true;
 		});
 		it('triggers newBallots when the input is changed', () => {
-			const count = mutations.newBallots.callCount;
+			const count = actions.inputChange.callCount;
 
 			changeWrapper.setData({rawInput: 'fred'});
 			changeWrapper.find('textarea').trigger('change');
 
 			expect(changeWrapper.vm.rawInput).to.equal('fred');
 
-			expect(mutations.newBallots).to.have.callCount(count + 1);
+			expect(actions.inputChange).to.have.callCount(count + 1);
 		});
-		it('triggers newBallots with the right arguments', () => {
-			const count = mutations.newBallots.callCount;
-
-			changeWrapper.setData({rawInput: 'george'});
-			changeWrapper.find('textarea').trigger('change');
-			expect(changeWrapper.vm.rawInput).to.equal('george');
-
-			expect(mutations.newBallots).to.have.been.calledWith(state, 'george');
-			expect(mutations.newBallots).to.have.callCount(count + 1);
-		});
-		// it('triggers newBallots when called from outside', () => {
-		// 	const count = mutations.newBallots.callCount;
-		// 	$eventHub.$emit('getNewBallots');
-		// 	expect(mutations.newBallots).to.have.callCount(count + 1);
-		// });
 	});
 });

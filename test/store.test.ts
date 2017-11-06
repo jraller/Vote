@@ -2,17 +2,17 @@ import { expect } from 'chai';
 import 'babel-polyfill';
 
 import State, {roundTypeEnum} from '../app/modules/state';
-import { mutations } from '../app/modules/store';
+import { actions, mutations } from '../app/modules/store';
 
 describe('store', () => {
 	describe('newBallots', () => {
 		it('should handle newBallots with input', () => {
 			const state = new State();
-			const raw = 'fred\nfred\nsally';
+			state.raw = 'fred\nfred\nsally';
 
 			const { newBallots } = mutations;
 
-			newBallots(state, raw);
+			newBallots(state);
 			expect(state.rawLength).to.equal(3);
 			expect(state.ballotCount).to.equal(3);
 			expect(state.current).to.eql([['fred'], ['fred'], ['sally']]);
@@ -109,27 +109,6 @@ describe('store', () => {
 		it('should set for numerics', () => {
 			pickWeightedValues(state, '1,fred');
 			expect(state.voteValues).to.be.true;
-		});
-	});
-	describe('runClicked', () => {
-		const state = new State();
-		const { runClicked } = mutations;
-		state.round = [
-			{candidates: [
-				{n: 'a', v: [2], l: false},
-				{n: 'b', v: [1], l: true}
-			],
-				roundType: roundTypeEnum.roundSummary}
-		];
-		it('should make results visible', () => {
-			runClicked(state);
-			expect(state.visible.results).to.be.true;
-		});
-		it('should make results visible', () => {
-			state.disqualifiedCandidates = ['fred'];
-			state.current = [['fred', 'sally']];
-			runClicked(state);
-			expect(state.current).to.eql([['sally']]);
 		});
 	});
 	describe('setDelimiter', () => {

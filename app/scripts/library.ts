@@ -263,6 +263,10 @@ export function runRound(state: State, callNext = finishRound) {
 			round.roundType = roundTypeEnum.roundChoice;
 		}
 	} else {
+		// TODO fix this which was added to handled positions = candidates in first round
+		if (state.round.length === 0) {
+			state.round.push(round);
+		}
 		// Add final round links for chart as nodes are already there, added above
 		for (const candidate of state.round[state.round.length - 1].candidates) {
 			// this is duplicating the prior round, but should only include active candidates?

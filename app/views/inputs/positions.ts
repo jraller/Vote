@@ -1,20 +1,22 @@
+import $eventHub from '../../modules/eventHub';
+
 export default {
 	data: function () {
 		return {
 			positions: 1
 		}
 	},
-	// methods: {
-	// 	changePositions: function () {
-	// 		this.$store.commit('updatePositions', this.positions);
-	// 	}
-	// },
 	name: 'inputControlPositions',
 	watch: {
-		// TODO consider using watch instead of method?
 		positions: function () {
 			this.$store.commit('updatePositions', this.positions);
+			this.$store.dispatch('inputChange');
+
+			// this.$store.commit('newBallots');
+			// this.$store.commit('newCandidates');
+			// this.$store.commit('resetClicked');
 			// TODO on changes clear results? or handle it at the store level?
+			// TODO candidateList needs to be updated for sure on change
 		}
 	}
 }

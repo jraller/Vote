@@ -29,12 +29,13 @@ export default class State {
 	public current: string[][] = []; // the parsed current state of ballots at any point
 	public delimiter: string = 'auto'; // delimiter setting, initally auto to improve UI
 	public delimiterList = new Delimiters().listDelimiters();
-	public disableReset: boolean = true; // UI control for button
-	public disableRun: boolean = true; // UI control for button
 	public disqualifiedCandidates: string[] = []; // see candidateList and candidateListFull
 	public positions: number = 1; // number of winners to select
+	public raw: string = '';
 	public rawLength: number = 0; // length of text in ballot
+	public resetButtonEnabled = false;
 	public round: IRoundType[] = []; // the collected round history
+	public runButtonEnabled = false;
 	public sortOrder: string = 'u'; // sort candidates by. Initial value of unsorted
 	public visible = new Visible(); // the set of visibility flags
 	public voteValues: boolean = false; // is the first entry in each row in ballot a weighting value
