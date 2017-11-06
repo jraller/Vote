@@ -4,7 +4,7 @@ module.exports = {
 		skippedBallots() {
 			const test = (this.$store.state.rawLength > 1) && (this.$store.state.rawLength - this.$store.state.ballotCount > 0);
 			this.triggers.skipped = test;
-			this.$store.commit('setVisibleSanity', this.check());
+			this.$store.commit('setVisible', {sanity: this.check()});
 			return test;
 		},
 		noCandidatesLeft() {
@@ -13,7 +13,7 @@ module.exports = {
 					(this.$store.state.candidateList.length === this.$store.state.disqualifiedCandidates.length)
 				);
 			this.triggers.noneLeft = test;
-			this.$store.commit('setVisibleSanity', this.check());
+			this.$store.commit('setVisible', {sanity: this.check()});
 			return test;
 		},
 		notEnoughCandidates() {
@@ -23,7 +23,7 @@ module.exports = {
 					< this.$store.state.positions
 				);
 			this.triggers.notEnoughLeft = test;
-			this.$store.commit('setVisibleSanity', this.check());
+			this.$store.commit('setVisible', {sanity: this.check()});
 			return test;
 		},
 	},

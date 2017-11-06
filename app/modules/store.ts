@@ -5,6 +5,8 @@ import $eventHub from './eventHub';
 
 import State from './state';
 
+import {IVisible} from './visible';
+
 import * as library from '../scripts/library';
 
 import {Delimiters} from '../scripts/delimiters';
@@ -17,6 +19,7 @@ export const actions = {
 	inputChange(context): void {
 		if (context.getters.raw === '') { // if input is empty
 			context.commit('setDelimiter', 'auto'); // reset delimiter to auto select
+			// TODO unset weighted values if empty?
 		} else if (context.getters.delimiter === 'auto') { // if input has content and delimiter is auto
 			context.commit('pickDelimiter', context.getters.raw); // select delimiter
 			context.commit('pickWeightedValues', context.getters.raw); // select weighted values as well
@@ -39,8 +42,7 @@ export const actions = {
 		context.disableReset = false;
 
 		// context.visible.results = true;
-		// context.commit('setVisible', {results: true}); // TODO see below about this form
-		context.commit('setVisibleResults', true);
+		context.commit('setVisible', {results: true});
 		context.commit('startRun');
 	},
 };
@@ -115,14 +117,13 @@ export const mutations = {
 	setResetButtonEnable: (state: State, value: boolean) => state.resetButtonEnabled = value,
 	setRunButtonEnable: (state: State, value: boolean) => state.runButtonEnabled = value,
 
-	setVisible: (state: State, value: object) => {
-		// TODO this version might be better than separate ones?
-		// TODO change object to a specific type
+	setVisible: (state: State, value: IVisible) => {
+		for (const item of ['chart', 'disqualifyList', 'results', 'sanity']) {
+			if (value.hasOwnProperty(item)) {
+				state.visible[item] = value[item];
+			}
+		}
 	},
-
-	setVisibleResults: (state: State, value: boolean) => state.visible.results = value,
-	setVisibleSanity: (state: State, value: boolean) => state.visible.sanity = value,
-
 	startRun: (state: State) => {
 		library.disqualify(state, state.disqualifiedCandidates);
 		library.runRound(state);
