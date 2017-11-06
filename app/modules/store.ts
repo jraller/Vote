@@ -116,7 +116,6 @@ export const mutations = {
 	setRaw: (state: State, value: string) => state.raw = value,
 	setResetButtonEnable: (state: State, value: boolean) => state.resetButtonEnabled = value,
 	setRunButtonEnable: (state: State, value: boolean) => state.runButtonEnabled = value,
-
 	setVisible: (state: State, value: IVisible) => {
 		for (const item of ['chart', 'disqualifyList', 'results', 'sanity']) {
 			if (value.hasOwnProperty(item)) {

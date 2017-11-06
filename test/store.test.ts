@@ -122,10 +122,10 @@ describe('store', () => {
 	});
 	describe('setVisibleSanity', () => {
 		const state = new State();
-		const { setVisibleSanity } = mutations;
+		const { setVisible } = mutations;
 		it('should assing visibility', () => {
 			expect(state.visible.sanity).to.be.false;
-			setVisibleSanity(state, true);
+			setVisible(state, {sanity: true});
 			expect(state.visible.sanity).to.be.true;
 		});
 	});
