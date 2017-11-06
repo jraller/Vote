@@ -57,11 +57,7 @@ describe('store', () => {
 				],
 				roundType: roundTypeEnum.roundSummary}
 			];
-
 			eliminateAndContinue(state, 'all');
-
-			// TODO fix test
-
 			expect(state.round[1].candidates).to.eql([]);
 		});
 	});

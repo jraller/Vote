@@ -135,7 +135,6 @@ export function eliminate(state: State, candidate: string|string[]): void {
 						},
 						to: {
 							name: goesto,
-							// TODO will need to be altered to support chain of eliminated nodes
 							round: state.round.length + 2 - linkOffset,
 						},
 						value: eliminations[from][goesto],
@@ -197,9 +196,6 @@ export function runRound(state: State, callNext = finishRound) {
 		candidates: [],
 		roundType: roundTypeEnum.unset,
 	};
-
-	// TODO consider adding choices eliminated to each round
-	// in which it could be to avoid vertical shift in chart?
 
 	// build candidateList from current state
 	for (const candidate of state.candidateList) {

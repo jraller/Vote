@@ -11,12 +11,6 @@ export default {
 		positions: function () {
 			this.$store.commit('updatePositions', this.positions);
 			this.$store.dispatch('inputChange');
-
-			// this.$store.commit('newBallots');
-			// this.$store.commit('newCandidates');
-			// this.$store.commit('resetClicked');
-			// TODO on changes clear results? or handle it at the store level?
-			// TODO candidateList needs to be updated for sure on change
 		}
 	}
 }

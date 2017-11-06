@@ -19,7 +19,7 @@ export const actions = {
 	inputChange(context): void {
 		if (context.getters.raw === '') { // if input is empty
 			context.commit('setDelimiter', 'auto'); // reset delimiter to auto select
-			// TODO unset weighted values if empty?
+			context.commit('setWeightedValues', false); // if empty unset vote values
 		} else if (context.getters.delimiter === 'auto') { // if input has content and delimiter is auto
 			context.commit('pickDelimiter', context.getters.raw); // select delimiter
 			context.commit('pickWeightedValues', context.getters.raw); // select weighted values as well
@@ -28,20 +28,15 @@ export const actions = {
 		context.commit('newCandidates'); // trigger building of candidate list
 	},
 	resetClicked(context): void {
-		context.visible.results = false;
-		context.visible.chart = false;
+		context.commit('setVisible', {chart: false, results: false});
 		context.round = [];
-		$eventHub.$emit('clearChart');
-		$eventHub.$emit('getNewBallots');
-		context.disableReset = true;
-		context.disableRun = false; // TODO should check to see if there are identified candidates?
+		context.dispatch('inputChange');
+		context.commit('setResetButtonEnable', false);
+		context.commit('setRunButtonEnable', context.getters.raw.length > 0);
 	},
 	runClicked(context): void {
-		// context.disableRun = true;
 		context.commit('setRunButtonEnable', false);
-		context.disableReset = false;
-
-		// context.visible.results = true;
+		context.commit('setResetButtonEnable', true);
 		context.commit('setVisible', {results: true});
 		context.commit('startRun');
 	},
@@ -50,11 +45,9 @@ export const actions = {
 export const getters = {
 	delimiter: (state) => state.delimiter,
 	raw: (state) => state.raw,
+	resetButtonEnabled: (state) => state.resetButtonEnabled === false,
+	runButtonEnabled: (state) => state.runButtonEnabled === false,
 };
-
-// what is a DRY way to handle UI state changes in mutations?
-// should they be internal to store, or modularized?
-// TODO handle chart visibility by detecting end of run conditions, or as part of library runRound
 
 export const mutations = {
 	newBallots(state: State): void {
@@ -123,6 +116,7 @@ export const mutations = {
 			}
 		}
 	},
+	setWeightedValues: (state: State, value: boolean) => state.voteValues = value,
 	startRun: (state: State) => {
 		library.disqualify(state, state.disqualifiedCandidates);
 		library.runRound(state);

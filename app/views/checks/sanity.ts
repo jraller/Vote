@@ -9,7 +9,7 @@ module.exports = {
 		},
 		noCandidatesLeft() {
 			const test = (this.$store.state.rawLength > 0)
-				&& ( // TODO fix this logic so that it compares against full candidate list?
+				&& (
 					(this.$store.state.candidateList.length === this.$store.state.disqualifiedCandidates.length)
 				);
 			this.triggers.noneLeft = test;
