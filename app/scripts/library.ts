@@ -259,29 +259,43 @@ export function runRound(state: State, callNext = finishRound) {
 			round.roundType = roundTypeEnum.roundChoice;
 		}
 	} else {
-		// TODO fix this which was added to handled positions = candidates in first round
 		if (state.round.length === 0) {
-			state.round.push(round);
-		}
-		// Add final round links for chart as nodes are already there, added above
-		for (const candidate of state.round[state.round.length - 1].candidates) {
-			// this is duplicating the prior round, but should only include active candidates?
-			let current = false;
-			for (const active of round.candidates) {
-				if (active.n === candidate.n) {
-					current = true;
-				}
-			}
-			if (current) {
+			// all candidates are winners in the first round
+			for (const candidate of round.candidates) {
 				const total = candidate.v.reduce((a: number, b: number) => a + b);
 				$eventHub.$emit('addLink', {
 					from: {
-						name: candidate.n,
-						round: state.round.length,
+						name: state.chartLabelPool,
+						round: 0,
 					},
-					to: {name: candidate.n, round: state.round.length + 1},
+					to: {
+						name: candidate.n,
+						round: 1,
+					},
 					value: total,
 				});
+			}
+		} else {
+			// Add final round links for chart as nodes are already there, added above
+			for (const candidate of state.round[state.round.length - 1].candidates) {
+				// this is duplicating the prior round, but should only include active candidates?
+				let current = false;
+				for (const active of round.candidates) {
+					if (active.n === candidate.n) {
+						current = true;
+					}
+				}
+				if (current) {
+					const total = candidate.v.reduce((a: number, b: number) => a + b);
+					$eventHub.$emit('addLink', {
+						from: {
+							name: candidate.n,
+							round: state.round.length,
+						},
+						to: {name: candidate.n, round: state.round.length + 1},
+						value: total,
+					});
+				}
 			}
 		}
 		$eventHub.$emit('redraw');
