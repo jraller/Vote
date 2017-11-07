@@ -7,6 +7,7 @@ const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 
 const developmentConfig = require('./webpack.dev');
+// const lighthouseConfig = require('./webpack.lighthouse');
 const productionConfig = require('./webpack.prod');
 const testConfig = require('./webpack.test');
 
@@ -149,7 +150,7 @@ module.exports = (env) => {
 			config = merge(commonConfig, developmentConfig);
 			break;
 		case 'production':
-			config = merge(commonConfig, productionConfig);
+			config = merge(commonConfig, productionConfig); // lighthouseConfig
 			break;
 		default:
 		case 'test':

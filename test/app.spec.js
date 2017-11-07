@@ -11,10 +11,6 @@ const expect = chai.expect;
 describe('e2e first test', function() {
 	browser.waitForAngularEnabled(false);
 
-	it('easy', function() {
-		expect(1 + 1).to.equal(2);
-	});
-
 	it('should enable run overly complex', function(done) {
 		// this.timeout(10000);
 		try {
@@ -47,5 +43,14 @@ describe('e2e first test', function() {
 		element(by.id('votes')).sendKeys('a\na\na\nb\nb\nc\t');
 
 		expect(runButton).to.be.enabled;
+	});
+	it('should handle a,a,b', function() {
+		browser.get('http://localhost:8000/');
+		const runButton = element(by.buttonText('Run'));
+		element(by.id('votes')).sendKeys('a\na\na\nb\nb\nc\t');
+		runButton.click();
+
+		const lastTableRow = $$('tbody tr').last;
+		expect(lastTableRow.getText()).to.equal('a 2 2 100.00%');
 	});
 });

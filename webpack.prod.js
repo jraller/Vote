@@ -2,8 +2,6 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 
 module.exports = merge([
 	{
@@ -30,13 +28,6 @@ module.exports = merge([
 					warnings: true
 				}
 			}),
-			new StatsPlugin(
-				'stats.json', {
-					chunkModules: true,
-					exclude: [/node_modules/]
-				}
-			),
-			new Visualizer()
 		],
 		resolve: {
 			alias: {
