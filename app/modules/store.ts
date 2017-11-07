@@ -45,8 +45,8 @@ export const actions = {
 export const getters = {
 	delimiter: (state) => state.delimiter,
 	raw: (state) => state.raw,
-	resetButtonEnabled: (state) => state.resetButtonEnabled === false,
-	runButtonEnabled: (state) => state.runButtonEnabled === false,
+	resetButtonDisabled: (state) => state.resetButtonEnabled === false,
+	runButtonDisabled: (state) => state.runButtonEnabled === false,
 };
 
 export const mutations = {

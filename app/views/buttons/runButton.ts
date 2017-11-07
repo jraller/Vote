@@ -2,7 +2,7 @@ import {mapGetters} from "vuex";
 
 export default {
 	computed: mapGetters({
-		disableRun: 'runButtonEnabled',
+		disableRun: 'runButtonDisabled',
 	}),
 	methods: {
 		runClicked: function() {

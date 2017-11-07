@@ -2,7 +2,7 @@ import {mapGetters} from "vuex";
 
 export default {
 	computed: mapGetters({
-		disableReset: 'resetButtonEnabled',
+		disableReset: 'resetButtonDisabled',
 	}),
 	methods: {
 		resetClicked: function() {
