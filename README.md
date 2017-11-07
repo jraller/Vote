@@ -1,4 +1,10 @@
+<a href="https://github.com/DevExpress/testcafe">
+    <img alt="Tested with TestCafe" src="https://img.shields.io/badge/tested%20with-TestCafe-2fa4cf.svg">
+</a>
+
 # Untested and Unverified
+
+Tests are being written. There are both unit (wallabyjs running Mocha Chai tests) and e2e (testcafe, protractor - still comparing the two) tests.
 
 # Do not use yet
 

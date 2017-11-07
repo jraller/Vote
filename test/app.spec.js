@@ -22,7 +22,7 @@ describe('e2e first test', function() {
 			expect(runButton).to.be.displayed;
 			expect(runButton).not.to.be.enabled;
 
-			element(by.id('votes')).sendKeys('a\na\na\nb\nb\nc\t');
+			element(by.id('votes')).sendKeys('a\n\t');
 
 			expect(runButton).to.be.enabled;
 			done();
@@ -40,17 +40,18 @@ describe('e2e first test', function() {
 		expect(runButton).to.be.displayed;
 		expect(runButton).not.to.be.enabled;
 
-		element(by.id('votes')).sendKeys('a\na\na\nb\nb\nc\t');
+		element(by.id('votes')).sendKeys('a\n\t');
 
 		expect(runButton).to.be.enabled;
 	});
+
 	it('should handle a,a,b', function() {
 		browser.get('http://localhost:8000/');
 		const runButton = element(by.buttonText('Run'));
-		element(by.id('votes')).sendKeys('a\na\na\nb\nb\nc\t');
+		element(by.id('votes')).sendKeys('a\na\nb\nb\t');
 		runButton.click();
 
-		const lastTableRow = $$('tbody tr').last;
-		expect(lastTableRow.getText()).to.equal('a 2 2 100.00%');
+		const lastTableRow = element.all(by.css('tbody td')).get(-2);
+		expect(lastTableRow.getText()).to.eventually.equal('2');
 	});
 });
