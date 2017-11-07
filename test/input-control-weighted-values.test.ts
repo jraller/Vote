@@ -23,8 +23,11 @@ describe('Weighted Values', () => {
 		voteValues: false,
 	};
 
+	const actions = {
+		inputChange: sinon.stub(),
+	}
+
 	const mutations = {
-		newCandidates: sinon.stub(),
 		updateVoteValues: sinon.stub(),
 	};
 
@@ -38,6 +41,7 @@ describe('Weighted Values', () => {
 
 
 		const store = new Vuex.Store({
+			actions,
 			mutations,
 			state
 		});
@@ -56,11 +60,11 @@ describe('Weighted Values', () => {
 	});
 	it('triggers proper store items when changed', () => {
 		const counta = mutations.updateVoteValues.callCount;
-		const countb = mutations.newCandidates.callCount;
+		const countb = actions.inputChange.callCount;
 
 		wrapper.vm.changeVoteValues();
 
 		expect(mutations.updateVoteValues.callCount).to.equal(counta + 1);
-		expect(mutations.newCandidates.callCount).to.equal(countb + 1);
+		expect(actions.inputChange.callCount).to.equal(countb + 1);
 	});
 });
