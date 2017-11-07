@@ -43,10 +43,26 @@ export const actions = {
 };
 
 export const getters = {
+	ballot: (state) => state.ballot,
+	ballotCount: (state) => state.ballotCount,
+	// candidateList
+	// candidateListFull
+	// chartLabelPool
+	// chartLabelNoCount
+	// chartNoCount
+	// current
 	delimiter: (state) => state.delimiter,
+	// delimiterList
+	// disqualifiedCandidates
+	// positions
 	raw: (state) => state.raw,
+	// rawLength
 	resetButtonDisabled: (state) => state.resetButtonEnabled === false,
+	// round
 	runButtonDisabled: (state) => state.runButtonEnabled === false,
+	// sortOrder
+	// visible
+	// voteValues
 };
 
 export const mutations = {
