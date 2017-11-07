@@ -46,13 +46,13 @@ export default {
 		});
 		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 
-			console.log(' addNode', data.name, data.round);
+			// console.log(' addNode', data.name, data.round);
 
 			this.history.nodes.push(data);
 		});
 		$eventHub.$on('addLink', data => { // this function could detect links that need to be queued
 
-			console.log(' addlink', data.from.name, data.from.round, data.to.name, data.to.round, data.value);
+			// console.log(' addlink', data.from.name, data.from.round, data.to.name, data.to.round, data.value);
 
 			data.source = null;
 			data.target = null;

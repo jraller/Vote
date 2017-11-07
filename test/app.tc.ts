@@ -1,7 +1,11 @@
 import { Selector } from 'testcafe';
+import VueSelector from 'testcafe-vue-selectors';
 
 fixture `Vote`
 	.page `http://localhost:8000`;
+
+const rootVue = VueSelector();
+// https://github.com/DevExpress/testcafe-vue-selectors
 
 const runButton = Selector('button')
 	.withText('Run');
@@ -45,7 +49,7 @@ test('a case', async t => {
 
 test('ab 2 positions case', async t => {
 	await t
-		.typeText('#votes', 'a\nb')
+		.typeText('#votes', 'a\na\nb')
 		.pressKey('tab')
 		.typeText(positions, '2',{replace: true})
 		.click(runButton)
@@ -69,7 +73,7 @@ test('ab 2 positions case', async t => {
 				.find('td')
 				.nth(-2)
 				.textContent
-		).eql('1') // with one vote for a as total votes
+		).eql('2') // with two votes for a as total votes
 		.expect(
 			resultRows
 				.nth(1)
