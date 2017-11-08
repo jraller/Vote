@@ -1,6 +1,6 @@
 import {ICandidateType} from '../../modules/state';
 
-module.exports = {
+export default {
 	computed: {
 		eliminated() {
 			return this.$store.state

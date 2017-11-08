@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	computed: {
 		// TODO review for additional tests?
 		skippedBallots() {

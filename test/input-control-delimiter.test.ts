@@ -12,5 +12,3 @@ describe('sanity', () => {
 		expect(wrapper.vm.getDescription('tab')).to.equal('Tab');
 	});
 });
-
-// https://github.com/jraller/Vote/tree/webpack

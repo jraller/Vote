@@ -1,7 +1,6 @@
 const webpackConfig = require('./webpack.config')('test');
 const wallabyWebpack = require('wallaby-webpack');
 
-
 // https://wallabyjs.com/docs/integration/webpack.html
 
 module.exports = function (wallaby) {
