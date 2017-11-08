@@ -127,26 +127,12 @@ test('a,a,ba case', async t => {
 		.typeText('#votes', 'a\na\nb,a')
 		.pressKey('tab')
 		.click(runButton)
-		.expect(
-			resultRows
-				.find('td')
-				.nth(0)
-				.textContent
-		).eql('a') // a is winner
-		.expect(
-			resultRows
-				.find('td')
-				.nth(-2)
-				.textContent
-		).eql('3') // with three votes
-		.expect(
-			chart
-				.find('.link')
-				.count
-		).eql(4) // chart has four links
-		.expect(
-			chart
-				.find('.node')
-				.count
-		).eql(4); // between four nodes because there is no lost vote node
+		.expect(resultRows.find('td').nth(0).textContent).eql('a')
+		// a is winner
+		.expect(resultRows.find('td').nth(-2).textContent).eql('3')
+		// with three votes
+		.expect(chart.find('.link').count).eql(4)
+		// chart has four links
+		.expect(chart.find('.node').count).eql(4);
+		// between four nodes because there is no lost vote node
 });
