@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {mount} from 'avoriaz';
+import {mount} from 'vue-test-utils';
 
 const Delimiter = require('../app/views/inputs/delimiter.vue');
 
