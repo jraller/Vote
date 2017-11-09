@@ -6,8 +6,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import 'babel-polyfill';
 
-// https://eddyerburgh.gitbooks.io/avoriaz/content/guides/using-with-vuex.html
-
 chai.use(sinonChai);
 Vue.use(Vuex);
 

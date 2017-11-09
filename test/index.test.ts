@@ -10,12 +10,3 @@ describe('index', () => {
 		});
 	});
 });
-
-// https://vuejs.org/v2/guide/unit-testing.html
-
-// pick between
-// https://github.com/eddyerburgh/avoriaz
-// and
-// https://github.com/callumacrae/vue-test
-// or wait for them to merge?
-// https://eddyerburgh.gitbooks.io/avoriaz/content/

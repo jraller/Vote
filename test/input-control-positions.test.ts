@@ -1,4 +1,4 @@
-import * as Avoriaz from 'vue-test-utils';
+import {mount} from 'vue-test-utils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'
@@ -12,7 +12,6 @@ chai.use(sinonChai);
 const Positions = require('../app/views/inputs/positions.vue');
 
 const expect = chai.expect;
-const mount = Avoriaz.mount;
 
 describe('Positions', () => {
 

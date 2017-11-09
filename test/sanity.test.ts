@@ -40,13 +40,10 @@ describe('Sanity', () => {
 	});
 	it('warns about skipped ballots', () => {
 		const count = mutations.setVisible.callCount;
-		// per https://github.com/eddyerburgh/avoriaz/issues/15
-		// expect(wrapper.computed().skippedBallots()).to.be.false;
 		expect(wrapper.vm['skippedBallots']).to.be.false;
 		state.rawLength = 4;
 		state.ballotCount = 2;
 		expect(wrapper.vm['skippedBallots']).to.be.true;
-		// expect(mutations.setVisibleSanity).to.have.callCount(count + 1);
 		expect(mutations.setVisible).to.have.been.calledWith(state, {sanity: true});
 	});
 	it('warns about not enough candidates', () => {

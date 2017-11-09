@@ -1,4 +1,3 @@
-import * as Avoriaz from 'vue-test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import * as chai from 'chai';
