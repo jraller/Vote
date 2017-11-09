@@ -29,7 +29,6 @@ export const actions = {
 	},
 	resetClicked(context): void {
 		context.commit('setVisible', {chart: false, results: false});
-		context.round = [];
 		context.dispatch('inputChange');
 		context.commit('setResetButtonEnable', false);
 		context.commit('setRunButtonEnable', context.getters.raw.length > 0);
