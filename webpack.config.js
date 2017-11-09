@@ -51,9 +51,9 @@ const commonConfig = merge([
 			],
 		},
 		output: {
+			filename: '[name].js',
 			path: PATHS.build,
 			publicPath: '/',
-			filename: '[name].js'
 		},
 		module: {
 			rules: [
@@ -64,7 +64,7 @@ const commonConfig = merge([
 						esModule: false, // when tsconfig.json set to use es2015 modules?
 						loaders: {
 							ts: 'ts-loader'
-						}
+						},
 					}
 				},
 				{
