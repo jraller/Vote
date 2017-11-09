@@ -244,15 +244,46 @@ describe('store', () => {
 		describe('setVisibleSanity', () => {
 			const state = new State();
 			const { setVisible } = mutations;
-			it('should assing visibility', () => {
+			it('should assign visibility', () => {
 				expect(state.visible.sanity).to.be.false;
 				setVisible(state, {sanity: true});
 				expect(state.visible.sanity).to.be.true;
 			});
 		});
-
-
-
+		describe('setWeightedValues', () => {
+			const state = new State();
+			const { setWeightedValues } = mutations;
+			it('should set vote values', () => {
+				expect(state.voteValues).to.eql(false);
+				setWeightedValues(state, true);
+				expect(state.voteValues).to.eql(true);
+			});
+		});
+		describe('startRun', () => {
+			const state = new State();
+			const { startRun } = mutations;
+			it('should start a run', () => {
+				startRun(state);
+				// check to see if stub called for library
+			});
+		});
+		describe('updateBallotSort', () => {
+			const state = new State();
+			const { updateBallotSort } = mutations;
+			it('should update the ballot sort', () => {
+				state.ballot = [];
+				updateBallotSort(state, [
+					['alpha zebra'],
+					['mellow llama'],
+					['yellow bear']
+				]);
+				expect(state.ballot).to.eql([
+					['alpha zebra'],
+					['mellow llama'],
+					['yellow bear']
+				]);
+			});
+		});
 		describe('updateDisqualified', () => {
 			const state = new State();
 			const { updateDisqualified } = mutations;
