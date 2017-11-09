@@ -53,7 +53,7 @@ export const getters = {
 	delimiter: (state) => state.delimiter,
 	// delimiterList
 	// disqualifiedCandidates
-	// positions
+	positions: (state) => state.positions,
 	raw: (state) => state.raw,
 	// rawLength
 	resetButtonDisabled: (state) => state.resetButtonEnabled === false,

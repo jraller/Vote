@@ -25,7 +25,7 @@ describe('Weighted Values', () => {
 
 	const actions = {
 		inputChange: sinon.stub(),
-	}
+	};
 
 	const mutations = {
 		updateVoteValues: sinon.stub(),

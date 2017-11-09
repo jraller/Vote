@@ -8,7 +8,7 @@ module.exports = function (wallaby) {
 	delete webpackConfig.devServer;
 	delete webpackConfig.entry;
 	// json only needed for brittleness in Chai, remove when fixed
-	webpackConfig.resolve.extensions = ['.vue', '.jsx', '.js', '.json'];
+	webpackConfig.resolve.extensions = ['.js', '.ts', '.vue', '.json'];
 
 	webpackConfig.module.rules = webpackConfig.module.rules.filter(r => !'.ts'.match(r.test) && !'.js'.match(r.test));
 	webpackConfig.module.rules.find(r => r.loader === 'vue-loader').options.loaders.js = '';

@@ -1,7 +1,7 @@
-import {expect} from 'chai';
-import {mount} from 'vue-test-utils';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {mount} from 'vue-test-utils';
+import {expect} from 'chai';
 import 'babel-polyfill';
 
 import Store from '../app/modules/store';
