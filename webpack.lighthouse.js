@@ -7,7 +7,7 @@ module.exports = merge([
 	{
 		plugins: [
 			new WebpackLighthousePlugin({
-				url: 'http://localhost:8000'
+				url: 'http://localhost:8000/webpack-dev-server'
 			})
 		],
 	}

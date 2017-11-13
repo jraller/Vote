@@ -1,6 +1,6 @@
 import {ICandidateType} from '../../modules/state';
 
-module.exports = {
+export default {
 	components: {
 		candidateRow: require('./candidate-row.vue'),
 		roundSummary: require('./round-summary.vue'),

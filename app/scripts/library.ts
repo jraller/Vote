@@ -74,6 +74,21 @@ export function eliminate(state: State, candidate: string|string[]): void {
 	for (const can of candidate) {
 		eliminations[can] = {};
 	}
+
+	if (state.chartNoCount > 0) {
+		$eventHub.$emit('addLink', {
+			from: {
+				name: state.chartLabelNoCount,
+				round: state.round.length + 1 - linkOffset,
+			},
+			to: {
+				name: state.chartLabelNoCount,
+				round: state.round.length + 2 - linkOffset,
+			},
+			value: state.chartNoCount,
+		});
+	}
+
 	// handle each ballot
 	for (let index = 0; index < state.current.length; index++) {
 		const offset = (state.voteValues) ? 1 : 0;
@@ -120,15 +135,22 @@ export function eliminate(state: State, candidate: string|string[]): void {
 						},
 						to: {
 							name: goesto,
-							// TODO will need to be altered to support chain of eliminated nodes
-							round: (goesto === state.chartLabelNoCount) ? 0 : state.round.length + 2 - linkOffset,
+							round: state.round.length + 2 - linkOffset,
 						},
 						value: eliminations[from][goesto],
 					});
-
+					if (goesto === state.chartLabelNoCount) {
+						state.chartNoCount += eliminations[from][goesto];
+					}
 				}
 			}
 		}
+	}
+	if (state.chartNoCount > 0) {
+		$eventHub.$emit('addNode', {
+			name: state.chartLabelNoCount,
+			round: state.round.length + 2 - linkOffset,
+		});
 	}
 }
 
@@ -175,9 +197,6 @@ export function runRound(state: State, callNext = finishRound) {
 		roundType: roundTypeEnum.unset,
 	};
 
-	// TODO consider adding choices eliminated to each round
-	// in which it could be to avoid vertical shift in chart?
-
 	// build candidateList from current state
 	for (const candidate of state.candidateList) {
 		const tally: number[] = [];
@@ -190,7 +209,10 @@ export function runRound(state: State, callNext = finishRound) {
 			lowValue = total;
 		}
 		if (total > 0) { // || state.round.length > 0
-			$eventHub.$emit('addNode', {name: candidate, round: state.round.length + 1});
+			$eventHub.$emit('addNode', {
+				name: candidate,
+				round: state.round.length + 1,
+			});
 		}
 	}
 	if (state.candidateList.length > state.positions) {
@@ -214,7 +236,10 @@ export function runRound(state: State, callNext = finishRound) {
 						name: ((state.round.length > 0) ? candidate.n : state.chartLabelPool),
 						round: state.round.length,
 					},
-					to: {name: candidate.n, round: state.round.length + 1},
+					to: {
+						name: candidate.n,
+						round: state.round.length + 1,
+					},
 					value: linkTotal,
 				});
 			}
@@ -234,25 +259,43 @@ export function runRound(state: State, callNext = finishRound) {
 			round.roundType = roundTypeEnum.roundChoice;
 		}
 	} else {
-		// Add final round links for chart as nodes are already there, added above
-		for (const candidate of state.round[state.round.length - 1].candidates) {
-			// this is duplicating the prior round, but should only include active candidates?
-			let current = false;
-			for (const active of round.candidates) {
-				if (active.n === candidate.n) {
-					current = true;
-				}
-			}
-			if (current) {
+		if (state.round.length === 0) {
+			// all candidates are winners in the first round
+			for (const candidate of round.candidates) {
 				const total = candidate.v.reduce((a: number, b: number) => a + b);
 				$eventHub.$emit('addLink', {
 					from: {
-						name: candidate.n,
-						round: state.round.length,
+						name: state.chartLabelPool,
+						round: 0,
 					},
-					to: {name: candidate.n, round: state.round.length + 1},
+					to: {
+						name: candidate.n,
+						round: 1,
+					},
 					value: total,
 				});
+			}
+		} else {
+			// Add final round links for chart as nodes are already there, added above
+			for (const candidate of state.round[state.round.length - 1].candidates) {
+				// this is duplicating the prior round, but should only include active candidates?
+				let current = false;
+				for (const active of round.candidates) {
+					if (active.n === candidate.n) {
+						current = true;
+					}
+				}
+				if (current) {
+					const total = candidate.v.reduce((a: number, b: number) => a + b);
+					$eventHub.$emit('addLink', {
+						from: {
+							name: candidate.n,
+							round: state.round.length,
+						},
+						to: {name: candidate.n, round: state.round.length + 1},
+						value: total,
+					});
+				}
 			}
 		}
 		$eventHub.$emit('redraw');

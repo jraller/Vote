@@ -35,13 +35,14 @@ export default {
 	created: function () {
 		$eventHub.$on('clearChart', () => { // if some other component requests
 			this.history.links = [];
+			// all cast -- first always -- initial round are children of this node
 			this.history.nodes = [
 				{
 					'name': this.$store.state.chartLabelPool,
 					'round': 0
 				}
 			];
-			// all cast -- first always -- initial round are children of this node
+			this.$store.commit('setChartNoCount', 0);
 		});
 		$eventHub.$on('addNode', data => { // this function could detect nodes that need to be queued
 
@@ -61,23 +62,6 @@ export default {
 
 			// console.log('nodes', this.history.nodes);
 			// console.log('links', this.history.links);
-
-			let linksToNowhere = 0;
-
-			for (const link of this.history.links) {
-				if (link.to.name === this.$store.state.chartLabelNoCount) {
-					linksToNowhere++;
-				}
-			}
-
-			if (linksToNowhere > 0) { // there were any links to it
-				this.history.nodes.push({
-					'name': this.$store.state.chartLabelNoCount,
-					'round': 0
-				});
-			}
-			// add the eliminated node
-			// resolve links
 
 			for (let index = 0; index < this.history.links.length; index++) {
 

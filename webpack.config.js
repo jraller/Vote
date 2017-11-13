@@ -7,6 +7,7 @@ const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 
 const developmentConfig = require('./webpack.dev');
+// const lighthouseConfig = require('./webpack.lighthouse');
 const productionConfig = require('./webpack.prod');
 const testConfig = require('./webpack.test');
 
@@ -24,17 +25,6 @@ const PATHS = {
 
 // look into imports-loader https://github.com/webpack-contrib/imports-loader
 
-// const babelOptions = {
-// 	'presets': [
-// 		// 'env'
-// 		['es2015',
-// 			{
-// 				'modules': false
-// 			}
-// 		]
-// 	]
-// };
-
 // https://webpack.js.org/guides/webpack-and-typescript/#enabling-tree-shaking
 
 // TODO this can be a .ts file https://medium.com/webpack/unambiguous-webpack-config-with-typescript-8519def2cac7
@@ -50,9 +40,9 @@ const commonConfig = merge([
 			],
 		},
 		output: {
+			filename: '[name].js',
 			path: PATHS.build,
 			publicPath: '/',
-			filename: '[name].js'
 		},
 		module: {
 			rules: [
@@ -63,7 +53,7 @@ const commonConfig = merge([
 						esModule: false, // when tsconfig.json set to use es2015 modules?
 						loaders: {
 							ts: 'ts-loader'
-						}
+						},
 					}
 				},
 				{
@@ -72,7 +62,6 @@ const commonConfig = merge([
 					use: [
 						{
 							loader: 'babel-loader',
-							// options: babelOptions
 						},
 						{
 							loader: 'ts-loader',
@@ -89,7 +78,6 @@ const commonConfig = merge([
 					exclude: /node_modules/,
 					use: {
 						loader: 'babel-loader',
-						// options: babelOptions
 					}
 				},
 				{
@@ -149,7 +137,7 @@ module.exports = (env) => {
 			config = merge(commonConfig, developmentConfig);
 			break;
 		case 'production':
-			config = merge(commonConfig, productionConfig);
+			config = merge(commonConfig, productionConfig); // lighthouseConfig
 			break;
 		default:
 		case 'test':

@@ -3,8 +3,16 @@
     [
       "env",
       {
-        "modules": false
+        "modules": false,
+        "targets": {
+          "browsers": ["last 2 versions"]
+        }
       }
     ]
+  ],
+  "plugins": [
+    "transform-es2015-parameters",
+    "transform-es2015-destructuring",
+    "transform-object-rest-spread"
   ]
 }

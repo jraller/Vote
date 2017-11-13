@@ -1,6 +1,6 @@
 import {ICandidateType} from '../../modules/state';
 
-module.exports = {
+export default {
 	computed: {
 		choices(): string[] {
 			let response = this.$store.state.round[this.round - 1].candidates;

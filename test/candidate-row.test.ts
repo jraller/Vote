@@ -1,7 +1,7 @@
-import {expect} from 'chai';
-import {mount} from 'avoriaz';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {mount} from 'vue-test-utils';
+import {expect} from 'chai';
 import 'babel-polyfill';
 
 import Store from '../app/modules/store';
@@ -27,33 +27,10 @@ describe('Candidate Row', () => {
 
 	store.state.positions = 2;
 
-	// const Table = {
-	// 	components: {
-	// 		row: CandidateRow
-	// 	},
-	// 	name: 'table',
-	// 	template: `<table>
-	// 			<tbody>
-	// 			<row>
-	// 			</row>
-	// 			</tbody>
-	// 			</table>`
-	// };
-	//
-	// Vue.component('table', Table);
-	//
-	// const table = mount(Table, {store, attachToDocument: true});
-	//
-	// console.log(table.isVueComponent);
-	// console.log(table.html());
-	//
-	// let wrapper = table.find('tr')[0];
-	//
-	// console.log(wrapper);
-	//
-	// console.log(wrapper.isVueComponent);
-
-	const wrapper = mount(CandidateRow, {store, props});
+	const wrapper = mount(CandidateRow, {
+		store,
+		props
+	});
 	wrapper.setProps(props);
 
 	it('has the right name', () => {
@@ -88,36 +65,16 @@ describe('Candidate Row', () => {
 	it('renders the correct output', () => {
 		expect(wrapper.isVueComponent).to.be.true;
 
-		// console.log(document.body.outerHTML.split('\n')[7]);
+		const cells = wrapper.findAll('td');
 
-		// console.log('[', wrapper.text(), ']');
-		// console.log(wrapper.html());
-
-		// console.log(wrapper.vm.$el);
-
-		// console.log(document.body.innerText);
-		//
-		// console.log(document.body.innerHTML.split('\n')[7]);
-
-		// console.log(wrapper.find('td')[0].html());
-
-		const cells = wrapper.find('td');
-
-		expect(cells[0].html()).to.equal('<td>a</td>');
-		expect(cells[1].html()).to.equal('<td>3</td>');
-		expect(cells[2].html()).to.equal('<td>0</td>');
-		expect(cells[3].html()).to.equal('<td>3</td>');
-		expect(cells[4].html()).to.equal('<td>30.00%</td>');
+		expect(cells.at(0).html()).to.equal('<td>a</td>');
+		expect(cells.at(1).html()).to.equal('<td>3</td>');
+		expect(cells.at(2).html()).to.equal('<td>0</td>');
+		expect(cells.at(3).html()).to.equal('<td>3</td>');
+		expect(cells.at(4).html()).to.equal('<td>30.00%</td>');
 
 		wrapper.update();
 
-		// console.log('[', wrapper.text(), ']');
-		// console.log(wrapper.html());
-
-		// console.log(wrapper)
-
-		// expect(wrapper.hasClass('danger')).to.be.false;
-
-		expect(wrapper.find('tr').length).to.be.greaterThan(0);
+		expect(wrapper.findAll('tr').length).to.be.greaterThan(0);
 	});
 });

@@ -1,12 +1,12 @@
-module.exports = {
-	computed: {
-		disableReset: function() {
-			return this.$store.state.disableReset;
-		},
-	},
+import {mapGetters} from "vuex";
+
+export default {
+	computed: mapGetters({
+		disableReset: 'resetButtonDisabled',
+	}),
 	methods: {
 		resetClicked: function() {
-			this.$store.commit('resetClicked');
+			this.$store.dispatch('resetClicked');
 		},
 	},
 	name: 'resetButton'

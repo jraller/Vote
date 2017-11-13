@@ -1,12 +1,12 @@
-module.exports = {
-	computed: {
-		disableRun: function() {
-			return this.$store.state.disableRun;
-		},
-	},
+import {mapGetters} from "vuex";
+
+export default {
+	computed: mapGetters({
+		disableRun: 'runButtonDisabled',
+	}),
 	methods: {
 		runClicked: function() {
-			this.$store.commit('runClicked');
+			this.$store.dispatch('runClicked');
 		},
 	},
 	name: 'runButton'

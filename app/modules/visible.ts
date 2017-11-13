@@ -1,6 +1,13 @@
 // initial visibility state of various elements
 // used to control visibility throughout process
 
+export interface IVisible {
+	chart?: boolean;
+	disqualifyList?: boolean;
+	results?: boolean;
+	sanity?: boolean;
+}
+
 export default class Visible {
 	// chart should only be shown when results are final
 	public chart: boolean = false;

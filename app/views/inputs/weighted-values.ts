@@ -11,7 +11,7 @@ export default {
 	methods: {
 		changeVoteValues() {
 			this.$store.commit('updateVoteValues', (this.$refs.voteValues as HTMLFormElement).checked);
-			this.$store.commit('newCandidates');
+			this.$store.dispatch('inputChange');
 		},
 	},
 	name: 'inputControlWeightedValues',

@@ -28,5 +28,3 @@ export default {
 	},
 	name: 'STVRunner',
 };
-
-// TODO consider adding button next to run that unlocks inputs, lock (disable) inputs on run?

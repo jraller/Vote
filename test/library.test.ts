@@ -49,30 +49,6 @@ describe('library', () => {
 			expect(sortCandidateList(['a b', 'a a', 'a c'], 'l')).to.eql(['a a', 'a b', 'a c']);
 		});
 	});
-	describe('eliminate', () => {
-		it('should remove targeted candidate', () => {
-			const state = new State();
-			state.current = [
-				['a', 'b'],
-				['b', 'a'],
-				['c']
-			];
-			eliminate(state, 'a');
-			expect(state.current).to.eql([['b'], ['b'], ['c']]);
-		});
-	});
-	describe('disqualify', () => {
-		it('should remove targeted candidate', () => {
-			const state = new State();
-			state.current = [
-				['a', 'b'],
-				['b', 'a'],
-				['c']
-			];
-			disqualify(state, ['a']);
-			expect(state.current).to.eql([['b'], ['b'], ['c']]);
-		});
-	});
 	describe('updateCandidateList', () => {
 		it('should rebuild a candidate list', () => {
 			const state = new State();
@@ -84,6 +60,45 @@ describe('library', () => {
 			];
 			updateCandidateList(state);
 			expect(state.candidateList).to.eql(['a', 'b', 'c']);
+		});
+		it('should use ballot order', () => {
+			const state = new State();
+			state.candidateList = [];
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
+			state.sortOrder = 'b';
+			state.ballot = ['b', '', 'c'];
+			state.round.push([]);
+			updateCandidateList(state);
+			expect(state.candidateList).to.eql(['b', 'c', 'a']);
+		});
+	});
+	describe('eliminate', () => {
+		it('should remove targeted candidate', () => {
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
+			eliminate(state, 'a');
+			expect(state.current).to.eql([['b'], ['b'], ['c']]);
+		});
+		// TODO more tests here
+	});
+	describe('disqualify', () => {
+		it('should remove targeted candidate', () => {
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
+			disqualify(state, ['a']);
+			expect(state.current).to.eql([['b'], ['b'], ['c']]);
 		});
 	});
 	describe('countXPlace', () => {
