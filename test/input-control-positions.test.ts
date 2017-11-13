@@ -35,9 +35,9 @@ describe('Positions', () => {
 		expect(wrapper.name()).to.equal('inputControlPositions');
 	});
 	it('notifies the store when changed', () => {
-		expect(wrapper.vm['positions']).to.equal(1);
+		expect(wrapper.vm.positions).to.equal(1);
 		wrapper.setData({positions: 2});
 		wrapper.find('#positions').trigger('change');
-		expect(wrapper.vm['positions']).to.equal(2);
+		expect(wrapper.vm.positions).to.equal(2);
 	});
 });

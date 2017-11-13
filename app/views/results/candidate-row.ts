@@ -15,7 +15,7 @@ export default {
 			return this.candidate.l;
 		},
 		positions: function () {
-			return this.$state.store.positions;
+			return this.$store.state.positions;
 		}
 	},
 	name: 'candidateRow',
