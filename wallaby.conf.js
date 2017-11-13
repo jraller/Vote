@@ -20,9 +20,9 @@ module.exports = function (wallaby) {
 
 	return {
 		compilers: {
-			'**/*.js': wallaby.compilers.babel({}),
-			'**/*.ts': wallaby.compilers.typeScript({}),
-			'**/*.vue': require('wallaby-vue-compiler')(wallaby.compilers.babel({}))
+			'**/*.js': wallaby.compilers.babel(),
+			'**/*.ts': wallaby.compilers.typeScript(),
+			'**/*.vue': require('wallaby-vue-compiler')(wallaby.compilers.babel())
 		},
 		debug: true,
 		env: {
@@ -30,13 +30,19 @@ module.exports = function (wallaby) {
 			// runner: 'node',
 		},
 		files: [
+			{pattern: '.babelrc', load: false, instrument: false},
 			{pattern: 'tsconfig.json', load: false, instrument: false},
 			{pattern: 'node_modules/vue/dist/vue.js', instrument: false},
 			{pattern: 'app/**/*.ts', load: false},
-			{pattern: 'app/**/*.vue', load: false}
+			{pattern: 'app/**/*.vue', load: false},
 		],
 		hints: {
 			ignoreCoverage: /ignore coverage/
+		},
+		preprocessors: {
+			'**/*.js': file => require('babel-core').transform(
+				file.content,
+				{sourceMap: true, compact: false, filename: file.path, babelrc: true})
 		},
 		postprocessor: wallabyPostprocessor,
 		setup: function () {

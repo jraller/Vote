@@ -1,8 +1,8 @@
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 
 export default {
 	computed: {
-		...mapGetters(['positions',]),
+		// ...mapGetters(['positions']),
 		candidateTotal: function () {
 			return this.candidate.v.reduce(function(a, b) {
 				return a + b;
@@ -14,7 +14,14 @@ export default {
 		lowVotes: function () {
 			return this.candidate.l;
 		},
+		positions: function () {
+			return this.$state.store.positions;
+		}
 	},
 	name: 'candidateRow',
-	props: ['candidate', 'round', 'total'],
+	props: [
+		'candidate',
+		'round',
+		'total'
+	],
 };
