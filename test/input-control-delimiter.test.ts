@@ -10,6 +10,6 @@ describe('delimiter', () => {
 		expect(wrapper.name()).to.equal('inputControlDelimiter');
 	});
 	it('can get description', () => {
-		expect(wrapper.vm.getDescription('tab')).to.equal('Tab');
+		expect(wrapper.vm['getDescription']('tab')).to.equal('Tab');
 	});
 });

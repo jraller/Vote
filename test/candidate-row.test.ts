@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {mount} from 'vue-test-utils';
+import {mount, MountOptions} from 'vue-test-utils';
 import {expect} from 'chai';
 import 'babel-polyfill';
 
@@ -27,10 +27,7 @@ describe('Candidate Row', () => {
 
 	store.state.positions = 2;
 
-	const wrapper = mount(CandidateRow, {
-		store,
-		props
-	});
+	const wrapper = mount(CandidateRow, {store});
 	wrapper.setProps(props);
 
 	it('has the right name', () => {
@@ -50,20 +47,20 @@ describe('Candidate Row', () => {
 	});
 	describe('computed', () => {
 		it('candidateTotal', () => {
-			expect(wrapper.vm.candidateTotal).to.equal(3);
+			expect(wrapper.vm['candidateTotal']).to.equal(3);
 		});
 		it('candidatePercent', () => {
-			expect(wrapper.vm.candidatePercent).to.equal('30.00%');
+			expect(wrapper.vm['candidatePercent']).to.equal('30.00%');
 		});
 		it('lowVotes', () => {
-			expect(wrapper.vm.lowVotes).to.be.false;
+			expect(wrapper.vm['lowVotes']).to.be.false;
 		});
 		it('positions', () => {
-			expect(wrapper.vm.positions).to.equal(2);
+			expect(wrapper.vm['positions']).to.equal(2);
 		});
 	});
 	it('renders the correct output', () => {
-		expect(wrapper.isVueComponent).to.be.true;
+		expect(wrapper.isVueInstance()).to.be.true;
 
 		const cells = wrapper.findAll('td');
 

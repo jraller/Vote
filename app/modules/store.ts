@@ -24,6 +24,7 @@ export const actions = {
 			context.commit('pickDelimiter', context.getters.raw); // select delimiter
 			context.commit('pickWeightedValues', context.getters.raw); // select weighted values as well
 		}
+		$eventHub.$emit('changeDelimiter', context.getters.delimiter);
 		context.commit('newBallots'); // trigger ballot parsing
 		context.commit('newCandidates'); // trigger building of candidate list
 	},

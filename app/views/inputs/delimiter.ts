@@ -6,23 +6,16 @@ const delimiters = new Delimiters;
 
 export default {
 	computed: {
-		delimiter:{
-			get: function () {
-				return this.$store.state.delimiter;
-			},
-			set: function (newValue) {
-			}
-		},
 		delimiterList() {
 			return this.$store.state.delimiterList;
 		},
 	},
+	data: function () {
+		return {
+			delimiter: 'auto'
+		}
+	},
 	methods: {
-		changeDelimiter: function () {
-			this.$store.commit('setDelimiter', this.$refs.delimiter.value);
-			$eventHub.$emit('getNewBallots');
-			this.$store.commit('newCandidates');
-		},
 		getDescription: (d: string) => {
 			return delimiters.getDescription(d);
 		},
@@ -30,5 +23,18 @@ export default {
 			return d === 'auto';
 		},
 	},
+	mounted: function () {
+		this.$nextTick(function() {
+			$eventHub.$on('changeDelimiter', (data) => { // if some other component requests
+				this.delimiter = data;
+			});
+		});
+	},
 	name: 'inputControlDelimiter',
+	watch: {
+		delimiter: function (d) {
+			this.$store.commit('setDelimiter', this.delimiter);
+			this.$store.dispatch('inputChange');
+		}
+	},
 };
