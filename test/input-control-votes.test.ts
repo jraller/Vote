@@ -42,7 +42,8 @@ describe('Ballot Input', () => {
 
 		const mutations = {
 			newBallots: sinon.stub(),
-			newCandidates: sinon.stub()
+			newCandidates: sinon.stub(),
+			setRaw: sinon.stub()
 		};
 
 		const state = State;
@@ -68,24 +69,26 @@ describe('Ballot Input', () => {
 		it('is a Vue component', () => {
 			expect(changeWrapper.isVueComponent).to.be.true;
 		});
-		it('is starts out empty', () => {
-			expect(changeWrapper.vm.rawInput).to.equal('');
-		});
 		it('has the right id', () => {
 			expect(changeWrapper.contains('#votes')).to.be.true;
 		});
 		it('contains a textarea', () => {
 			expect(changeWrapper.contains('textarea')).to.be.true;
 		});
+		it('is starts out empty', () => {
+			expect(changeWrapper.vm.rawInput).to.equal('');
+		});
 		it('triggers newBallots when the input is changed', () => {
-			const count = actions.inputChange.callCount;
+			const inputChangeCount = actions.inputChange.callCount;
+			const setRawCount = mutations.setRaw.callCount;
 
 			changeWrapper.setData({rawInput: 'fred'});
 			changeWrapper.find('textarea').trigger('change');
 
 			expect(changeWrapper.vm.rawInput).to.equal('fred');
 
-			expect(actions.inputChange).to.have.callCount(count + 1);
+			expect(mutations.setRaw).to.have.callCount(inputChangeCount + 1);
+			expect(actions.inputChange).to.have.callCount(inputChangeCount + 1);
 		});
 	});
 });

@@ -17,11 +17,16 @@ describe('Positions', () => {
 
 	const state = require('../app/modules/state');
 
+	const actions = {
+		inputChange: sinon.stub(),
+	};
+
 	const mutations = {
 		updatePositions: sinon.stub(),
 	};
 
 	const store = new Vuex.Store({
+		actions,
 		mutations,
 		state
 	});
@@ -35,9 +40,13 @@ describe('Positions', () => {
 		expect(wrapper.name()).to.equal('inputControlPositions');
 	});
 	it('notifies the store when changed', () => {
+		const inputChangeCount = actions.inputChange.callCount;
+
 		expect(wrapper.vm.positions).to.equal(1);
 		wrapper.setData({positions: 2});
 		wrapper.find('#positions').trigger('change');
 		expect(wrapper.vm.positions).to.equal(2);
+
+		expect(actions.inputChange).to.have.callCount(inputChangeCount + 1);
 	});
 });
