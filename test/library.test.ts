@@ -87,6 +87,19 @@ describe('library', () => {
 			eliminate(state, 'a');
 			expect(state.current).to.eql([['b'], ['b'], ['c']]);
 		});
+		it('should remove targeted candidates', () => {
+			const state = new State();
+			state.current = [
+				['a', 'b'],
+				['b', 'a'],
+				['c']
+			];
+			eliminate(state, ['a', 'c']);
+			expect(state.current).to.eql([['b'], ['b'], []]);
+			// empty third entry is expected due to not shifting away empty ballots
+			// this is by design to make it easier to audit initial array
+			// against state at any point in the future
+		});
 		// TODO more tests here
 	});
 	describe('disqualify', () => {
