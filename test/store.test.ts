@@ -83,6 +83,9 @@ describe('store', () => {
 		it('gets delimiter', () => {
 			expect(Store.getters.delimiter).to.equal('auto');
 		});
+		it('gets positions', () => {
+			expect(Store.getters.positions).to.equal(1);
+		});
 		it('gets raw', () => {
 			expect(Store.getters.raw).to.equal('');
 		});
