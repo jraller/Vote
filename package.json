@@ -72,7 +72,7 @@
     "vue-loader": "^13.5.0",
     "vue-property-decorator": "^6.0.0",
     "vue-template-compiler": "^2.5.8",
-    "vue-test-utils": "^1.0.0-beta.5",
+    "vue-test-utils": "^1.0.0-beta.6",
     "vuex": "^3.0.1",
     "vuex-class": "^0.3.0",
     "wallaby-vue-compiler": "^1.0.2",
@@ -88,10 +88,10 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "d3-color": "^1.0.3",
-    "d3-format": "^1.2.0",
+    "d3-format": "^1.2.1",
     "d3-sankey": "^0.7.1",
-    "d3-scale": "^1.0.6",
-    "d3-selection": "^1.1.0",
+    "d3-scale": "^1.0.7",
+    "d3-selection": "^1.2.0",
     "jquery": "^3.2.1",
     "lighthouse": "^2.6.0"
   }
