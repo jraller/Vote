@@ -136,7 +136,9 @@ export default {
 					return Math.max(1, d.width);
 				})
 				.select('title')
-				.text((d: any) => `${d.source['name']} → ${d.target['name']}`);
+				.text((d: any) =>
+					`${d.source['name']} → ${d.target['name']}\n${formatVote(d.value)}`
+				);
 
 			// nodes
 
@@ -171,8 +173,8 @@ export default {
 					return rgb(d.color).darker(2);
 				})
 				.select('title')
-				.text(function (d: any, i) {
-					return d.name + '\n' + formatVote(d.value) + '\n' + i;
+				.text(function (d: any) {
+					return d.name + '\n' + formatVote(d.value);
 				});
 
 			node.merge(nodeEnter)
