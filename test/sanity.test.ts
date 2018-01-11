@@ -1,4 +1,4 @@
-import {mount} from 'vue-test-utils';
+import {mount} from '@vue/test-utils';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as sinonChai from 'sinon-chai'

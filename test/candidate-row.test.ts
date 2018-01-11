@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {mount, MountOptions} from 'vue-test-utils';
+import {mount, MountOptions} from '@vue/test-utils';
 import {expect} from 'chai';
 import 'babel-polyfill';
 
