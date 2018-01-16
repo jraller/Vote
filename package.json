@@ -57,7 +57,7 @@
     "protractor": "^5.2.2",
     "resolve-url-loader": "^2.2.1",
     "sass-loader": "^6.0.6",
-    "sinon": "^4.1.5",
+    "sinon": "^4.1.6",
     "sinon-chai": "^2.14.0",
     "style-loader": "^0.19.1",
     "testcafe": "^0.18.6",
