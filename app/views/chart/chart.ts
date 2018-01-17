@@ -114,6 +114,8 @@ export default {
 			.extent([[1, 1], [width, height]])
 			.iterations(32);
 
+		svg.attr('viewBox', '0 0 800 500')
+			.attr('preserveAspectRatio', 'xMidYMid meet');
 
 		update = () => {
 
