@@ -2,7 +2,11 @@
     <div class="panel panel-default">
         <div class="panel-heading">Chart</div>
         <div class="panel-body">
-            <svg id="chart" class="img-responsive" width="800" height="500"></svg>
+            <svg id="chart"
+				 class="img-responsive"
+				 width="800" height="500"
+				 viewBox="0 0 800 500"
+				preserveAspectRatio="xMidYMid meet"></svg>
         </div>
     </div>
 </template>
