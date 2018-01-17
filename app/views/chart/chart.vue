@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <h2>Chart</h2>
-        <svg id="chart" class="img-responsive" width="800" height="500"></svg>
+    <div class="panel panel-default">
+        <div class="panel-heading">Chart</div>
+        <div class="panel-body">
+            <svg id="chart" class="img-responsive" width="800" height="500"></svg>
+        </div>
     </div>
 </template>
 

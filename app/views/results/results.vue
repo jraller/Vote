@@ -1,7 +1,11 @@
 <template>
-    <div>
-        <h2>Results</h2>
-        <round v-for="(round, index) in roundCount" v-bind:key="round" v-bind:round="round" v-bind:index="index"></round>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+			Results
+		</div>
+		<div class="panel-body">
+	        <round v-for="(round, index) in roundCount" v-bind:key="round" v-bind:round="round" v-bind:index="index"></round>
+		</div>
     </div>
 </template>
 
