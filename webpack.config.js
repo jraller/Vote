@@ -91,8 +91,14 @@ const commonConfig = merge([
 					loader: 'url-loader?limit=10000'
 				},
 				{
-					test: /bootstrap-sass\/assets\/javascripts\//,
-					use: 'imports-loader?jQuery=jquery'
+					// bootstrap 3
+					test: /bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
+					loader: 'imports-loader?jQuery=jquery'
+				},
+				{
+					// bootstrap 4
+					test: /bootstrap[\/\\]dist[\/\\]js[\/\\]umd[\/\\]/,
+					loader: 'imports-loader?jQuery=jquery'
 				},
 				{ // only added to address brittleness in chai, see https://github.com/chaijs/chai/issues/985
 					test: /\.json$/,
