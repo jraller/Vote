@@ -33,10 +33,12 @@ const commonConfig = merge([
 	{
 		entry: {
 			// the entry point of our app
-			app: PATHS.app,
+			app: [
+				PATHS.app
+			],
 			vendor: [
-				'bootstrap-loader',
-				// 'jquery' // imports-loader?$= commenting out as Bootstrap isn't using any scripts
+				// 'jquery', // imports-loader?$= commenting out as Bootstrap isn't using any scripts
+				'bootstrap-loader'
 			],
 		},
 		output: {
