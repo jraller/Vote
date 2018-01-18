@@ -87,6 +87,10 @@ export default {
 				],
 				nodes: [
 				]
+			},
+			size: {
+				height: 768,
+				width: 1024
 			}
 		}
 	},
@@ -114,7 +118,7 @@ export default {
 			.extent([[1, 1], [width, height]])
 			.iterations(32);
 
-		svg.attr('viewBox', '0 0 800 500')
+		svg.attr('viewBox', '0 0 '+ this.size.width + ' ' + this.size.height)
 			.attr('preserveAspectRatio', 'xMidYMid meet');
 
 		update = () => {

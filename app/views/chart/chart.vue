@@ -4,7 +4,8 @@
 		<div class="panel-body">
 			<svg id="chart"
 				 class="img-responsive"
-				 width="800" height="500"></svg>
+				 :width="size.width"
+				 :height="size.height"></svg>
 		</div>
 	</div>
 </template>
