@@ -20,6 +20,7 @@
 	}
 
 	.node text {
+		font-size: 2.25em;
 		pointer-events: none;
 		text-shadow: 0 1px 0 #fff;
 	}

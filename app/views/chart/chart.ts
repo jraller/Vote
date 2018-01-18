@@ -89,8 +89,8 @@ export default {
 				]
 			},
 			size: {
-				height: 768,
-				width: 1024
+				height: 1080,
+				width: 1920
 			}
 		}
 	},
