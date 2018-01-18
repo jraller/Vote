@@ -1,7 +1,13 @@
 <template>
 	<div class="panel panel-default">
-		<div class="panel-heading">Chart</div>
-		<div class="panel-body">
+		<div class="panel-heading">
+			<a role="button"
+			   data-toggle="collapse"
+			   data-target="#chartDiv"
+			   aria-expanded="true"
+			   aria-controls="chartDiv">Chart</a>
+		</div>
+		<div class="panel-body collapse in" id="chartDiv">
 			<svg id="chart"
 				 class="img-responsive"
 				 :width="size.width"
