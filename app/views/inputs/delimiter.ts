@@ -32,9 +32,9 @@ export default {
 	},
 	name: 'inputControlDelimiter',
 	watch: {
-		delimiter: function (d) {
+		delimiter: function () {
 			this.$store.commit('setDelimiter', this.delimiter);
-			this.$store.dispatch('inputChange');
+			return this.$store.dispatch('inputChange');
 		}
 	},
 };

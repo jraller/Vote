@@ -4,7 +4,7 @@ const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {rgb} = require('d3-color');
 const {format} = require('d3-format');
 const {scaleOrdinal, schemeCategory20} = require('d3-scale');
-const {select, selectAll} = require('d3-selection');
+const {select} = require('d3-selection');
 
 let update;
 

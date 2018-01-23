@@ -10,7 +10,7 @@ export default {
 	watch: {
 		positions: function () {
 			this.$store.commit('updatePositions', this.positions);
-			this.$store.dispatch('inputChange');
+			return this.$store.dispatch('inputChange');
 		}
 	}
 }

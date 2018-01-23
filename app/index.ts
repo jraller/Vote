@@ -2,8 +2,6 @@ import Vue from 'vue';
 
 import store from './modules/store';
 
-import $eventHub from './modules/eventHub';
-
 Vue.config.silent = false;
 Vue.config.devtools = process.env.NODE_ENV === 'development';
 Vue.config.performance = false;

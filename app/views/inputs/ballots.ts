@@ -9,7 +9,7 @@ export default {
 	methods: {
 		changeVotes: function () {
 			this.$store.commit('setRaw', this.rawInput);
-			this.$store.dispatch('inputChange');
+			return this.$store.dispatch('inputChange');
 		},
 	},
 	name: 'InputControlVotes',

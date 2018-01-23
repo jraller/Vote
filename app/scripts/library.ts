@@ -1,4 +1,4 @@
-import State, {ICandidateType, IRoundType, roundTypeEnum} from '../modules/state';
+import State, {IRoundType, roundTypeEnum} from '../modules/state';
 
 import $eventHub from '../modules/eventHub';
 
@@ -167,7 +167,7 @@ function countXPlace(state: State, candidate: string, place: number): number {
 	function countFactory(voteValues: boolean) {
 		switch (voteValues) {
 			case false:
-				return (ballot) => 1;
+				return () => 1;
 			case true:
 				return (ballot) => parseFloat(ballot[0]);
 		}

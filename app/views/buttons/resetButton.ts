@@ -6,7 +6,7 @@ export default {
 	}),
 	methods: {
 		resetClicked: function() {
-			this.$store.dispatch('resetClicked');
+			return this.$store.dispatch('resetClicked');
 		},
 	},
 	name: 'resetButton'

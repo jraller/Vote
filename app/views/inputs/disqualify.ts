@@ -1,5 +1,3 @@
-import $eventHub from '../../modules/eventHub'
-
 export default {
 	data: function () {
 		return {
@@ -14,7 +12,7 @@ export default {
 	methods: {
 		changeDisqualified() {
 			this.$store.commit('updateDisqualified', this.disqualifyCandidates);
-			this.$store.dispatch('inputChange');
+			return this.$store.dispatch('inputChange');
 		}
 	}
 }

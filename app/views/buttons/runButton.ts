@@ -6,7 +6,7 @@ export default {
 	}),
 	methods: {
 		runClicked: function() {
-			this.$store.dispatch('runClicked');
+			return this.$store.dispatch('runClicked');
 		},
 	},
 	name: 'runButton'
