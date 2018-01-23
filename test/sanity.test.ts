@@ -39,7 +39,6 @@ describe('Sanity', () => {
 		expect(wrapper.name()).to.equal('SanityChecks');
 	});
 	it('warns about skipped ballots', () => {
-		const count = mutations.setVisible.callCount;
 		expect(wrapper.vm['skippedBallots']).to.be.false;
 		state.rawLength = 4;
 		state.ballotCount = 2;

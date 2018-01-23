@@ -1,5 +1,3 @@
-import $eventHub from '../../modules/eventHub';
-
 export default {
 	data: function () {
 		return {
