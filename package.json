@@ -67,7 +67,7 @@
     "ts-node": "^4.1.0",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.6.2",
+    "typescript": "^2.7.1",
     "url-loader": "^0.6.2",
     "vue": "^2.5.13",
     "vue-class-component": "^6.1.2",
