@@ -3,7 +3,8 @@ import $eventHub from '../../modules/eventHub';
 const {sankey, sankeyLinkHorizontal} = require('d3-sankey');
 const {rgb} = require('d3-color');
 const {format} = require('d3-format');
-const {scaleOrdinal, schemeCategory20} = require('d3-scale');
+const {scaleOrdinal} = require('d3-scale');
+const {schemeCategory10: schemeCategory10} = require('d3-scale-chromatic');
 const {select} = require('d3-selection');
 
 let update;
@@ -99,7 +100,7 @@ export default {
 		const formatVote = function (d) {
 			return formatNumber(d) + ' votes';
 		};
-		const color = scaleOrdinal(schemeCategory20);
+		const color = scaleOrdinal(schemeCategory10);
 		const svg = select('#chart');
 		const margin = {top: 20, right: 20, bottom: 20, left: 20};
 		const width = parseInt(svg.attr('width'), 10) - margin.left - margin.right;
