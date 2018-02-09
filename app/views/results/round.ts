@@ -2,9 +2,9 @@ import {ICandidateType} from '../../modules/state';
 
 export default {
 	components: {
-		candidateRow: require('./candidate-row.vue'),
-		roundSummary: require('./round-summary.vue'),
-		roundChoice: require('./round-choice.vue'),
+		candidateRow: require('./candidate-row.vue').default,
+		roundSummary: require('./round-summary.vue').default,
+		roundChoice: require('./round-choice.vue').default,
 	},
 	computed: {
 		positions() {

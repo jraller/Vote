@@ -15,7 +15,7 @@ Vue.config.performance = false;
 
 const vm = new Vue({
 	components: {
-		app: require('./views/app.vue'),
+		app: require('./views/app.vue').default,
 	},
 	el: '#app',
 	store,

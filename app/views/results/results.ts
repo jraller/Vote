@@ -1,6 +1,6 @@
 export default {
 	components: {
-		round: require('./round.vue'),
+		round: require('./round.vue').default,
 	},
 	computed: {
 		roundCount() {
