@@ -19,6 +19,11 @@
 <script lang="ts" src="./chart.ts"></script>
 
 <style>
+	svg {
+		max-width: 100%;
+		height: auto;
+	}
+
 	.node rect {
 		/*cursor: move;*/
 		fill-opacity: .9;

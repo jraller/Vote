@@ -5,7 +5,7 @@ import 'babel-polyfill';
 const Delimiter = require('../app/views/inputs/delimiter.vue');
 
 describe('delimiter', () => {
-	const wrapper = mount(Delimiter);
+	const wrapper = mount(Delimiter.default);
 	it('has the right name', () => {
 		expect(wrapper.name()).to.equal('inputControlDelimiter');
 	});

@@ -31,7 +31,7 @@ describe('Positions', () => {
 		state
 	});
 
-	const wrapper = mount(Positions, {
+	const wrapper = mount(Positions.default, {
 		store,
 		attachToDocument: true
 	});

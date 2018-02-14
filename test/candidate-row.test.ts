@@ -27,7 +27,7 @@ describe('Candidate Row', () => {
 
 	store.state.positions = 2;
 
-	const wrapper = mount(CandidateRow, {store});
+	const wrapper = mount(CandidateRow.default, {store});
 	wrapper.setProps(props);
 
 	it('has the right name', () => {

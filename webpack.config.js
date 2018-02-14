@@ -38,7 +38,7 @@ const commonConfig = merge([
 			],
 			vendor: [
 				// 'jquery', // imports-loader?$= commenting out as Bootstrap isn't using any scripts
-				'bootstrap-loader'
+				// 'bootstrap-loader'
 			],
 		},
 		output: {

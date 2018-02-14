@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuetify from 'vuetify';
 
 import store from './modules/store';
 
@@ -12,6 +13,8 @@ Vue.config.performance = false;
 // TODO look at inject-loader and babel-plugin-rewire per https://www.coding123.org/stub-dependencies-vue-unit-tests/
 
 // Vue.prototype.$eventHub = new Vue();
+
+Vue.use(Vuetify);
 
 const vm = new Vue({
 	components: {

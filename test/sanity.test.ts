@@ -28,7 +28,7 @@ describe('Sanity', () => {
 		state
 	});
 
-	const wrapper = mount(Sanity, {
+	const wrapper = mount(Sanity.default, {
 		store,
 	});
 

@@ -1,35 +1,50 @@
 <template>
-    <div>
-        <h3>Round {{ round }}</h3>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Candidate</th>
-                    <th v-for="i in positions">{{ i }}</th>
-                    <th>total <span v-if="voteValues">points</span><span v-else>votes</span></th>
-                    <th>%</th>
-                </tr>
-            </thead>
-            <tbody>
-				<candidateRow v-for="candidate, index in candidates" v-bind:key="index" v-bind:candidate="candidate" v-bind:round="round" v-bind:total="total"></candidateRow>
+    <v-layout>
+        <v-flex xs12>
+			<v-toolbar color="cyan" dark dense>
+				<v-toolbar-title>Round {{ round }}</v-toolbar-title>
+			</v-toolbar>
+			<v-card>
+				<v-container fluid grid-list-md>
+					<v-layout row wrap>
+						<v-data-table
+								:headers="headers"
+								:items="items"
+								hide-actions
+								class="elevation-1"
+						>
+							<template slot="items" slot-scope="props">
+								<tr :class="{ 'red lighten-4': props.item.lowVotes }">
+									<td>{{ props.item.name }}</td>
 
-                <!--<tr v-for="candidate in candidates">-->
-                    <!--<td>{{ candidate.n }}</td>-->
-                    <!--<td v-for="(p, i) in positions">{{ candidate.v[i] }}</td>-->
-                    <!--<td>{{ candidateTotal() }}</td> &lt;!&ndash; candidate.v.reduce(function(a, b) {return a + b;}) &ndash;&gt;-->
-                    <!--<td>{{ candidatePercent() }}</td>-->
-                <!--</tr>-->
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td :colspan="positions + 1"></td>
-                    <td>{{ total }}</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-        <component :is="roundType" v-bind:key="round" v-bind:round="round"></component>
-    </div>
+									<td v-for="pos in parseInt(positions, 10)" class="text-xs-right">{{ props.item['p' + (pos - 1)] }}</td>
+
+									<td class="text-xs-right">{{ props.item.total }}</td>
+									<td class="text-xs-right">{{ props.item.percent }}</td>
+								</tr>
+							</template>
+							<template slot="footer">
+								<td :colspan="positions + 1"></td>
+								<td>{{ total }}</td>
+								<td></td>
+							</template>
+							<template slot="headerCell" slot-scope="props">
+								<v-tooltip bottom>
+									<span slot="activator">
+									  {{ props.header.text }}
+									</span>
+									<span>
+									  {{ props.header.tooltip }}
+									</span>
+								</v-tooltip>
+							</template>
+						</v-data-table>
+						<component :is="roundType" v-bind:key="round" v-bind:round="round"></component>
+					</v-layout>
+				</v-container>
+			</v-card>
+		</v-flex>
+    </v-layout>
 </template>
 
 <script lang="ts" src="./round.ts"></script>

@@ -1,19 +1,20 @@
 <template>
-	<div class="panel panel-default">
-		<div class="panel-heading">Disqualify List</div>
-		<div class="panel-body">
-			<ul>
-				<li v-for="candidate in candidates">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" :value="candidate" v-model="disqualifyCandidates"
-								   v-on:change="changeDisqualified">{{ candidate }}
-						</label>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
+	<v-card color="grey lighten-4">
+		<v-card-title>Disqualify List</v-card-title>
+		<v-list dense subheader>
+			<template v-for="candidate in candidates">
+				<v-list-tile>
+					<v-list-tile-content>
+						<v-checkbox :label="candidate"
+									:value="candidate"
+									v-model="disqualifyCandidates"
+									v-on:change="changeDisqualified"
+						></v-checkbox>
+					</v-list-tile-content>
+				</v-list-tile>
+			</template>
+		</v-list>
+	</v-card>
 </template>
 
 <script lang="ts" src="./disqualify.ts"></script>

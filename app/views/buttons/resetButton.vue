@@ -1,5 +1,5 @@
 <template>
-	<button class="btn btn-default" @click.prevent="resetClicked" :disabled="disableReset">Reset</button>
+	<v-btn @click.prevent="resetClicked" :disabled="disableReset">Reset</v-btn>
 </template>
 
 <script lang="ts" src="./resetButton.ts"></script>

@@ -3,10 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <title>Tabulator</title>
+        <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+        <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
     </head>
     <body>
         <div id="app">
-            <app v-cloak></app>
+			<v-app>
+				<v-toolbar app color="cyan">
+					<v-toolbar-title>Vote Processor</v-toolbar-title>
+				</v-toolbar>
+				<v-content>
+					<app v-cloak></app>
+				</v-content>
+			</v-app>
         </div>
         <script src="vendor.js"></script>
         <script src="app.js"></script>

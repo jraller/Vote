@@ -2,7 +2,13 @@ export default {
 	data: function () {
 		return {
 			sortOrder: 'u',
-			ballotOrder: ''
+			ballotOrder: '',
+			orders: [
+				{order: "u", text: "unsorted"},
+				{order: "b", text: "ballot"},
+				{order: "f", text: "first name"},
+				{order: "l", text: "last name"}
+			]
 		}
 	},
 	methods: {

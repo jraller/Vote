@@ -1,35 +1,23 @@
+import $eventHub from '../../modules/eventHub';
+
 export default {
-	computed: {
-		voteValues: {
-			get: function () {
-				return this.$store.state.voteValues;
-			},
-			set: function () {
-			}
+	data: function () {
+		return {
+			voteValues: false
 		}
 	},
-	methods: {
-		changeVoteValues() {
-			this.$store.commit('updateVoteValues', (this.$refs.voteValues as HTMLFormElement).checked);
-			return this.$store.dispatch('inputChange');
-		},
-	},
 	name: 'inputControlWeightedValues',
+	mounted: function () {
+		this.$nextTick(function() {
+			$eventHub.$on('changeVoteValues', (data) => {
+				this.voteValues = data;
+			});
+		});
+	},
+	watch: {
+		voteValues: function() {
+			this.$store.commit('updateVoteValues', this.voteValues);
+			return this.$store.dispatch('inputChange');
+		}
+	}
 };
-
-
-// import Vue from 'vue';
-//
-// import Component from 'vue-class-component';
-//
-// @Component
-// export default class inputControlWeightedValues extends Vue {
-// 	get voteValues() {
-// 		return this.$store.state.voteValues;
-// 	}
-//
-// 	changeVoteValues() { //method
-// 		this.$store.commit('updateVoteValues', (this.$refs.voteValues as HTMLFormElement).checked);
-// 		this.$store.commit('newCandidates');
-// 	}
-// }

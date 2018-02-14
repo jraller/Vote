@@ -25,8 +25,10 @@ export default {
 	},
 	mounted: function () {
 		this.$nextTick(function() {
-			$eventHub.$on('changeDelimiter', (data) => { // if some other component requests
-				this.delimiter = data;
+			$eventHub.$on('changeDelimiter', (data) => {
+				if (this.delimiter != data) {
+					this.delimiter = data;
+				}
 			});
 		});
 	},

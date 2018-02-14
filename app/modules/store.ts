@@ -25,6 +25,7 @@ export const actions = {
 			context.commit('pickWeightedValues', context.getters.raw); // select weighted values as well
 		}
 		$eventHub.$emit('changeDelimiter', context.getters.delimiter);
+		$eventHub.$emit('changeVoteValues', context.getters.voteValues);
 		context.commit('newBallots'); // trigger ballot parsing
 		context.commit('newCandidates'); // trigger building of candidate list
 	},
@@ -62,7 +63,7 @@ export const getters = {
 	runButtonDisabled: (state) => state.runButtonEnabled === false,
 	// sortOrder
 	// visible
-	// voteValues
+	voteValues: (state) => state.voteValues,
 };
 
 export const mutations = {

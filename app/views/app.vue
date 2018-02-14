@@ -1,53 +1,54 @@
 <template>
-    <div class="container">
-        <h1>Vote Processor</h1>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Input Controls
-            </div>
-            <div class="panel-body">
-                <form action="" v-on:submit.prevent>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <inputControlVotes></inputControlVotes>
-                        </div>
-                        <div class="col-sm-6">
-                            <inputControlDelimiter></inputControlDelimiter>
-                            <inputControlPositions></inputControlPositions>
-                            <inputControlSortOrder></inputControlSortOrder>
-                            <inputControlWeightedValues></inputControlWeightedValues>
-                        </div>
-                    </div>
-                    <div v-show="showDisqualify" class="row">
-                        <div class="col-xs-12">
-                            <disqualify></disqualify>
-                        </div>
-                    </div>
-                    <div v-show="showSanity" class="row">
-                        <div class="col-xs-12">
-                            <sanity></sanity>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <runButton></runButton>
-                            <resetButton></resetButton>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div v-show="showResults" class="row">
-            <div class="col-xs-12">
+    <v-container fluid grid-list-md wrap>
+        <v-layout row wrap>
+            <v-flex xs12>
+				<v-subheader>Input Controls</v-subheader>
+            </v-flex>
+            <v-flex xs12>
+				<v-card color="grey lighten-4">
+					<v-form action="" v-on:submit.prevent>
+						<v-layout>
+							<v-flex sm8 class="ma-3">
+								<inputControlVotes></inputControlVotes>
+							</v-flex>
+							<v-flex sm4 class="ma-3">
+								<inputControlDelimiter></inputControlDelimiter>
+								<inputControlPositions></inputControlPositions>
+								<inputControlSortOrder></inputControlSortOrder>
+								<inputControlWeightedValues></inputControlWeightedValues>
+							</v-flex>
+						</v-layout>
+						<v-layout v-show="showDisqualify">
+							<v-flex xs12>
+								<disqualify></disqualify>
+							</v-flex>
+						</v-layout>
+						<v-layout v-show="showSanity">
+							<v-flex xs12>
+								<sanity></sanity>
+							</v-flex>
+						</v-layout>
+						<v-layout class="row">
+							<v-flex>
+								<runButton></runButton>
+								<resetButton></resetButton>
+							</v-flex>
+						</v-layout>
+					</v-form>
+				</v-card>
+			</v-flex>
+        </v-layout>
+        <v-layout v-show="showResults">
+            <v-flex xs12>
                 <results></results>
-            </div>
-        </div>
-        <div v-show="showChart" class="row">
-            <div class="col-xs-12">
+            </v-flex>
+        </v-layout>
+        <v-layout v-show="showChart">
+            <v-flex xs12>
                 <chart></chart>
-            </div>
-        </div>
-    </div>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script lang="ts" src="./app.ts"></script>

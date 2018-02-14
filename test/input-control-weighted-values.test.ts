@@ -46,7 +46,7 @@ describe('Weighted Values', () => {
 			state
 		});
 
-		wrapper = mount(WeightedValues, {
+		wrapper = mount(WeightedValues.default, {
 			store,
 			attachToDocument: true
 		});

@@ -16,7 +16,7 @@ const expect = chai.expect;
 
 describe('Ballot Input', () => {
 
-	const wrapper = mount(Ballots);
+	const wrapper = mount(Ballots.default);
 
 	it('has the right name', () => {
 		expect(wrapper.name()).to.equal('InputControlVotes');
